@@ -86,9 +86,16 @@ int main( int argc, char **argv ) {
             3, 1, 2
     };
 
+    std::vector< GLfloat > textureCoods = {
+            0.0f, 0.0f, // V0
+            0.0f, 1.0f, // V1
+            1.0f, 1.0f, // V2
+            1.0f, 0.0f, // V3
+    };
+
 
     // Model
-    Model model = loader.loadToVao( vertices, indices );
+    Model model = loader.loadToVao( vertices, textureCoods, indices );
 
     // Texture
     const std::string cat = "/Users/eddiehoyle/Code/cpp/opengl-examples/resources/cat.png";
@@ -97,9 +104,6 @@ int main( int argc, char **argv ) {
 
     // Textured model
     TexturedModel texturedModel( model, texture );
-
-
-//    std::cerr << texture << std::endl;
 
 
     while ( glfwWindowShouldClose( window ) == 0 ) {

@@ -15,10 +15,7 @@ public:
     void prepare();
 
     /// Render this model
-    void render( const Model& model );
     void render( const TexturedModel& model );
-
-
 };
 
 

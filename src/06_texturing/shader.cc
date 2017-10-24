@@ -39,14 +39,15 @@ void AbstractShader::cleanup() {
 
 // ------------------------------------------------------------------------------------------ //
 
-static const std::string kVertexPath = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/05_colouring/shaders/vertex.glsl";
-static const std::string kFragmentPath = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/05_colouring/shaders/fragment.glsl";
+static const std::string kVertexPath = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/06_texturing/shaders/vertex.glsl";
+static const std::string kFragmentPath = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/06_texturing/shaders/fragment.glsl";
 
 StaticShader::StaticShader()
         : AbstractShader( kVertexPath, kFragmentPath ) {
 }
 
 void StaticShader::bindAttributes() {
-    bindAttribute( 0 , "position" );
+    bindAttribute( 0, "position" );
+    bindAttribute( 1, "textureCoords" );
 }
 

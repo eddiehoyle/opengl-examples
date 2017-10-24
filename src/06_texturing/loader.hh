@@ -14,6 +14,7 @@ public:
 
     /// Create a model from some vertices
     Model loadToVao( const std::vector< GLfloat >& positions,
+                     const std::vector< GLfloat >& textureCoords,
                      const std::vector< GLuint >& indices );
 
     /// TODO
@@ -32,6 +33,7 @@ private:
 
     /// Store vertex data into an attribute handle
     void storeDataInAttributeList( GLint attributeNumber,
+                                   GLuint coordinateSize,
                                    const std::vector< GLfloat >& vertices );
 
     /// Unbind vertex array handle

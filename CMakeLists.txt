@@ -12,7 +12,7 @@ find_package(GLEW REQUIRED)
 find_package(GLM REQUIRED)
 
 find_package(PkgConfig REQUIRED)
-find_package(GLFW3 REQUIRED)
+pkg_search_module(GLFW REQUIRED glfw3)
 
 include_directories(
         ${OPENGL_EXAMPLES_EXTERNAL_DIR}

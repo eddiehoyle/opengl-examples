@@ -1,6 +1,6 @@
 set(EXERCISE 06_texturing)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
-add_executable(${EXERCISE} ${SOURCE_FILES} shader.cc shader.hh texture.cc texture.hh)
+add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY
         DIRECTORY ../common
         DEFINITION COMMON_LIBRARY)
@@ -9,3 +9,4 @@ target_link_libraries(${EXERCISE}
         ${GLEW_LIBRARIES}
         ${GLFW_LIBRARIES}
         ${COMMON_LIBRARY})
+message(WARNING ${GLFW_LIBRARIES})
