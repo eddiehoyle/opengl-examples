@@ -2,8 +2,12 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
+#include <string>
 #include "loader.hh"
 #include <GL/glew.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 Model Loader::loadToVao( const std::vector< GLfloat >& positions,
                          const std::vector< GLuint >& indices ) {
@@ -21,6 +25,15 @@ GLint Loader::createVaoID() {
     return vaoID;
 }
 
+GLuint Loader::loadTexture( const std::string& path ) {
+
+    int width, height, channels;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0 );
+
+    GLuint textureID;
+    glGenTextures( 1, &textureID );
+    return textureID;
+}
 
 void Loader::bindIndicesBuffer( const std::vector< GLuint >& indices ) {
     GLuint vboID;
@@ -51,4 +64,5 @@ void Loader::cleanup() {
 //    // TODO
 //    glDeleteVertexArrays( vaoID );
 //    glDeleteBuffers( vboID );
+//    glDeleteTextures( textureID );
 }

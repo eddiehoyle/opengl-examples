@@ -6,6 +6,7 @@
 // C++
 #include <cstdlib>
 #include <cstdio>
+#include <iostream>
 
 #include "render.hh"
 #include "loader.hh"
@@ -56,7 +57,7 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwSetKeyCallback( window, keyPressEvent );
-    glfwSetWindowTitle( window, "05_colouring" );
+    glfwSetWindowTitle( window, "06_texturing" );
 
     // Activate this context
     glfwMakeContextCurrent( window );
@@ -85,7 +86,21 @@ int main( int argc, char **argv ) {
             3, 1, 2
     };
 
+
+    // Model
     Model model = loader.loadToVao( vertices, indices );
+
+    // Texture
+    const std::string cat = "/Users/eddiehoyle/Code/cpp/opengl-examples/resources/cat.png";
+    GLuint textureID = loader.loadTexture( cat );
+    ModelTexture texture( textureID );
+
+    // Textured model
+    TexturedModel texturedModel( model, texture );
+
+
+//    std::cerr << texture << std::endl;
+
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
@@ -97,7 +112,7 @@ int main( int argc, char **argv ) {
         // Fix the quad
 
         // Render
-        render.render( model );
+        render.render( texturedModel );
         shader.stop();
 
         // NOTE:

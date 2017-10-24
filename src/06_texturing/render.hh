@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
-#ifndef LEARNING_OPENGL_03_INDICIES_RENDER_HH
-#define LEARNING_OPENGL_03_INDICIES_RENDER_HH
+#ifndef LEARNING_OPENGL_06_TEXTURING_RENDER_HH
+#define LEARNING_OPENGL_06_TEXTURING_RENDER_HH
 
 #include "model.hh"
 
@@ -16,9 +16,10 @@ public:
 
     /// Render this model
     void render( const Model& model );
+    void render( const TexturedModel& model );
 
 
 };
 
 
-#endif //LEARNING_OPENGL_03_INDICIES_RENDER_HH
+#endif //LEARNING_OPENGL_06_TEXTURING_RENDER_HH
