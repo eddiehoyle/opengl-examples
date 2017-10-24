@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 3.8)
-project(learning_opengl)
+project(opengl_examples)
 
 set(CMAKE_CXX_STANDARD 11)
+set(OPENGL_EXAMPLES_ROOT_DIR ${OPENGL_EXAMPLES_ROOT_DIR})
+set(OPENGL_EXAMPLES_EXTERNAL_DIR ${OPENGL_EXAMPLES_ROOT_DIR}/ext)
+set(CMAKE_MODULE_PATH ${OPENGL_EXAMPLES_ROOT_DIR}/cmake)
 
 # Find packages
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-find_package(glm REQUIRED)
-
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
-
-set(LRN_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(LRN_EXTERNAL_DIR ${BTGFX_ROOT_DIR}/ext)
+find_package(GLM REQUIRED)
+find_package(GLFW3 REQUIRED)
 
 include_directories(
         ${GLFW_INCLUDE_DIRS}

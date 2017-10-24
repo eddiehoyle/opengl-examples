@@ -24,7 +24,7 @@ void Loader::storeDataInAttributeList( GLint attributeNumber, const std::vector<
     GLuint vboID;
     glGenBuffers( 1, &vboID );
     glBindBuffer( GL_ARRAY_BUFFER, vboID );
-    glBufferData( GL_ARRAY_BUFFER, sizeof( GLfloat ) * data.size(), &data, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, sizeof( GLfloat ) * data.size(), &data[0], GL_STATIC_DRAW );
     glVertexAttribPointer( attributeNumber,   // The attribute number
                            3,                 // Length of each 'vertex' data array
                            GL_FLOAT,          // Type of data

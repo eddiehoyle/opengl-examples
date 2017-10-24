@@ -9,7 +9,9 @@
 
 #include "render.hh"
 #include "loader.hh"
-#include "shader.hh""
+#include "shader.hh"
+
+
 
 void keyPressEvent( GLFWwindow* window, int key, int scancode, int action, int mods ) {
     if ( action != GLFW_PRESS )
@@ -47,7 +49,7 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwSetKeyCallback( window, keyPressEvent );
-    glfwSetWindowTitle( window, "03_indices" );
+    glfwSetWindowTitle( window, "05_colouring" );
 
     // Activate this context
     glfwMakeContextCurrent( window );
@@ -68,10 +70,7 @@ int main( int argc, char **argv ) {
             -0.5f, 0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
-
-            0.5f, -0.5f, -0.0f,
-            0.5f, 0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f
+            0.5f, 0.5f, 0.0f
     };
 
     std::vector< GLuint > indices = {

@@ -13,11 +13,7 @@ AbstractShader::AbstractShader( const std::string& vertex_path,
     m_vertexShaderID = common::load_shader( vertex_path, GL_VERTEX_SHADER );
     m_fragmentShaderID = common::load_shader( fragment_path, GL_FRAGMENT_SHADER );
     m_programID = common::create_program( m_vertexShaderID, m_fragmentShaderID );
-
-    //
-    // https://youtu.be/4w7lNF8dnYw
-    // Currently at: 9:50
-    //
+    bindAttributes();
 }
 
 void AbstractShader::bindAttribute( GLint attribute, const std::string& name ) {
