@@ -30,23 +30,31 @@ GLint Loader::createVaoID() {
 
 GLuint Loader::loadTexture( const std::string& path ) {
 
-    int width, height, channels;
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0 );
+    int width, height, bytesperpixel;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &bytesperpixel, STBI_rgb );
+
+    GLenum colorFormat = GL_RGB;
+    if ( bytesperpixel == 4 ) {
+        colorFormat = GL_RGBA;
+    }
 
     GLuint textureID;
     glGenTextures( 1, &textureID );
+    glBindTexture(GL_TEXTURE_2D, textureID);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    // End texture load
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    std::cerr << "Loader::loadTexture() : width="
-              << width << ", height="
-              << height
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, colorFormat, GL_UNSIGNED_BYTE, data);
+
+    stbi_image_free(data);
+
+    std::cerr << "Loader::loadTexture() : width=" << width
+              << ", height=" << height
               << std::endl;
+
     return textureID;
 }
 

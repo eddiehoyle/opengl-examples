@@ -9,4 +9,3 @@ target_link_libraries(${EXERCISE}
         ${GLEW_LIBRARIES}
         ${GLFW_LIBRARIES}
         ${COMMON_LIBRARY})
-message(WARNING ${GLFW_LIBRARIES})

@@ -8,34 +8,34 @@
 #include <GL/glew.h>
 #include <string>
 
-class AbstractShader {
+class StaticShader {
 
 public:
 
-    explicit AbstractShader( const std::string& vertex_path, const std::string& fragment_path );
+    /// Constructor
+    StaticShader();
 
+    /// Destructor
+    ~StaticShader();
+
+    /// Bind this shader
     void start();
-    void stop();
-    void cleanup();
-    virtual void bindAttributes() {};
 
-protected:
-    virtual void bindAttribute( GLint attribute, const std::string& name );
+    /// Unbind this shader
+    void stop();
+
+    /// Delete this shader
+    void cleanup();
 
 private:
-    GLint m_programID;
-    GLint m_vertexShaderID;
-    GLint m_fragmentShaderID;
+    void bindAttribute( GLint attribute, const std::string& name );
+    bool validateShader( GLuint shader );
+    bool validateProgram( GLuint program );
+    GLuint compile( const std::string& shader, GLenum type );
 
+    GLuint m_programID;
+    GLuint m_vertexShaderID;
+    GLuint m_fragmentShaderID;
 };
-
-class StaticShader : public AbstractShader {
-
-public:
-    StaticShader();
-    virtual void bindAttributes();
-
-};
-
 
 #endif //LEARNING_OPENGL_06_TEXTURING_SHADER_HH
