@@ -5,3 +5,4 @@ add_subdirectory(03_indices)
 #add_subdirectory(04_shaders) // No code in this example
 add_subdirectory(05_colouring)
 add_subdirectory(06_texturing)
+add_subdirectory(07_uniforms)
