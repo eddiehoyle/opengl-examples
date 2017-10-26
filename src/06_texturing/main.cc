@@ -11,6 +11,7 @@
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
+#include "../common/resources.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -98,7 +99,9 @@ int main( int argc, char **argv ) {
     Model model = loader.loadToVao( vertices, textureCoods, indices );
 
     // Texture
-    const std::string cat = "/Users/eddiehoyle/Code/cpp/opengl-examples/resources/cat.png";
+//    const std::string cat = "/Users/eddiehoyle/Code/cpp/opengl-examples/resources/cat.png";
+    bool result;
+    const std::string cat = common::getResource( "cat.png", result );
     GLuint textureID = loader.loadTexture( cat );
     ModelTexture texture( textureID );
 

@@ -1,9 +1,8 @@
 set(COMMON_LIBRARY common)
-include_directories(
-        ${GLEW_INCLUDE_DIR}
-        ${GLFW_INCLUDE_DIRS})
 add_library(${COMMON_LIBRARY} SHARED
-        io.cc)
+        io.cc
+        resources.cc)
+target_compile_definitions(${COMMON_LIBRARY} PRIVATE -DPROJECT_ROOT_DIR="${OPENGL_EXAMPLES_ROOT_DIR}")
 target_link_libraries(${COMMON_LIBRARY}
         ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES}

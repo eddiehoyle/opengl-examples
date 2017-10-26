@@ -6,19 +6,23 @@
 #include <vector>
 #include "shader.hh"
 #include "../common/io.hh"
+#include "../common/resources.hh"
 
 StaticShader::StaticShader()
         : m_vertexShaderID( 0 ),
           m_fragmentShaderID( 0 ),
           m_programID( 0 ) {
 
+    // File status result
+    bool shader_file_exists;
+
     // Read in vertex shader
-    const std::string vertex_path = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/06_texturing/shaders/vertex.glsl";
+    const std::string vertex_path = common::getResource( "shaders/06_texturing/vertex.glsl", shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 
     // Read in fragment shader
-    const std::string fragment_path = "/Users/eddiehoyle/Code/cpp/opengl-examples/src/06_texturing/shaders/fragment.glsl";
+    const std::string fragment_path = common::getResource( "shaders/06_texturing/fragment.glsl", shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
 

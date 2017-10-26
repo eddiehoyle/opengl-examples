@@ -1,5 +1,5 @@
-#ifndef BTGFX_IO_HH
-#define BTGFX_IO_HH
+#ifndef OPENGL_EXAMPLES_COMMON_IO_HH
+#define OPENGL_EXAMPLES_COMMON_IO_HH
 
 #include <iostream>
 
@@ -12,4 +12,4 @@ std::string read_file( const std::string& path );
 
 } // namespace common
 
-#endif // BTGFX_IO_HH
+#endif // OPENGL_EXAMPLES_COMMON_IO_HH
