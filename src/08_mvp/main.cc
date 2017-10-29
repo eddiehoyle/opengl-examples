@@ -92,23 +92,102 @@ int main( int argc, char **argv ) {
     Render render = Render( shader );
 
     std::vector< GLfloat > vertices = {
-            -0.5f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f
-    };
+            -0.5f,0.5f,-0.5f,
+            -0.5f,-0.5f,-0.5f,
+            0.5f,-0.5f,-0.5f,
+            0.5f,0.5f,-0.5f,
 
-    std::vector< GLuint > indices = {
-            0, 1, 3,
-            3, 1, 2
+            -0.5f,0.5f,0.5f,
+            -0.5f,-0.5f,0.5f,
+            0.5f,-0.5f,0.5f,
+            0.5f,0.5f,0.5f,
+
+            0.5f,0.5f,-0.5f,
+            0.5f,-0.5f,-0.5f,
+            0.5f,-0.5f,0.5f,
+            0.5f,0.5f,0.5f,
+
+            -0.5f,0.5f,-0.5f,
+            -0.5f,-0.5f,-0.5f,
+            -0.5f,-0.5f,0.5f,
+            -0.5f,0.5f,0.5f,
+
+            -0.5f,0.5f,0.5f,
+            -0.5f,0.5f,-0.5f,
+            0.5f,0.5f,-0.5f,
+            0.5f,0.5f,0.5f,
+
+            -0.5f,-0.5f,0.5f,
+            -0.5f,-0.5f,-0.5f,
+            0.5f,-0.5f,-0.5f,
+            0.5f,-0.5f,0.5f
+
     };
 
     std::vector< GLfloat > textureCoods = {
-            0.0f, 0.0f, // V0
-            0.0f, 1.0f, // V1
-            1.0f, 1.0f, // V2
-            1.0f, 0.0f, // V3
+
+            0,0,
+            0,1,
+            1,1,
+            1,0,
+            0,0,
+            0,1,
+            1,1,
+            1,0,
+            0,0,
+            0,1,
+            1,1,
+            1,0,
+            0,0,
+            0,1,
+            1,1,
+            1,0,
+            0,0,
+            0,1,
+            1,1,
+            1,0,
+            0,0,
+            0,1,
+            1,1,
+            1,0
+
+
     };
+
+    std::vector< GLuint > indices = {
+            0,1,3,
+            3,1,2,
+            4,5,7,
+            7,5,6,
+            8,9,11,
+            11,9,10,
+            12,13,15,
+            15,13,14,
+            16,17,19,
+            19,17,18,
+            20,21,23,
+            23,21,22
+
+    };
+
+//    std::vector< GLfloat > vertices = {
+//            -0.5f, 0.5f, 0.0f,
+//            -0.5f, -0.5f, 0.0f,
+//            0.5f, -0.5f, 0.0f,
+//            0.5f, 0.5f, 0.0f
+//    };
+//
+//    std::vector< GLuint > indices = {
+//            0, 1, 3,
+//            3, 1, 2
+//    };
+//
+//    std::vector< GLfloat > textureCoods = {
+//            0.0f, 0.0f, // V0
+//            0.0f, 1.0f, // V1
+//            1.0f, 1.0f, // V2
+//            1.0f, 0.0f, // V3
+//    };
 
     // Model
     Model model = loader.loadToVao( vertices, textureCoods, indices );
@@ -122,7 +201,7 @@ int main( int argc, char **argv ) {
     // Textured model
     TexturedModel texturedModel( model, texture );
 
-    glm::vec3 translate( 0.0f, 0.0f, -1.0f );
+    glm::vec3 translate( 0.0f, 0.0f, 5.0f );
     glm::vec3 rotate( 0.0f, 0.0f, 0.0f );
     GLfloat scale = 1.0f;
     Entity entity( texturedModel,
@@ -139,21 +218,21 @@ int main( int argc, char **argv ) {
 
         int wState = glfwGetKey( window, GLFW_KEY_W );
         if ( wState == GLFW_PRESS || wState == GLFW_REPEAT ) {
-            cameraPosition.z -= 0.05f;
+            cameraPosition.z += 0.05f;
         }
         int aState = glfwGetKey( window, GLFW_KEY_A );
         if ( aState == GLFW_PRESS || aState == GLFW_REPEAT ) {
-            cameraPosition.x -= 0.05f;
+            cameraPosition.x += 0.05f;
         }
 
         int sState = glfwGetKey( window, GLFW_KEY_S );
         if ( sState == GLFW_PRESS || sState == GLFW_REPEAT ) {
-            cameraPosition.z += 0.05f;
+            cameraPosition.z -= 0.05f;
         }
 
         int dState = glfwGetKey( window, GLFW_KEY_D );
         if ( dState == GLFW_PRESS || dState == GLFW_REPEAT ) {
-            cameraPosition.x += 0.05f;
+            cameraPosition.x -= 0.05f;
         }
 
         common::DisplayManager::instance()->camera()->move( cameraPosition );
@@ -163,7 +242,7 @@ int main( int argc, char **argv ) {
         shader.start();
         shader.loadViewMatrix( common::Camera::createViewMatrix( camera ) );
 
-        entity.increaseRotation( 2.0f, 4.0f, 0.0f );
+        entity.increaseRotation( 1.0f, 1.0f, 0.0f );
 
         // Render
         render.render( entity, shader );

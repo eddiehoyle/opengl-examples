@@ -5,7 +5,6 @@
 #include "display.hh"
 #include "camera.hh"
 
-
 namespace common {
 
 DisplayManager *DisplayManager::s_instance = nullptr;

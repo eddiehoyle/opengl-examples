@@ -12,11 +12,10 @@
 #include <iostream>
 
 static const float kFov = 70;
-static const float kNearPlane = 0.1f;
+static const float kNearPlane = 0.01f;
 static const float kFarPlane = 1000.0f;
 
 Render::Render( StaticShader& shader ) {
-
     createProjectionMatrix();
     shader.start();
     shader.loadProjectionMatrix( m_projectionMatrix );
@@ -24,7 +23,8 @@ Render::Render( StaticShader& shader ) {
 }
 
 void Render::prepare() {
-    glClear( GL_COLOR_BUFFER_BIT );
+    glEnable( GL_DEPTH_TEST );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glClearColor( 0.1, 0.2, 0.8, 1 );
 }
 
@@ -42,7 +42,6 @@ void Render::render( const Entity& entity, StaticShader& shader ) {
             entity.getPosition(),
             entity.getRotation(),
             entity.getScale() );
-
     shader.loadTransformationMatrix( transformationMatrix );
 
     glActiveTexture( GL_TEXTURE0 );

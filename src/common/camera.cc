@@ -62,7 +62,12 @@ glm::mat4 Camera::matrix() const {
 //    // rotate around to the required head tilt: pitch
 //    camera = glm::rotate( camera, m_pitch, pitchVector );
 
-    glm::mat4 camera = glm::translate( m_position );
+//    glm::mat4 camera = glm::translate( m_position );
+    glm::mat4 camera = glm::lookAt(
+            m_position, // Camera is at (4,3,3), in World Space
+            glm::vec3( m_pitch, m_yaw, m_roll ), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
 
     return camera;
 }

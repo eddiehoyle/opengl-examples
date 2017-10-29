@@ -18,7 +18,7 @@ glm::mat4 createTransformationMatrix( const glm::vec3& translate,
     glm::mat4 rotate_matrix( 1.0f );
     glm::mat4 scale_matrix( 1.0f );
 
-    translate_matrix = glm::translate( translate_matrix, pivot);
+    translate_matrix = glm::translate( translate_matrix, translate);
 
     rotate_matrix = glm::translate( rotate_matrix, pivot );
     rotate_matrix = glm::rotate( rotate_matrix, glm::radians( -( float )rotate.x ), glm::vec3( 1, 0, 0 ) );

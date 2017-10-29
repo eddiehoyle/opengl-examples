@@ -18,21 +18,14 @@ public:
 public:
 
     void move( const glm::vec3& position );
-
     void setPosition( const glm::vec3& position );
-
     void setPitch( float pitch );
-
     void setYaw( float yaw );
-
     void setRoll( float roll );
 
     glm::vec3 position() const;
-
     float pitch() const;
-
     float yaw() const;
-
     float roll() const;
 
     glm::mat4 matrix() const;
