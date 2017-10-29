@@ -10,6 +10,7 @@
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
+#include "../common/display.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -18,7 +19,6 @@
 #ifndef GLFW_FALSE
 #define GLFW_FALSE 0
 #endif
-
 
 void keyPressEvent( GLFWwindow* window, int key, int scancode, int action, int mods ) {
     if ( action != GLFW_PRESS )
@@ -56,7 +56,6 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwSetKeyCallback( window, keyPressEvent );
-    glfwSetWindowTitle( window, "05_colouring" );
 
     // Activate this context
     glfwMakeContextCurrent( window );
