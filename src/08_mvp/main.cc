@@ -129,7 +129,7 @@ int main( int argc, char **argv ) {
     common::Camera *camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -1.0f ) );
+    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -5.0f ) );
 
     Loader loader = Loader();
     StaticShader shader = StaticShader();
@@ -231,17 +231,17 @@ int main( int argc, char **argv ) {
                    scale );
 
     // Move away from screen
-    entity.setPosition( glm::vec3( 0.0f, 0.0f, 1.0f ) );
+    entity.setPosition( glm::vec3( 0.0f, 0.0f, 0.0f ) );
 
     float value = 0.0;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        float xPosition = sin( value ) / 10.0f;
+        float xPosition = sin( value ) * 1.5;
         value += 0.04;
 
         // Move away from screen
-        entity.increasePosition( xPosition, 0.0f, 0.0f );
+        entity.setPosition( glm::vec3( xPosition, 0.0f, 0.0f ) );
         entity.increaseRotation( 1.0f, 1.0f, 0.0f );
 
         glm::vec3 cameraPosition;
