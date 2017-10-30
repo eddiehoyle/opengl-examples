@@ -50,19 +50,6 @@ float Camera::roll() const {
 
 glm::mat4 Camera::matrix() const {
 
-//    // define your up vector
-//    glm::vec3 upVector = glm::vec3( 0, 1, 0 );
-//
-//    // rotate around to a given bearing: yaw
-//    glm::mat4 camera = glm::rotate( glm::mat4(), m_yaw, upVector );
-//
-//    // Define the 'look up' axis, should be orthogonal to the up axis
-//    glm::vec3 pitchVector = glm::vec3( 1, 0, 0 );
-//
-//    // rotate around to the required head tilt: pitch
-//    camera = glm::rotate( camera, m_pitch, pitchVector );
-
-//    glm::mat4 camera = glm::translate( m_position );
     glm::mat4 camera = glm::lookAt(
             m_position, // Camera is at (4,3,3), in World Space
             glm::vec3( m_pitch, m_yaw, m_roll ), // and looks at the origin

@@ -23,8 +23,16 @@
 #define GLFW_FALSE 0
 #endif
 
+
+
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
+
+// Simple key press states
+static bool kKeyPressedW = false;
+static bool kKeyPressedA = false;
+static bool kKeyPressedS = false;
+static bool kKeyPressedD = false;
 
 void windowResizeCallback( GLFWwindow *window, int width, int height ) {
     common::DisplayManager::instance()->update(
@@ -38,6 +46,41 @@ void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int m
 
     if ( key == GLFW_KEY_ESCAPE && mods == 0 )
         glfwSetWindowShouldClose( window, GLFW_TRUE );
+
+    switch ( action ) {
+        case GLFW_PRESS:
+            switch( key ) {
+                case GLFW_KEY_W:
+                    kKeyPressedW = true;
+                    break;
+                case GLFW_KEY_A:
+                    kKeyPressedA = true;
+                    break;
+                case GLFW_KEY_S:
+                    kKeyPressedS = true;
+                    break;
+                case GLFW_KEY_D:
+                    kKeyPressedD = true;
+                    break;
+            }
+            break;
+        case GLFW_RELEASE:
+            switch( key ) {
+                case GLFW_KEY_W:
+                    kKeyPressedW = false;
+                    break;
+                case GLFW_KEY_A:
+                    kKeyPressedA = false;
+                    break;
+                case GLFW_KEY_S:
+                    kKeyPressedS = false;
+                    break;
+                case GLFW_KEY_D:
+                    kKeyPressedD = false;
+                    break;
+            }
+            break;
+    }
 }
 
 int main( int argc, char **argv ) {
@@ -86,6 +129,7 @@ int main( int argc, char **argv ) {
     common::Camera *camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
+    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -1.0f ) );
 
     Loader loader = Loader();
     StaticShader shader = StaticShader();
@@ -125,7 +169,6 @@ int main( int argc, char **argv ) {
     };
 
     std::vector< GLfloat > textureCoods = {
-
             0,0,
             0,1,
             1,1,
@@ -150,8 +193,6 @@ int main( int argc, char **argv ) {
             0,1,
             1,1,
             1,0
-
-
     };
 
     std::vector< GLuint > indices = {
@@ -167,27 +208,7 @@ int main( int argc, char **argv ) {
             19,17,18,
             20,21,23,
             23,21,22
-
     };
-
-//    std::vector< GLfloat > vertices = {
-//            -0.5f, 0.5f, 0.0f,
-//            -0.5f, -0.5f, 0.0f,
-//            0.5f, -0.5f, 0.0f,
-//            0.5f, 0.5f, 0.0f
-//    };
-//
-//    std::vector< GLuint > indices = {
-//            0, 1, 3,
-//            3, 1, 2
-//    };
-//
-//    std::vector< GLfloat > textureCoods = {
-//            0.0f, 0.0f, // V0
-//            0.0f, 1.0f, // V1
-//            1.0f, 1.0f, // V2
-//            1.0f, 0.0f, // V3
-//    };
 
     // Model
     Model model = loader.loadToVao( vertices, textureCoods, indices );
@@ -209,29 +230,31 @@ int main( int argc, char **argv ) {
                    rotate,
                    scale );
 
+    // Move away from screen
+    entity.setPosition( glm::vec3( 0.0f, 0.0f, 1.0f ) );
+
+    float value = 0.0;
+
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
+        float xPosition = sin( value ) / 10.0f;
+        value += 0.04;
+
         // Move away from screen
-//        entity.increasePosition( 0.0f, 0.0f, -0.01f );
+        entity.increasePosition( xPosition, 0.0f, 0.0f );
+        entity.increaseRotation( 1.0f, 1.0f, 0.0f );
 
         glm::vec3 cameraPosition;
-
-        int wState = glfwGetKey( window, GLFW_KEY_W );
-        if ( wState == GLFW_PRESS || wState == GLFW_REPEAT ) {
+        if ( kKeyPressedW ) {
             cameraPosition.z += 0.05f;
         }
-        int aState = glfwGetKey( window, GLFW_KEY_A );
-        if ( aState == GLFW_PRESS || aState == GLFW_REPEAT ) {
+        if ( kKeyPressedA ) {
             cameraPosition.x += 0.05f;
         }
-
-        int sState = glfwGetKey( window, GLFW_KEY_S );
-        if ( sState == GLFW_PRESS || sState == GLFW_REPEAT ) {
+        if ( kKeyPressedS ) {
             cameraPosition.z -= 0.05f;
         }
-
-        int dState = glfwGetKey( window, GLFW_KEY_D );
-        if ( dState == GLFW_PRESS || dState == GLFW_REPEAT ) {
+        if ( kKeyPressedD ) {
             cameraPosition.x -= 0.05f;
         }
 
@@ -241,8 +264,6 @@ int main( int argc, char **argv ) {
         render.prepare();
         shader.start();
         shader.loadViewMatrix( common::Camera::createViewMatrix( camera ) );
-
-        entity.increaseRotation( 1.0f, 1.0f, 0.0f );
 
         // Render
         render.render( entity, shader );
