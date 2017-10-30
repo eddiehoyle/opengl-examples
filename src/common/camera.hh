@@ -16,7 +16,6 @@ public:
     static glm::mat4 createViewMatrix( Camera* camera );
 
 public:
-
     void move( const glm::vec3& position );
     void setPosition( const glm::vec3& position );
     void setPitch( float pitch );

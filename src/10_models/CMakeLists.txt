@@ -1,6 +1,6 @@
-set(EXERCISE 08_mvp)
+set(EXERCISE 10_mvp)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
-add_executable(${EXERCISE} ${SOURCE_FILES})
+add_executable(${EXERCISE} ${SOURCE_FILES} OBJLoader.cc OBJLoader.hh)
 get_directory_property(COMMON_LIBRARY
         DIRECTORY ../common
         DEFINITION COMMON_LIBRARY)

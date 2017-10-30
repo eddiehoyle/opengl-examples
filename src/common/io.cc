@@ -10,7 +10,7 @@ namespace common {
 
 std::string read_file( const std::string& path ) {
 
-    // Read the Vertex Shader code from the file
+    // Read the file
     std::string data;
     std::ifstream stream( path, std::ios::in );
     if ( !stream.good() ) {
