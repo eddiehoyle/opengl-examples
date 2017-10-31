@@ -216,7 +216,8 @@ int main( int argc, char **argv ) {
     OBJLoader::loadObjModel( stall, loader );
 
     // Model
-    Model model = loader.loadToVao( vertices, textureCoods, indices );
+//    Model model = loader.loadToVao( vertices, textureCoods, indices );
+    Model model = OBJLoader::loadObjModel( stall, loader );
 
     // Texture
     const std::string cat = common::getResource( "cat.png", result );
@@ -246,7 +247,7 @@ int main( int argc, char **argv ) {
 
         // Move away from screen
         entity.setPosition( glm::vec3( xPosition, 0.0f, 0.0f ) );
-        entity.increaseRotation( 1.0f, 1.0f, 0.0f );
+        entity.increaseRotation( 0.0f, 1.0f, 0.0f );
 
         glm::vec3 cameraPosition;
         if ( kKeyPressedW ) {
