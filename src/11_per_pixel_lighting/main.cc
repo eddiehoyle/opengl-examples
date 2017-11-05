@@ -11,6 +11,7 @@
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
+
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
@@ -126,7 +127,7 @@ int main( int argc, char **argv ) {
     }
 
     // Set width/height
-    common::Camera *camera = new common::Camera();
+    common::Camera* camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
     common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -5.0f ) );
@@ -156,25 +157,20 @@ int main( int argc, char **argv ) {
                    rotate,
                    scale );
 
-    /// TODO
-    /// Position is broken. Vector isn't be receieved by vertex shader
     Light light( glm::vec3( 0, 0, -20 ), glm::vec3( 1, 1, 1 ) );
 
     float value = 0.0;
     double speed = 0.4;
 
-    std::cerr << "lightPosition=" << glm::to_string( light.getPosition() )
-              << ", lightColour=" << glm::to_string( light.getColour() )
-              << std::endl;
-
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-//        float xPosition = sin( value ) * 1.5;
-//        value += 0.04;
+        float sinx = sin( value );
+        float cosx = cos( value );
+        value += 0.04;
 
-        // Move away from screen
-//        entity.setPosition( glm::vec3( 0.0, -2.0f, 0.0f ) );
-        entity.increaseRotation( 0.0f, 1.0f, 0.0f );
+        // Update
+        entity.setPosition( glm::vec3( sinx, -2.0f, 0.0f ) );
+        entity.setRotation( glm::vec3( 0.0f, sinx * cosx * 10, 0.0f ) );
 
         glm::vec3 cameraPosition;
         if ( kKeyPressedW ) {

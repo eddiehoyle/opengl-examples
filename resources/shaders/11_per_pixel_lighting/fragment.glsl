@@ -11,7 +11,6 @@ uniform sampler2D textureSampler;
 uniform vec3 lightColour;
 
 void main() {
-//    out_Color = vec4( 1, 1, 1, 1 );
 
     vec3 unitNormal = normalize( surfaceNormal );
     vec3 unitLightVector = normalize( toLightVector );
@@ -19,10 +18,8 @@ void main() {
     float nDot1 = dot( unitNormal, unitLightVector );
     float brightness = max( nDot1, 0.0 );
 
-//    vec3 diffuse = brightness * lightColour;
-    vec3 diffuse = brightness * vec3( 1, 1, 1 );
+    vec3 diffuse = brightness * lightColour;
 
-    /// Fix
     out_Color = vec4( diffuse, 1.0 ) * texture( textureSampler, pass_textureCoords );
 }
 

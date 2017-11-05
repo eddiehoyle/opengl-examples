@@ -59,6 +59,8 @@ void StaticShader::getUniformLocations() {
     m_viewMatrix = getUniformLocation( "viewMatrix" );
     m_lightPosition = getUniformLocation( "lightPosition" );
     m_lightColour = getUniformLocation( "lightColour" );
+
+    std::cerr << m_lightPosition << ", " << m_lightColour << std::endl;
 }
 
 void StaticShader::loadTransformationMatrix( const glm::mat4& mat ) {
@@ -87,7 +89,7 @@ void StaticShader::loadFloat( GLint location, GLfloat value ) {
 }
 
 void StaticShader::loadVector( GLint location, const glm::vec3& vec ) {
-    glVertexAttrib3fv( location, glm::value_ptr( vec ) );
+    glUniform3fv( location, 1, glm::value_ptr( vec ) );
 }
 
 void StaticShader::loadMatrix( GLint location, const glm::mat4& mat ) {

@@ -12,7 +12,6 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-// This isn't coming in property
 uniform vec3 lightPosition;
 
 void main( void ) {
@@ -23,9 +22,6 @@ void main( void ) {
     pass_textureCoords = textureCoords;
 
     surfaceNormal = ( transformationMatrix * vec4( normal, 0.0 ) ).xyz;
-
-//    toLightVector = lightPosition - worldPosition.xyz;
-//    toLightVector = vec3( 0, 0, -20 ) - worldPosition.xyz;
-    toLightVector = vec3( 0, 0, -20 );
+    toLightVector = lightPosition - worldPosition.xyz;
 
 }
