@@ -1,11 +1,11 @@
-add_subdirectory(common)
-add_subdirectory(01_window)
-add_subdirectory(02_vao)
-add_subdirectory(03_indices)
-#add_subdirectory(04_shaders) // shader theory, no code
-add_subdirectory(05_colouring)
-add_subdirectory(06_texturing)
-add_subdirectory(07_uniforms)
-add_subdirectory(08_mvp)
-#add_subdirectory(09_obj // .obj loader theory, no code
-add_subdirectory(10_models)
+set(EXERCISE dev)
+file(GLOB_RECURSE SOURCE_FILES "*.cc")
+add_executable(${EXERCISE} ${SOURCE_FILES})
+get_directory_property(COMMON_LIBRARY
+        DIRECTORY ../common
+        DEFINITION COMMON_LIBRARY)
+target_link_libraries(${EXERCISE}
+        ${OPENGL_LIBRARIES}
+        ${GLEW_LIBRARIES}
+        ${GLFW_LIBRARIES}
+        ${COMMON_LIBRARY})

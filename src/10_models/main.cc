@@ -212,22 +212,18 @@ int main( int argc, char **argv ) {
     };
 
     bool result;
-    const std::string stall = common::getResource( "stall.obj", result );
-    OBJLoader::loadObjModel( stall, loader );
-
-    // Model
-//    Model model = loader.loadToVao( vertices, textureCoods, indices );
-    Model model = OBJLoader::loadObjModel( stall, loader );
+    const std::string modelPath = common::getResource( "stall.obj", result );
+    Model model = OBJLoader::loadObjModel( modelPath, loader );
 
     // Texture
-    const std::string cat = common::getResource( "cat.png", result );
-    GLuint textureID = loader.loadTexture( cat );
+    const std::string modelTexture = common::getResource( "stallTexture.jpg", result );
+    GLuint textureID = loader.loadTexture( modelTexture );
     ModelTexture texture( textureID );
 
     // Textured model
     TexturedModel texturedModel( model, texture );
 
-    glm::vec3 translate( 0.0f, 0.0f, 1.0f );
+    glm::vec3 translate( 0.0f, -4.0f, 1.0f );
     glm::vec3 rotate( 0.0f, 0.0f, 0.0f );
     GLfloat scale = 1.0f;
     Entity entity( texturedModel,
@@ -239,6 +235,7 @@ int main( int argc, char **argv ) {
     entity.setPosition( glm::vec3( 0.0f, 0.0f, 0.0f ) );
 
     float value = 0.0;
+    double speed = 0.4;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
@@ -246,21 +243,21 @@ int main( int argc, char **argv ) {
         value += 0.04;
 
         // Move away from screen
-        entity.setPosition( glm::vec3( xPosition, 0.0f, 0.0f ) );
+        entity.setPosition( glm::vec3( xPosition, -2.0f, 0.0f ) );
         entity.increaseRotation( 0.0f, 1.0f, 0.0f );
 
         glm::vec3 cameraPosition;
         if ( kKeyPressedW ) {
-            cameraPosition.z += 0.05f;
+            cameraPosition.z += speed;
         }
         if ( kKeyPressedA ) {
-            cameraPosition.x += 0.05f;
+            cameraPosition.x += speed;
         }
         if ( kKeyPressedS ) {
-            cameraPosition.z -= 0.05f;
+            cameraPosition.z -= speed;
         }
         if ( kKeyPressedD ) {
-            cameraPosition.x -= 0.05f;
+            cameraPosition.x -= speed;
         }
 
         common::DisplayManager::instance()->camera()->move( cameraPosition );

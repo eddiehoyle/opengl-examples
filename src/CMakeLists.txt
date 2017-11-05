@@ -9,3 +9,6 @@ add_subdirectory(07_uniforms)
 add_subdirectory(08_mvp)
 #add_subdirectory(09_obj // .obj loader theory, no code
 add_subdirectory(10_models)
+
+# Trying new things
+add_subdirectory(dev)
