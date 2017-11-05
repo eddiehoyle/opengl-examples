@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 23/10/17.
 //
 
-#ifndef LEARNING_OPENGL_10_SHADER_HH
-#define LEARNING_OPENGL_10_SHADER_HH
+#ifndef LEARNING_OPENGL_11_SHADER_HH
+#define LEARNING_OPENGL_11_SHADER_HH
 
 #include <GL/glew.h>
 #include <string>

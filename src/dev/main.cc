@@ -18,7 +18,7 @@ void external( const std::string& path, tinyobj::shape_t& shape ) {
 
         std::cerr << __func__ << " :"
                   << " shapes=" << shapes.size()
-                  << ", positions=" << shape.mesh.positions.size()
+                  << ", positions=" << shape.mesh.vertices.size()
                   << ", normals=" << shape.mesh.normals.size()
                   << ", texcoords=" << shape.mesh.texcoords.size()
                   << ", indices=" << shape.mesh.indices.size()
@@ -31,7 +31,7 @@ void internal( const std::string& resource, common::Shape& shape ) {
 
     common::load_obj( resource, shape );
     std::cerr << __func__ << " :"
-              << " shapes=" << 0
+              << " shapes=" << "NA"
               << ", positions=" << shape.mesh.vertices.size()
               << ", normals=" << shape.mesh.normals.size()
               << ", texcoords=" << shape.mesh.texcoords.size()
@@ -42,7 +42,7 @@ void internal( const std::string& resource, common::Shape& shape ) {
 int main( void ) {
 
     bool result;
-    const std::string path = common::getResource( "cube2.obj", result );
+    const std::string path = common::getResource( "dragon.obj", result );
 
 
     tinyobj::shape_t external_shape;
@@ -51,14 +51,14 @@ int main( void ) {
     common::Shape internal_shape;
     internal( path, internal_shape );
 
-    assert( internal_shape.mesh.vertices.size() == external_shape.mesh.positions.size() );
+    assert( internal_shape.mesh.vertices.size() == external_shape.mesh.vertices.size() );
     assert( internal_shape.mesh.texcoords.size() == external_shape.mesh.texcoords.size() );
     assert( internal_shape.mesh.normals.size() == external_shape.mesh.normals.size() );
     assert( internal_shape.mesh.indices.size() == external_shape.mesh.indices.size() );
 
     for ( std::size_t i = 0; i < internal_shape.mesh.vertices.size(); ++i ) {
         float internal_position = internal_shape.mesh.vertices[ i ];
-        float external_position = external_shape.mesh.positions[ i ];
+        float external_position = external_shape.mesh.vertices[ i ];
         if ( internal_position  != external_position ) {
             std::cerr << "Position error! " << internal_position << " != " << external_position << std::endl;
         }

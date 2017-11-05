@@ -33,6 +33,7 @@ public:
     /// TODO
     void loadProjectionMatrix( const glm::mat4& mat );
 
+    /// TODO
     void loadViewMatrix( const glm::mat4& mat );
 
     /// Load a bool into a uniform

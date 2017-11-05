@@ -1,2 +1,6 @@
 .idea
 cmake-build-debug
+
+// third party research
+tiny_obj_loader.cc
+tiny_obj_loader.hh
