@@ -170,7 +170,8 @@ int main( int argc, char **argv ) {
 
         // Update
         entity.setPosition( glm::vec3( sinx, -2.0f, 0.0f ) );
-        entity.setRotation( glm::vec3( 0.0f, sinx * cosx * 10, 0.0f ) );
+//        entity.setRotation( glm::vec3( 0.0f, sinx * cosx * 10, 0.0f ) );
+        entity.increaseRotation( 0, 1, 0 );
 
         glm::vec3 cameraPosition;
         if ( kKeyPressedW ) {

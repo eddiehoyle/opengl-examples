@@ -16,12 +16,19 @@ uniform vec3 lightPosition;
 
 void main( void ) {
 
-    vec4 worldPosition = transformationMatrix * vec4( position.xyz, 1.0 );
+    // World position of vertex
+    vec4 worldPosition = ( transformationMatrix * vec4( position, 1.0 ) );
 
-    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * worldPosition;
+    // UVs
     pass_textureCoords = textureCoords;
 
-    surfaceNormal = ( transformationMatrix * vec4( normal, 0.0 ) ).xyz;
-    toLightVector = lightPosition - worldPosition.xyz;
+    // Normals
+    mat4 normalMatrix = transpose( inverse( transformationMatrix ) );
+    surfaceNormal = ( normalMatrix * vec4( normal, 0.0 ) ).xyz;
 
+    // Vertex
+    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+
+    // Direction of light
+    toLightVector = lightPosition - worldPosition.xyz;
 }

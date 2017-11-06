@@ -13,11 +13,8 @@ uniform vec3 lightColour;
 void main() {
 
     vec3 unitNormal = normalize( surfaceNormal );
-    vec3 unitLightVector = normalize( toLightVector );
-
-    float nDot1 = dot( unitNormal, unitLightVector );
-    float brightness = max( nDot1, 0.0 );
-
+    vec3 unitDirection = normalize( toLightVector );
+    float brightness = max( dot( unitNormal, unitDirection ), 0.0 );
     vec3 diffuse = brightness * lightColour;
 
     out_Color = vec4( diffuse, 1.0 ) * texture( textureSampler, pass_textureCoords );
