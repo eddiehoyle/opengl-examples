@@ -29,6 +29,9 @@ public:
     void getUniformLocations();
 
     /// TODO
+    void loadShineVariables( GLfloat damper, GLfloat reflectivity );
+
+    /// TODO
     void loadTransformationMatrix( const glm::mat4& mat );
 
     /// TODO
@@ -77,6 +80,8 @@ private:
     GLint m_viewMatrix;
     GLint m_lightPosition;
     GLint m_lightColour;
+    GLint m_shineDamper;
+    GLint m_reflectivity;
 };
 
 #endif //OPENGL_EXAMPLES_12_SHADER_HH

@@ -25,7 +25,7 @@ Render::Render( StaticShader& shader ) {
 void Render::prepare() {
     glEnable( GL_DEPTH_TEST );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glClearColor( 0.1, 0.2, 0.8, 1 );
+    glClearColor( 0.7, 0.1, 0.1, 1 );
 }
 
 void Render::render( const Entity& entity, StaticShader& shader ) {
@@ -44,6 +44,8 @@ void Render::render( const Entity& entity, StaticShader& shader ) {
             entity.getRotation(),
             entity.getScale() );
     shader.loadTransformationMatrix( transformationMatrix );
+
+    shader.loadShineVariables( texture.getShineDamper(), texture.getReflectivity() );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, texture.getID() );

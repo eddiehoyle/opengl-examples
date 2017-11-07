@@ -18,12 +18,12 @@ StaticShader::StaticShader()
     bool shader_file_exists;
 
     // Read in vertex shader
-    const std::string vertex_path = common::getResource( "shaders/11_per_pixel_lighting/vertex.glsl", shader_file_exists );
+    const std::string vertex_path = common::getResource( "shaders/12_specular_lighting/vertex.glsl", shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 
     // Read in fragment shader
-    const std::string fragment_path = common::getResource( "shaders/11_per_pixel_lighting/fragment.glsl", shader_file_exists );
+    const std::string fragment_path = common::getResource( "shaders/12_specular_lighting/fragment.glsl", shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
 
@@ -59,8 +59,13 @@ void StaticShader::getUniformLocations() {
     m_viewMatrix = getUniformLocation( "viewMatrix" );
     m_lightPosition = getUniformLocation( "lightPosition" );
     m_lightColour = getUniformLocation( "lightColour" );
+    m_shineDamper = getUniformLocation( "shineDamper" );
+    m_reflectivity = getUniformLocation( "reflectivity" );
+}
 
-    std::cerr << m_lightPosition << ", " << m_lightColour << std::endl;
+void StaticShader::loadShineVariables( GLfloat damper, GLfloat reflectivity ) {
+    loadFloat( m_shineDamper, damper );
+    loadFloat( m_reflectivity, reflectivity );
 }
 
 void StaticShader::loadTransformationMatrix( const glm::mat4& mat ) {

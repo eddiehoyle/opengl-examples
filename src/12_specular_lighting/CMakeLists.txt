@@ -1,4 +1,4 @@
-set(EXERCISE 11_specular_lighting)
+set(EXERCISE 12_specular_lighting)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
 add_executable(${EXERCISE} ${SOURCE_FILES} OBJLoader.cc OBJLoader.hh light.cc light.hh)
 get_directory_property(COMMON_LIBRARY

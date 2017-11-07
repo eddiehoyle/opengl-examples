@@ -100,7 +100,7 @@ int main( int argc, char **argv ) {
     glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "11_per_pixel_lighting", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "12_specular_lighting", nullptr, nullptr );
     if ( window == nullptr ) {
         printf( "Failed to open GLFW window.\n" );
         glfwTerminate();
@@ -138,12 +138,18 @@ int main( int argc, char **argv ) {
 
     bool result;
     const std::string modelPath = common::getResource( "dragon.obj", result );
+    assert( result );
+
     Model model = OBJLoader::loadObjModel( modelPath, loader );
 
     // Texture
-    const std::string modelTexture = common::getResource( "white.png", result );
+    const std::string modelTexture = common::getResource( "rock.png", result );
+    assert( result );
+
     GLuint textureID = loader.loadTexture( modelTexture );
     ModelTexture texture( textureID );
+    texture.setShineDamper( 10.0f );
+    texture.setReflectivity( 1.0f );
 
     // Textured model
     TexturedModel texturedModel( model, texture );
@@ -169,8 +175,7 @@ int main( int argc, char **argv ) {
         value += 0.04;
 
         // Update
-        entity.setPosition( glm::vec3( sinx, -2.0f, 0.0f ) );
-//        entity.setRotation( glm::vec3( 0.0f, sinx * cosx * 10, 0.0f ) );
+        entity.setPosition( glm::vec3( sinx, -3.0f, 0.0f ) );
         entity.increaseRotation( 0, 1, 0 );
 
         glm::vec3 cameraPosition;
