@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 28/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_11_ENTITY_HH
-#define OPENGL_EXAMPLES_11_ENTITY_HH
+#ifndef OPENGL_EXAMPLES_ENTITY_HH
+#define OPENGL_EXAMPLES_ENTITY_HH
 
 
 #include <glm/vec3.hpp>
@@ -33,6 +33,11 @@ public:
     void setScale( float scale );
     float getScale() const;
 
+    /// Temp
+    bool operator<( const Entity& rhs ) const{
+        return getTexturedModel().getModel().getVaoID() < rhs.getTexturedModel().getModel().getVaoID();
+    }
+
 private:
     TexturedModel m_model;
     glm::vec3 m_position;
@@ -44,4 +49,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_11_ENTITY_HH
+#endif //OPENGL_EXAMPLES_ENTITY_HH

@@ -30,7 +30,7 @@ void Render::prepare() {
 
 void Render::render( const Entity& entity, StaticShader& shader ) {
 
-    TexturedModel texturedModel = entity.getMode();
+    TexturedModel texturedModel = entity.getTexturedModel();
 
     Model model = texturedModel.getModel();
     ModelTexture texture = texturedModel.getTexture();

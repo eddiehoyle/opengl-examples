@@ -10,7 +10,7 @@ Entity::Entity( const TexturedModel& model,
           m_scale( scale ) {
 }
 
-TexturedModel Entity::getMode() const {
+TexturedModel Entity::getTexturedModel() const {
     return m_model;
 }
 

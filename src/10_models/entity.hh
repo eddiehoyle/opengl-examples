@@ -17,7 +17,7 @@ public:
                       const glm::vec3& rotation,
                       float scale );
 
-    TexturedModel getMode() const;
+    TexturedModel getTexturedModel() const;
     void setModel( const TexturedModel& model );
 
     void increasePosition( float x, float y, float z );

@@ -11,6 +11,7 @@ add_subdirectory(08_mvp)
 add_subdirectory(10_models)
 add_subdirectory(11_diffuse_lighting)
 add_subdirectory(12_specular_lighting)
+add_subdirectory(13_optimising)
 
 # Trying new things
 add_subdirectory(dev)

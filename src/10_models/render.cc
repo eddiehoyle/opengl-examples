@@ -8,6 +8,7 @@
 #include "shader.hh"
 #include "../common/math.hh"
 #include "../common/display.hh"
+#include "../13_optimising/render.hh"
 #include <GL/glew.h>
 #include <iostream>
 
@@ -30,7 +31,7 @@ void Render::prepare() {
 
 void Render::render( const Entity& entity, StaticShader& shader ) {
 
-    TexturedModel texturedModel = entity.getMode();
+    TexturedModel texturedModel = entity.getTexturedModel();
 
     Model model = texturedModel.getModel();
     ModelTexture texture = texturedModel.getTexture();
@@ -63,3 +64,15 @@ void Render::createProjectionMatrix() {
             kNearPlane,
             kFarPlane );
 }
+
+
+
+//
+
+
+
+
+
+
+
+
