@@ -124,9 +124,9 @@ void TerrainRenderer::loadModelMatrix( const Terrain& terrain ) {
 
 // ------------------------------------------------------------------------------------------
 
-MasterRenderer::MasterRenderer()
-        : m_shader(),
-          m_terrainShader(),
+MasterRenderer::MasterRenderer( StaticShader& shader, TerrainShader& terrainShader )
+        : m_shader( shader ),
+          m_terrainShader( terrainShader ),
           m_entities(),
           m_renderer( m_shader, glm::mat4() ),
           m_terrainRenderer( m_terrainShader, glm::mat4() ) {
@@ -136,23 +136,18 @@ MasterRenderer::MasterRenderer()
     // Do not re-init the shader after this otherwise things break. This
     // should be looked into
 
-    m_shader.init();
-    m_terrainShader.init();
+    createProjectionMatrix();
 
     glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
-
-    createProjectionMatrix();
-
-    m_terrainShader.start();
-    m_terrainShader.loadProjectionMatrix( m_projectionMatrix );
-    m_terrainShader.stop();
 
     m_shader.start();
     m_shader.loadProjectionMatrix( m_projectionMatrix );
     m_shader.stop();
 
-
+    m_terrainShader.start();
+    m_terrainShader.loadProjectionMatrix( m_projectionMatrix );
+    m_terrainShader.stop();
 
 }
 

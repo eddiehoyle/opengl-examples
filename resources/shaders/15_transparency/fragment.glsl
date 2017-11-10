@@ -34,7 +34,7 @@ void main() {
 //        discard;
 //    }
 
-    out_Color = vec4( diffuse, 1.0 ) * textureColour + vec4( finalSpecular, 1.0 );
+    out_Color = vec4( diffuse, 1.0 ) * textureColour * vec4( finalSpecular, 1.0 );
 }
 
 
