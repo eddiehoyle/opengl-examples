@@ -101,7 +101,7 @@ int main( int argc, char **argv ) {
     glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "13_optimising", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "14_terrain", nullptr, nullptr );
     if ( window == nullptr ) {
         printf( "Failed to open GLFW window.\n" );
         glfwTerminate();

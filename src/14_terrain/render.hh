@@ -24,9 +24,6 @@ public:
     /// Prepare to render
     void prepare();
 
-//    /// Render this model
-//    void render( const Entity& entity, StaticShader& shader );
-
     /// TODO
     void render( const EntityMap& entityMap );
 

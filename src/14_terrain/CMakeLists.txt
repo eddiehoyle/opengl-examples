@@ -1,6 +1,6 @@
 set(EXERCISE 14_terrain)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
-add_executable(${EXERCISE} ${SOURCE_FILES} )
+add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY
         DIRECTORY ../common
         DEFINITION COMMON_LIBRARY)

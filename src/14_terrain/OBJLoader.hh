@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 30/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_OBJLOADER_HH
-#define OPENGL_EXAMPLES_OBJLOADER_HH
+#ifndef OPENGL_EXAMPLES_14_OBJLOADER_HH
+#define OPENGL_EXAMPLES_14_OBJLOADER_HH
 
 
 #include <string>
@@ -17,4 +17,4 @@ public:
                                Loader loader );
 };
 
-#endif //OPENGL_EXAMPLES_OBJLOADER_HH
+#endif //OPENGL_EXAMPLES_14_OBJLOADER_HH

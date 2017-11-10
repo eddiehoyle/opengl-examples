@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 23/10/17.
 //
 
-#ifndef LEARNING_OPENGL_SHADER_HH
-#define LEARNING_OPENGL_SHADER_HH
+#ifndef LEARNING_OPENGL_14_SHADER_HH
+#define LEARNING_OPENGL_14_SHADER_HH
 
 #include <GL/glew.h>
 #include <string>
@@ -84,4 +84,4 @@ private:
     GLint m_reflectivity;
 };
 
-#endif //OPENGL_EXAMPLES_SHADER_HH
+#endif //OPENGL_EXAMPLES_14_SHADER_HH

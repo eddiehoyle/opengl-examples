@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_MODEL_HH
-#define OPENGL_EXAMPLES_MODEL_HH
+#ifndef OPENGL_EXAMPLES_14_MODEL_HH
+#define OPENGL_EXAMPLES_14_MODEL_HH
 
 #include <GL/glew.h>
 
@@ -12,6 +12,9 @@
 class Model {
 
 public:
+
+    /// TODO
+//    Model() : m_vaoID( -1 ), m_vertexCount( 0 ) {}
 
     /// Constructor
     Model( GLint vaoID, GLint vertexCount );
@@ -22,6 +25,7 @@ public:
     /// Get the vertex count for this model
     GLint getVertexCount() const;
 
+    /// For std::map
     bool operator<( const Model& rhs ) const {
         return getVaoID() < rhs.getVaoID();
     }
@@ -48,4 +52,4 @@ private:
 
 };
 
-#endif //OPENGL_EXAMPLES_MODEL_HH
+#endif //OPENGL_EXAMPLES_14_MODEL_HH

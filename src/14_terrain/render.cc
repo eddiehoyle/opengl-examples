@@ -75,35 +75,6 @@ void Render::prepareInstance( const Entity& entity ) {
     m_shader.loadTransformationMatrix( transformationMatrix );
 }
 
-//void Render::render( const Entity& entity, StaticShader& shader ) {
-//
-//    TexturedModel texturedModel = entity.getModel();
-//
-//    Model model = texturedModel.getModel();
-//    ModelTexture texture = texturedModel.getTexture();
-//    glBindVertexArray( model.getVaoID() );
-//    glEnableVertexAttribArray( 0 );
-//    glEnableVertexAttribArray( 1 );
-//    glEnableVertexAttribArray( 2 );
-//
-//    glm::mat4 transformationMatrix = common::createTransformationMatrix(
-//            entity.getPosition(),
-//            entity.getRotation(),
-//            entity.getScale() );
-//    shader.loadTransformationMatrix( transformationMatrix );
-//    shader.loadShineVariables( texture.getShineDamper(), texture.getReflectivity() );
-//
-//    glActiveTexture( GL_TEXTURE0 );
-//    glBindTexture( GL_TEXTURE_2D, texture.getID() );
-//
-//    glDrawElements( GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0 );
-//
-//    glDisableVertexAttribArray( 0 );
-//    glDisableVertexAttribArray( 1 );
-//    glDisableVertexAttribArray( 2 );
-//    glBindVertexArray( 0 );
-//}
-
 void Render::createProjectionMatrix() {
 
     unsigned int width = common::DisplayManager::instance()->width();

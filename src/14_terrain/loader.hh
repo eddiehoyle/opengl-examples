@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_LOADER_HH
-#define OPENGL_EXAMPLES_LOADER_HH
+#ifndef OPENGL_EXAMPLES_14_LOADER_HH
+#define OPENGL_EXAMPLES_14_LOADER_HH
 
 #include <vector>
 #include "model.hh"
@@ -46,4 +46,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_LOADER_HH
+#endif //OPENGL_EXAMPLES_14_LOADER_HH

@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 5/11/17.
 //
 
-#ifndef OPENGL_EXAMPLES_LIGHT_HH
-#define OPENGL_EXAMPLES_LIGHT_HH
+#ifndef OPENGL_EXAMPLES_14_LIGHT_HH
+#define OPENGL_EXAMPLES_14_LIGHT_HH
 
 
 #include <glm/vec3.hpp>
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif //OPENGL_EXAMPLES_LIGHT_HH
+#endif //OPENGL_EXAMPLES_14_LIGHT_HH
