@@ -181,8 +181,7 @@ int main( int argc, char **argv ) {
 
     double speed = 0.4;
 
-    StaticShader shader;
-    MasterRender render( shader );
+    MasterRenderer render;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 

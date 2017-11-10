@@ -12,15 +12,15 @@
 #include <glm/ext.hpp>
 #include "light.hh"
 
-class StaticShader {
+class ShaderProgram {
 
 public:
 
     /// Constructor
-    StaticShader();
+    ShaderProgram();
 
     /// Destructor
-    ~StaticShader();
+    ~ShaderProgram();
 
     /// TODO
     GLint getUniformLocation( const std::string& name );
@@ -64,7 +64,8 @@ public:
     /// Delete this shader
     void cleanup();
 
-private:
+protected:
+
     void bindAttribute( GLint attribute, const std::string& name );
     bool validateShader( GLuint shader );
     bool validateProgram( GLuint program );
@@ -82,6 +83,14 @@ private:
     GLint m_lightColour;
     GLint m_shineDamper;
     GLint m_reflectivity;
+};
+
+class StaticShader : public ShaderProgram {
+
+public:
+
+    /// Constructor
+    StaticShader();
 };
 
 #endif //OPENGL_EXAMPLES_14_SHADER_HH

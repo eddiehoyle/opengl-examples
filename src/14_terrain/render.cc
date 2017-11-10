@@ -15,23 +15,13 @@ static const float kFov = 70;
 static const float kNearPlane = 0.01f;
 static const float kFarPlane = 1000.0f;
 
-Render::Render( StaticShader& shader )
-: m_shader( shader ) {
-    glEnable( GL_CULL_FACE );
-    glCullFace( GL_BACK );
-    createProjectionMatrix();
-    m_shader.start();
-    m_shader.loadProjectionMatrix( m_projectionMatrix );
-    m_shader.stop();
+EntityRenderer::EntityRenderer( StaticShader& shader,
+                                const glm::mat4& projectionMatrix )
+        : m_shader( shader ) {
 }
 
-void Render::prepare() {
-    glEnable( GL_DEPTH_TEST );
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glClearColor( 0.7, 0.1, 0.1, 1 );
-}
 
-void Render::render( const EntityMap& entityMap ) {
+void EntityRenderer::render( const EntityMap& entityMap ) {
 
     for ( auto entityPair : entityMap ) {
 
@@ -47,7 +37,7 @@ void Render::render( const EntityMap& entityMap ) {
     }
 }
 
-void Render::prepareTexturedModel( const TexturedModel& texturedModel ) {
+void EntityRenderer::prepareTexturedModel( const TexturedModel& texturedModel ) {
     Model model = texturedModel.getModel();
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );
@@ -61,13 +51,14 @@ void Render::prepareTexturedModel( const TexturedModel& texturedModel ) {
 
 }
 
-void Render::unbindTexturedModel() {
+void EntityRenderer::unbindTexturedModel() {
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
     glDisableVertexAttribArray( 2 );
     glBindVertexArray( 0 );
 }
-void Render::prepareInstance( const Entity& entity ) {
+
+void EntityRenderer::prepareInstance( const Entity& entity ) {
     glm::mat4 transformationMatrix = common::createTransformationMatrix(
             entity.getPosition(),
             entity.getRotation(),
@@ -75,8 +66,29 @@ void Render::prepareInstance( const Entity& entity ) {
     m_shader.loadTransformationMatrix( transformationMatrix );
 }
 
-void Render::createProjectionMatrix() {
 
+// ------------------------------------------------------------------------------------------
+
+MasterRenderer::MasterRenderer()
+        : m_shader(),
+          m_entities(),
+          m_render( m_shader, glm::mat4() ) {
+
+    // Note
+    // 'm_shader' is initialised above and added to the renderer immediately
+    // Do not re-init the shader after this otherwise things break. This
+    // should be looked into
+
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
+
+    createProjectionMatrix();
+    m_shader.start();
+    m_shader.loadProjectionMatrix( m_projectionMatrix );
+    m_shader.stop();
+}
+
+void MasterRenderer::createProjectionMatrix() {
     unsigned int width = common::DisplayManager::instance()->width();
     unsigned int height = common::DisplayManager::instance()->height();
     m_projectionMatrix = common::createProjectionMatrix(
@@ -87,31 +99,30 @@ void Render::createProjectionMatrix() {
             kFarPlane );
 }
 
-// ------------------------------------------------------------------------------------------
-
-MasterRender::MasterRender( StaticShader& shader )
-        : m_shader( shader ),
-          m_entities(),
-          m_render( shader ) {}
-
-void MasterRender::cleanup() {
+void MasterRenderer::cleanup() {
     m_shader.cleanup();
 }
 
-void MasterRender::processEntity( const Entity& entity ) {
+void MasterRenderer::processEntity( const Entity& entity ) {
 
     TexturedModel texturedModel = entity.getTexturedModel();
 
     if ( m_entities.find( texturedModel ) == m_entities.end() ) {
         std::vector< Entity > entities;
-        m_entities.insert( EntityPair( texturedModel, entities ) ) ;
+        m_entities.insert( EntityPair( texturedModel, entities ) );
     }
 
     m_entities[texturedModel].push_back( entity );
 }
 
-void MasterRender::render( Light sun, common::Camera* camera ) {
-    m_render.prepare();
+void MasterRenderer::prepare() {
+    glEnable( GL_DEPTH_TEST );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClearColor( 0.7, 0.1, 0.1, 1 );
+}
+
+void MasterRenderer::render( Light sun, common::Camera *camera ) {
+    prepare();
     m_shader.start();
     m_shader.loadLight( sun );
     m_shader.loadViewMatrix( camera->matrix() );

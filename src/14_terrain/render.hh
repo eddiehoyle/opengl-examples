@@ -15,20 +15,16 @@
 typedef std::pair< TexturedModel, std::vector< Entity > > EntityPair;
 typedef std::map< EntityPair::first_type, EntityPair::second_type > EntityMap;
 
-class Render {
+class EntityRenderer {
 
 public:
 
-    explicit Render( StaticShader& shader );
-
-    /// Prepare to render
-    void prepare();
+    explicit EntityRenderer( StaticShader& shader, const glm::mat4& projectionMatrix );
 
     /// TODO
     void render( const EntityMap& entityMap );
 
     /// TODO
-    void createProjectionMatrix();
 
 private:
     void prepareTexturedModel( const TexturedModel& texturedModel );
@@ -36,23 +32,32 @@ private:
     void prepareInstance( const Entity& entity );
 
 private:
-    glm::mat4 m_projectionMatrix;
     StaticShader m_shader;
 };
 
-class MasterRender {
+class MasterRenderer {
+
 public:
-    explicit MasterRender( StaticShader& shader );
+
+    explicit MasterRenderer();
+
     void cleanup();
+
+    /// Prepare to render
+    void prepare();
+
     void render( Light sun, common::Camera* camera );
+
     void processEntity( const Entity& entity );
+
+    void createProjectionMatrix();
 
 private:
     StaticShader m_shader;
-    Render m_render;
+    EntityRenderer m_render;
     EntityMap m_entities;
 
-
+    glm::mat4 m_projectionMatrix;
 };
 
 
