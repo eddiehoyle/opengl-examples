@@ -21,7 +21,7 @@ void main( void ) {
     vec4 worldPosition = ( transformationMatrix * vec4( position, 1.0 ) );
 
     // UVs
-    pass_textureCoords = textureCoords * 10;
+    pass_textureCoords = textureCoords;
 
     // Normals
     mat4 normalMatrix = transpose( inverse( transformationMatrix ) );

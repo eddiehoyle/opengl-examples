@@ -145,45 +145,48 @@ int main( int argc, char **argv ) {
     common::Camera* camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -3.0f ) );
+    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
 
     Loader loader = Loader();
 
     bool result;
-    const std::string modelPath = common::getResource( "cube3.obj", result );
+    const std::string treeModelPath = common::getResource( "tree.obj", result );
     assert( result );
 
-    Model model = OBJLoader::loadObjModel( modelPath, loader );
+    Model model = OBJLoader::loadObjModel( treeModelPath, loader );
 
     // Texture
-    const std::string modelTexture = common::getResource( "cat.png", result );
+    const std::string treeTexturePath = common::getResource( "green.png", result );
     assert( result );
 
-    GLuint textureID = loader.loadTexture( modelTexture );
-    ModelTexture texture( textureID );
-    texture.setShineDamper( 10.0f );
-    texture.setReflectivity( 1.0f );
+    GLuint treeTextureID = loader.loadTexture( treeTexturePath );
+    ModelTexture treeTexture( treeTextureID );
+    treeTexture.setShineDamper( 10.0f );
+    treeTexture.setReflectivity( 1.0f );
 
     // Textured model
-    TexturedModel texturedModel( model, texture );
+    TexturedModel texturedModel( model, treeTexture );
 
     // Create entities
     std::vector< Entity > entities;
 
-    std::size_t numEntities = 20;
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+
+    std::size_t numEntities = 30;
     for ( std::size_t i = 0; i < numEntities; ++i ) {
 
-        std::random_device rd;  //Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-        std::uniform_real_distribution<> dis(-10.0, 10.0);
+        std::uniform_real_distribution<> dis(-200, 100.0);
+        std::uniform_real_distribution<> scaleDis(1.0, 2.0);
+
         double posX = dis(gen);
-        double posY = dis(gen);
         double posZ = dis(gen);
+        double scaleXYZ = scaleDis( gen );
 
         // Entity position
-        glm::vec3 translate( posX, posY, posZ );
+        glm::vec3 translate( posX, 0, posZ );
         glm::vec3 rotate( 0.0f, 0.0f, 0.0f );
-        GLfloat scale = 1.0f;
+        GLfloat scale = scaleXYZ;
         Entity entity( texturedModel,
                        translate,
                        rotate,
@@ -193,16 +196,13 @@ int main( int argc, char **argv ) {
 
     Light light( glm::vec3( 0, 100, 0 ), glm::vec3( 1, 1, 1 ) );
 
+
     // Grass texture 0
     const std::string grass0 = common::getResource( "grass0.jpg", result );
     GLuint grassTextureID0 = loader.loadTexture( grass0 );
     ModelTexture grassTexture0( grassTextureID0 );
-    assert( result );
-
-    // Grass texture 0
-    const std::string grass1 = common::getResource( "grass1.jpg", result );
-    GLuint grassTextureID1 = loader.loadTexture( grass1 );
-    ModelTexture grassTexture1( grassTextureID1 );
+    grassTexture0.setShineDamper( 1.0f );
+    grassTexture0.setReflectivity( 0.0f );
     assert( result );
 
     std::vector< Terrain > terrains;
@@ -214,7 +214,10 @@ int main( int argc, char **argv ) {
         }
     }
 
-    double speed = 0.4;
+
+
+
+    double speed = 2.0;
 
     MasterRenderer render;
 
@@ -242,17 +245,8 @@ int main( int argc, char **argv ) {
 
         common::DisplayManager::instance()->camera()->move( cameraPosition );
 
-        for ( std::size_t i = 0; i < entities.size(); ++i ) {
-
-            // Create some variation
-            if ( i % 2 == 0 ) {
-                entities[ i ].increaseRotation( 1, 1, 0 );
-            } else if ( i % 3 == 0 ) {
-                entities[ i ].increaseRotation( -1, 0, -1 );
-            } else {
-                entities[ i ].increaseRotation( 0, 1, -1 );
-            }
-            render.processEntity( entities[ i ] );
+        for ( auto entity : entities ) {
+            render.processEntity( entity );
         }
 
         for ( auto terrain : terrains ) {

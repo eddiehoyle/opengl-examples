@@ -140,8 +140,8 @@ MasterRenderer::MasterRenderer()
     m_shader.init();
     m_terrainShader.init();
 
-//    glEnable( GL_CULL_FACE );
-//    glCullFace( GL_BACK );
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
 
     createProjectionMatrix();
 

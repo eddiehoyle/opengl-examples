@@ -8,7 +8,7 @@
 #include "model.hh"
 #include "loader.hh"
 
-const float SIZE = 10;
+const float SIZE = 100;
 const int VERTEX_COUNT = 128;
 
 class Terrain {
