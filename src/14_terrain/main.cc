@@ -191,7 +191,7 @@ int main( int argc, char **argv ) {
         entities.push_back( entity );
     }
 
-    Light light( glm::vec3( 0, 0, -20 ), glm::vec3( 1, 1, 1 ) );
+    Light light( glm::vec3( 0, 100, 0 ), glm::vec3( 1, 1, 1 ) );
 
     // Grass texture 0
     const std::string grass0 = common::getResource( "grass0.jpg", result );
@@ -205,8 +205,14 @@ int main( int argc, char **argv ) {
     ModelTexture grassTexture1( grassTextureID1 );
     assert( result );
 
-    Terrain terrain0( 0, 0, loader, grassTexture0 );
-    Terrain terrain1( 0, -1, loader, grassTexture1 );
+    std::vector< Terrain > terrains;
+    int grid = 3;
+    for ( int i = 0; i < grid; ++i ) {
+        for ( int j = 0; j < grid; ++j ) {
+            Terrain terrain( -i, -j, loader, grassTexture0 );
+            terrains.push_back( terrain );
+        }
+    }
 
     double speed = 0.4;
 
@@ -249,8 +255,9 @@ int main( int argc, char **argv ) {
             render.processEntity( entities[ i ] );
         }
 
-        render.processTerrain( terrain0 );
-        render.processTerrain( terrain1 );
+        for ( auto terrain : terrains ) {
+            render.processTerrain( terrain );
+        }
 
         render.render( light, camera );
 
