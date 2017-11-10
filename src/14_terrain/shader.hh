@@ -22,6 +22,9 @@ public:
     /// Destructor
     ~ShaderProgram();
 
+    /// Compiles shader
+    virtual void init()=0;
+
     /// TODO
     GLint getUniformLocation( const std::string& name );
 
@@ -67,8 +70,11 @@ public:
 protected:
 
     void bindAttribute( GLint attribute, const std::string& name );
+
     bool validateShader( GLuint shader );
+
     bool validateProgram( GLuint program );
+
     GLuint compile( const std::string& shader, GLenum type );
 
     GLuint m_programID;
@@ -86,11 +92,15 @@ protected:
 };
 
 class StaticShader : public ShaderProgram {
-
 public:
-
-    /// Constructor
     StaticShader();
+    virtual void init();
+};
+
+class TerrainShader : public ShaderProgram {
+public:
+    TerrainShader();
+    virtual void init();
 };
 
 #endif //OPENGL_EXAMPLES_14_SHADER_HH

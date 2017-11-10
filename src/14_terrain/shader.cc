@@ -181,6 +181,9 @@ void ShaderProgram::cleanup() {
 // ---------------------------------------------------------------------------------
 
 StaticShader::StaticShader() {
+}
+
+void StaticShader::init() {
 
     // File status result
     bool shader_file_exists;
@@ -194,6 +197,44 @@ StaticShader::StaticShader() {
     const std::string fragment_path = common::getResource( "shaders/14_terrain/fragment.glsl", shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
+
+    // Create program
+    m_programID = glCreateProgram();
+    glAttachShader( m_programID, m_vertexShaderID );
+    glAttachShader( m_programID, m_fragmentShaderID );
+
+    // Bind attributes before linking to ensure order
+    bindAttribute( 0, "position" );
+    bindAttribute( 1, "textureCoords" );
+    bindAttribute( 2, "normal" );
+
+    // Link program
+    glLinkProgram( m_programID );
+    validateProgram( m_programID );
+
+    // Must happen after program is linked
+    getUniformLocations();
+}
+
+
+TerrainShader::TerrainShader() {
+}
+
+void TerrainShader::init() {
+    // File status result
+    bool shader_file_exists;
+
+    // Read in vertex shader
+    const std::string vertex_path = common::getResource( "shaders/14_terrain/terrainVertex.glsl", shader_file_exists );
+    const std::string vertex_source = common::read_file( vertex_path );
+    m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
+    assert( shader_file_exists );
+
+    // Read in fragment shader
+    const std::string fragment_path = common::getResource( "shaders/14_terrain/terrainFragment.glsl", shader_file_exists );
+    const std::string fragment_source = common::read_file( fragment_path );
+    m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
+    assert( shader_file_exists );
 
     // Create program
     m_programID = glCreateProgram();

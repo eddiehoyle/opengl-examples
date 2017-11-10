@@ -11,6 +11,7 @@
 #include "entity.hh"
 #include "shader.hh"
 #include "../common/camera.hh"
+#include "terrain.hh"
 
 typedef std::pair< TexturedModel, std::vector< Entity > > EntityPair;
 typedef std::map< EntityPair::first_type, EntityPair::second_type > EntityMap;
@@ -18,13 +19,8 @@ typedef std::map< EntityPair::first_type, EntityPair::second_type > EntityMap;
 class EntityRenderer {
 
 public:
-
     explicit EntityRenderer( StaticShader& shader, const glm::mat4& projectionMatrix );
-
-    /// TODO
     void render( const EntityMap& entityMap );
-
-    /// TODO
 
 private:
     void prepareTexturedModel( const TexturedModel& texturedModel );
@@ -35,6 +31,25 @@ private:
     StaticShader m_shader;
 };
 
+// ------------------------------------------------------------------------------------
+
+class TerrainRenderer {
+
+public:
+    explicit TerrainRenderer( TerrainShader& shader, const glm::mat4& projectionMatrix );
+    void render( const std::vector< Terrain >& terrains );
+
+private:
+    void prepareTerrain( const Terrain& terrain );
+    void unbindTexturedModel();
+    void loadModelMatrix( const Terrain& terrain );
+
+private:
+    TerrainShader m_shader;
+};
+
+// ------------------------------------------------------------------------------------
+
 class MasterRenderer {
 
 public:
@@ -42,20 +57,23 @@ public:
     explicit MasterRenderer();
 
     void cleanup();
-
-    /// Prepare to render
     void prepare();
-
     void render( Light sun, common::Camera* camera );
-
     void processEntity( const Entity& entity );
-
+    void processTerrain( const Terrain& terrain );
     void createProjectionMatrix();
 
 private:
+
+    /// Entities
     StaticShader m_shader;
-    EntityRenderer m_render;
+    EntityRenderer m_renderer;
     EntityMap m_entities;
+
+    /// Terrain
+    TerrainShader m_terrainShader;
+    TerrainRenderer m_terrainRenderer;
+    std::vector< Terrain > m_terrains;
 
     glm::mat4 m_projectionMatrix;
 };

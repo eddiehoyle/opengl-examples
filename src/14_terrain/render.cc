@@ -66,26 +66,95 @@ void EntityRenderer::prepareInstance( const Entity& entity ) {
     m_shader.loadTransformationMatrix( transformationMatrix );
 }
 
+// ------------------------------------------------------------------------------------------
+
+TerrainRenderer::TerrainRenderer( TerrainShader& shader,
+                                const glm::mat4& projectionMatrix )
+        : m_shader( shader ) {
+}
+
+
+void TerrainRenderer::render( const std::vector< Terrain >& terrains ) {
+
+    for ( const Terrain& terrain : terrains ) {
+
+        prepareTerrain( terrain );
+        loadModelMatrix( terrain );
+
+        glDrawElements( GL_TRIANGLES,
+                        terrain.getModel().getVertexCount(),
+                        GL_UNSIGNED_INT,
+                        0 );
+
+        unbindTexturedModel();
+    }
+}
+
+void TerrainRenderer::prepareTerrain( const Terrain& terrain ) {
+
+    Model model = terrain.getModel();
+
+    glBindVertexArray( model.getVaoID() );
+    glEnableVertexAttribArray( 0 );
+    glEnableVertexAttribArray( 1 );
+    glEnableVertexAttribArray( 2 );
+
+    ModelTexture texture = terrain.getTexture();
+    m_shader.loadShineVariables( texture.getShineDamper(), texture.getReflectivity() );
+
+    glActiveTexture( GL_TEXTURE0 );
+    glBindTexture( GL_TEXTURE_2D, texture.getID() );
+
+}
+
+void TerrainRenderer::unbindTexturedModel() {
+    glDisableVertexAttribArray( 0 );
+    glDisableVertexAttribArray( 1 );
+    glDisableVertexAttribArray( 2 );
+    glBindVertexArray( 0 );
+}
+
+void TerrainRenderer::loadModelMatrix( const Terrain& terrain ) {
+    glm::mat4 transformationMatrix = common::createTransformationMatrix(
+            glm::vec3( terrain.getX(), 0.0, terrain.getZ() ),
+            glm::vec3( 0, 0, 0 ),
+            1 );
+    m_shader.loadTransformationMatrix( transformationMatrix );
+}
+
 
 // ------------------------------------------------------------------------------------------
 
 MasterRenderer::MasterRenderer()
         : m_shader(),
+          m_terrainShader(),
           m_entities(),
-          m_render( m_shader, glm::mat4() ) {
+          m_renderer( m_shader, glm::mat4() ),
+          m_terrainRenderer( m_terrainShader, glm::mat4() ) {
 
     // Note
     // 'm_shader' is initialised above and added to the renderer immediately
     // Do not re-init the shader after this otherwise things break. This
     // should be looked into
 
-    glEnable( GL_CULL_FACE );
-    glCullFace( GL_BACK );
+    m_shader.init();
+    m_terrainShader.init();
+
+//    glEnable( GL_CULL_FACE );
+//    glCullFace( GL_BACK );
 
     createProjectionMatrix();
+
+    m_terrainShader.start();
+    m_terrainShader.loadProjectionMatrix( m_projectionMatrix );
+    m_terrainShader.stop();
+
     m_shader.start();
     m_shader.loadProjectionMatrix( m_projectionMatrix );
     m_shader.stop();
+
+
+
 }
 
 void MasterRenderer::createProjectionMatrix() {
@@ -101,6 +170,7 @@ void MasterRenderer::createProjectionMatrix() {
 
 void MasterRenderer::cleanup() {
     m_shader.cleanup();
+    m_terrainShader.cleanup();
 }
 
 void MasterRenderer::processEntity( const Entity& entity ) {
@@ -115,6 +185,10 @@ void MasterRenderer::processEntity( const Entity& entity ) {
     m_entities[texturedModel].push_back( entity );
 }
 
+void MasterRenderer::processTerrain( const Terrain& terrain ) {
+    m_terrains.push_back( terrain );
+}
+
 void MasterRenderer::prepare() {
     glEnable( GL_DEPTH_TEST );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -122,11 +196,21 @@ void MasterRenderer::prepare() {
 }
 
 void MasterRenderer::render( Light sun, common::Camera *camera ) {
+
     prepare();
+
     m_shader.start();
     m_shader.loadLight( sun );
     m_shader.loadViewMatrix( camera->matrix() );
-    m_render.render( m_entities );
+    m_renderer.render( m_entities );
     m_shader.stop();
+
+    m_terrainShader.start();
+    m_terrainShader.loadLight( sun );
+    m_terrainShader.loadViewMatrix( camera->matrix() );
+    m_terrainRenderer.render( m_terrains );
+    m_terrainShader.stop();
+
+    m_terrains.clear();
     m_entities.clear();
 }

@@ -35,6 +35,8 @@ static bool kKeyPressedW = false;
 static bool kKeyPressedA = false;
 static bool kKeyPressedS = false;
 static bool kKeyPressedD = false;
+static bool kKeyPressedQ = false;
+static bool kKeyPressedE = false;
 
 void windowResizeCallback( GLFWwindow *window, int width, int height ) {
     common::DisplayManager::instance()->update(
@@ -64,6 +66,12 @@ void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int m
                 case GLFW_KEY_D:
                     kKeyPressedD = true;
                     break;
+                case GLFW_KEY_Q:
+                    kKeyPressedQ = true;
+                    break;
+                case GLFW_KEY_E:
+                    kKeyPressedE = true;
+                    break;
             }
             break;
         case GLFW_RELEASE:
@@ -79,6 +87,12 @@ void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int m
                     break;
                 case GLFW_KEY_D:
                     kKeyPressedD = false;
+                    break;
+                case GLFW_KEY_Q:
+                    kKeyPressedQ = false;
+                    break;
+                case GLFW_KEY_E:
+                    kKeyPressedE = false;
                     break;
             }
             break;
@@ -156,7 +170,7 @@ int main( int argc, char **argv ) {
     // Create entities
     std::vector< Entity > entities;
 
-    std::size_t numEntities = 1000;
+    std::size_t numEntities = 20;
     for ( std::size_t i = 0; i < numEntities; ++i ) {
 
         std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -179,6 +193,21 @@ int main( int argc, char **argv ) {
 
     Light light( glm::vec3( 0, 0, -20 ), glm::vec3( 1, 1, 1 ) );
 
+    // Grass texture 0
+    const std::string grass0 = common::getResource( "grass0.jpg", result );
+    GLuint grassTextureID0 = loader.loadTexture( grass0 );
+    ModelTexture grassTexture0( grassTextureID0 );
+    assert( result );
+
+    // Grass texture 0
+    const std::string grass1 = common::getResource( "grass1.jpg", result );
+    GLuint grassTextureID1 = loader.loadTexture( grass1 );
+    ModelTexture grassTexture1( grassTextureID1 );
+    assert( result );
+
+    Terrain terrain0( 0, 0, loader, grassTexture0 );
+    Terrain terrain1( 0, -1, loader, grassTexture1 );
+
     double speed = 0.4;
 
     MasterRenderer render;
@@ -198,6 +227,12 @@ int main( int argc, char **argv ) {
         if ( kKeyPressedD ) {
             cameraPosition.x -= speed;
         }
+        if ( kKeyPressedQ ) {
+            cameraPosition.y -= speed;
+        }
+        if ( kKeyPressedE ) {
+            cameraPosition.y += speed;
+        }
 
         common::DisplayManager::instance()->camera()->move( cameraPosition );
 
@@ -213,6 +248,9 @@ int main( int argc, char **argv ) {
             }
             render.processEntity( entities[ i ] );
         }
+
+        render.processTerrain( terrain0 );
+        render.processTerrain( terrain1 );
 
         render.render( light, camera );
 

@@ -13,9 +13,6 @@ class Model {
 
 public:
 
-    /// TODO
-//    Model() : m_vaoID( -1 ), m_vertexCount( 0 ) {}
-
     /// Constructor
     Model( GLint vaoID, GLint vertexCount );
 

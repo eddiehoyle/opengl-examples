@@ -8,27 +8,22 @@
 #include "model.hh"
 #include "loader.hh"
 
-const float SIZE = 600;
+const float SIZE = 10;
 const int VERTEX_COUNT = 128;
-
 
 class Terrain {
 
 public:
     explicit Terrain( int gridX, int gridZ, Loader& loader, ModelTexture& texture );
     Model generateTerrain( Loader& loader );
-
     float getX() const;
-
-    float getY() const;
-
+    float getZ() const;
     Model getModel() const;
-
     ModelTexture getTexture() const;
 
 private:
     float m_x;
-    float m_y;
+    float m_z;
     Model m_model;
     ModelTexture m_texture;
 
