@@ -71,16 +71,6 @@ GLint ShaderProgram::getUniformLocation( const std::string& name ) {
     return glGetUniformLocation( m_programID, name.c_str() );
 }
 
-void ShaderProgram::getUniformLocations() {
-    m_transformationMatrix = getUniformLocation( "transformationMatrix" );
-    m_projectionMatrix = getUniformLocation( "projectionMatrix" );
-    m_viewMatrix = getUniformLocation( "viewMatrix" );
-    m_lightPosition = getUniformLocation( "lightPosition" );
-    m_lightColour = getUniformLocation( "lightColour" );
-    m_shineDamper = getUniformLocation( "shineDamper" );
-    m_reflectivity = getUniformLocation( "reflectivity" );
-}
-
 void ShaderProgram::loadShineVariables( GLfloat damper, GLfloat reflectivity ) {
     loadFloat( m_shineDamper, damper );
     loadFloat( m_reflectivity, reflectivity );
@@ -222,6 +212,21 @@ void StaticShader::init() {
     getUniformLocations();
 }
 
+void StaticShader::loadFakeLighting( bool state ) {
+    loadBoolean( m_useFakeLighting, state );
+}
+
+void StaticShader::getUniformLocations() {
+    m_transformationMatrix = getUniformLocation( "transformationMatrix" );
+    m_projectionMatrix = getUniformLocation( "projectionMatrix" );
+    m_viewMatrix = getUniformLocation( "viewMatrix" );
+    m_lightPosition = getUniformLocation( "lightPosition" );
+    m_lightColour = getUniformLocation( "lightColour" );
+    m_shineDamper = getUniformLocation( "shineDamper" );
+    m_reflectivity = getUniformLocation( "reflectivity" );
+    m_useFakeLighting = getUniformLocation( "useFakeLighting" );
+}
+
 
 TerrainShader::TerrainShader() : ShaderProgram() {
 }
@@ -259,4 +264,14 @@ void TerrainShader::init() {
 
     // Must happen after program is linked
     getUniformLocations();
+}
+
+void TerrainShader::getUniformLocations() {
+    m_transformationMatrix = getUniformLocation( "transformationMatrix" );
+    m_projectionMatrix = getUniformLocation( "projectionMatrix" );
+    m_viewMatrix = getUniformLocation( "viewMatrix" );
+    m_lightPosition = getUniformLocation( "lightPosition" );
+    m_lightColour = getUniformLocation( "lightColour" );
+    m_shineDamper = getUniformLocation( "shineDamper" );
+    m_reflectivity = getUniformLocation( "reflectivity" );
 }

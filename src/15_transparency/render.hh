@@ -21,9 +21,7 @@ class EntityRenderer {
 public:
     explicit EntityRenderer( StaticShader& shader, const glm::mat4& projectionMatrix );
     void render( const EntityMap& entityMap );
-    void setProjectionMatrix( const glm::mat4& matrix ) {
-        m_projectionMatrix = matrix;
-    }
+
 
 private:
     void prepareTexturedModel( const TexturedModel& texturedModel );
@@ -59,6 +57,10 @@ private:
 // ------------------------------------------------------------------------------------
 
 class MasterRenderer {
+public:
+
+    static void enableCulling();
+    static void disableCulling();
 
 public:
 
@@ -70,6 +72,8 @@ public:
     void processEntity( const Entity& entity );
     void processTerrain( const Terrain& terrain );
     void createProjectionMatrix();
+
+
 
 private:
 

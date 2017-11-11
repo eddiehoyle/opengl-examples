@@ -34,11 +34,13 @@ GLint Loader::createVaoID() {
 GLuint Loader::loadTexture( const std::string& path ) {
 
     int width, height, bytesperpixel;
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &bytesperpixel, STBI_rgb );
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &bytesperpixel, STBI_default );
 
+    GLenum dataFormat = GL_RGB;
     GLenum colorFormat = GL_RGB;
     if ( bytesperpixel == 4 ) {
         colorFormat = GL_RGBA;
+        dataFormat = GL_RGBA;
     }
 
     GLuint textureID;
@@ -50,7 +52,7 @@ GLuint Loader::loadTexture( const std::string& path ) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, colorFormat, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, colorFormat, GL_UNSIGNED_BYTE, data);
 
     stbi_image_free(data);
 

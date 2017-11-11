@@ -30,11 +30,11 @@ void main() {
     vec3 finalSpecular = dampedFactor * reflectivity * lightColour;
 
     vec4 textureColour = texture( textureSampler, pass_textureCoords );
-//    if ( textureColour.a < 0.5 ) {
-//        discard;
-//    }
+    if ( textureColour.a < 0.5 ) {
+        discard;
+    }
 
-    out_Color = vec4( diffuse, 1.0 ) * textureColour * vec4( finalSpecular, 1.0 );
+    out_Color = vec4( diffuse, 1.0 ) * textureColour;// * vec4( finalSpecular, 1.0 );
 }
 
 

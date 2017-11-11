@@ -174,26 +174,30 @@ int main( int argc, char **argv ) {
     bool result;
     Loader loader = Loader();
 
-    // Tree
-    const std::string treeModelPath = common::getResource( "tree.obj", result );
+    // Grass
+    const std::string grassModelPath = common::getResource( "grass.obj", result );
     assert( result );
-    const std::string treeTexturePath = common::getResource( "green.png", result );
+    const std::string grassTexturePath = common::getResource( "grassBlades.png", result );
     assert( result );
-    Model treeModel = OBJLoader::loadObjModel( treeModelPath, loader );
-    ModelTexture treeTexture( loader.loadTexture( treeTexturePath ) );
-    treeTexture.setShineDamper( 10.0f );
-    treeTexture.setReflectivity( 1.0f );
-    TexturedModel treeTexturedModel( treeModel, treeTexture );
+    Model grassModel = OBJLoader::loadObjModel( grassModelPath, loader );
+    ModelTexture grassTexture( loader.loadTexture( grassTexturePath ) );
+    grassTexture.setShineDamper( 10.0f );
+    grassTexture.setReflectivity( 1.0f );
+    grassTexture.setHasTransparency( true );
+    grassTexture.setUseFakeLighting( true );
+    TexturedModel grassTexturedModel( grassModel, grassTexture );
 
     // Fern
     const std::string fernModelPath = common::getResource( "fern.obj", result );
     assert( result );
-    const std::string fernTexturePath = common::getResource( "fern.png", result );
+    const std::string fernTexturePath = common::getResource( "fern2.png", result );
     assert( result );
     Model fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
     ModelTexture fernTexture( loader.loadTexture( fernTexturePath ) );
     fernTexture.setShineDamper( 10.0f );
     fernTexture.setReflectivity( 1.0f );
+    fernTexture.setHasTransparency( true );
+    fernTexture.setUseFakeLighting( false );
     TexturedModel fernTexturedModel( fernModel, fernTexture );
 
     // Create entities
@@ -202,31 +206,43 @@ int main( int argc, char **argv ) {
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()
 
-    std::size_t numEntities = 30;
-    for ( std::size_t i = 0; i < numEntities; ++i ) {
+    std::size_t numGrass = 300;
+    for ( std::size_t i = 0; i < numGrass; ++i ) {
 
         std::uniform_real_distribution<> dis( -200, 100.0 );
-        std::uniform_real_distribution<> scaleDis( 1.0, 2.0 );
+        std::uniform_real_distribution<> scaleDis( 3.0, 5.0 );
 
         double posX = dis( gen );
         double posZ = dis( gen );
         double scaleXYZ = scaleDis( gen );
 
-        Entity treeEntity( treeTexturedModel,
+        Entity grassEntity( grassTexturedModel,
                            glm::vec3( 0, 0, 0 ),
                            glm::vec3( 0, 0, 0 ),
                            1 );
-        treeEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
-        treeEntity.setScale( scaleXYZ );
-        entities.push_back( treeEntity );
+        grassEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
+        grassEntity.setScale( scaleXYZ );
+        entities.push_back( grassEntity );
 
-//        Entity fernEntity( fernTexturedModel,
-//                           glm::vec3( 0, 0, 0 ),
-//                           glm::vec3( 0, 0, 0 ),
-//                           1 );
-//        fernEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
-//        fernEntity.setScale( scaleXYZ );
-//        entities.push_back( fernEntity );
+    }
+
+    std::size_t numFerns = 100;
+    for ( std::size_t i = 0; i < numFerns; ++i ) {
+
+        std::uniform_real_distribution<> dis( -200, 100.0 );
+        std::uniform_real_distribution<> scaleDis( 1.0, 2.2 );
+
+        double posX = dis( gen );
+        double posZ = dis( gen );
+        double scaleXYZ = scaleDis( gen );
+
+        Entity fernEntity( fernTexturedModel,
+                       glm::vec3( 0, 0, 0 ),
+                       glm::vec3( 0, 0, 0 ),
+                       1 );
+        fernEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
+        fernEntity.setScale( scaleXYZ );
+        entities.push_back( fernEntity );
     }
 
     Light light( glm::vec3( 0, 100, 0 ), glm::vec3( 1, 1, 1 ) );
@@ -248,7 +264,6 @@ int main( int argc, char **argv ) {
             terrains.push_back( terrain );
         }
     }
-
 
     double speed = 2.0;
 

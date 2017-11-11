@@ -45,6 +45,12 @@ void EntityRenderer::prepareTexturedModel( const TexturedModel& texturedModel ) 
     glEnableVertexAttribArray( 2 );
 
     ModelTexture texture = texturedModel.getTexture();
+    if ( texture.isHasTransparency() ) {
+        MasterRenderer::disableCulling();
+    }
+
+    m_shader.loadFakeLighting( texture.isUseFakeLighting() );
+
     m_shader.loadShineVariables( texture.getShineDamper(), texture.getReflectivity() );
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, texture.getID() );
@@ -52,6 +58,9 @@ void EntityRenderer::prepareTexturedModel( const TexturedModel& texturedModel ) 
 }
 
 void EntityRenderer::unbindTexturedModel() {
+
+    MasterRenderer::enableCulling();
+
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
     glDisableVertexAttribArray( 2 );
@@ -136,10 +145,9 @@ MasterRenderer::MasterRenderer( StaticShader& shader, TerrainShader& terrainShad
     // Do not re-init the shader after this otherwise things break. This
     // should be looked into
 
-    createProjectionMatrix();
+    enableCulling();
 
-    glEnable( GL_CULL_FACE );
-    glCullFace( GL_BACK );
+    createProjectionMatrix();
 
     m_shader.start();
     m_shader.loadProjectionMatrix( m_projectionMatrix );
@@ -186,7 +194,16 @@ void MasterRenderer::processTerrain( const Terrain& terrain ) {
 void MasterRenderer::prepare() {
     glEnable( GL_DEPTH_TEST );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glClearColor( 0.7, 0.1, 0.1, 1 );
+    glClearColor( 0.54, 0.824, 1.0, 1 );
+}
+
+void MasterRenderer::enableCulling() {
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
+}
+
+void MasterRenderer::disableCulling() {
+    glDisable( GL_CULL_FACE );
 }
 
 void MasterRenderer::render( Light sun, common::Camera *camera ) {

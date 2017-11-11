@@ -28,3 +28,20 @@ GLfloat ModelTexture::getReflectivity() const {
 void ModelTexture::setReflectivity( GLfloat value ) {
     m_reflectivity = value;
 }
+
+bool ModelTexture::isHasTransparency() const {
+    return m_hasTransparency;
+}
+
+void ModelTexture::setHasTransparency( bool state ) {
+    m_hasTransparency = state;
+}
+
+bool ModelTexture::isUseFakeLighting() const {
+    return m_useFakeLighting;
+}
+
+void ModelTexture::setUseFakeLighting( bool state ) {
+    m_useFakeLighting = state;
+}
+

@@ -25,11 +25,11 @@ public:
     /// Compiles shader
     virtual void init() {}
 
+    /// Collect all the uniform locations in the shader
+    virtual void getUniformLocations() {}
+
     /// TODO
     GLint getUniformLocation( const std::string& name );
-
-    /// Collect all the uniform locations in the shader
-    void getUniformLocations();
 
     /// TODO
     void loadShineVariables( GLfloat damper, GLfloat reflectivity );
@@ -93,18 +93,26 @@ protected:
     GLint m_lightColour;
     GLint m_shineDamper;
     GLint m_reflectivity;
+
 };
 
 class StaticShader : public ShaderProgram {
 public:
     StaticShader();
     virtual void init();
+    virtual void getUniformLocations();
+
+    void loadFakeLighting( bool state );
+
+protected:
+    GLint m_useFakeLighting;
 };
 
 class TerrainShader : public ShaderProgram {
 public:
     TerrainShader();
     virtual void init();
+    virtual void getUniformLocations();
 };
 
 #endif //OPENGL_EXAMPLES_14_SHADER_HH
