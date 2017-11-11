@@ -15,7 +15,7 @@ add_subdirectory(13_optimising)
 add_subdirectory(14_terrain)
 add_subdirectory(15_transparency)
 add_subdirectory(16_fog)
-
+add_subdirectory(17_multi_texturing)
 
 # Trying new things
 add_subdirectory(dev)
