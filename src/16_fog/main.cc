@@ -45,30 +45,6 @@ void windowResizeCallback( GLFWwindow *window, int width, int height ) {
     std::cerr << __func__ << " : " << width << ", " << height << std::endl;
 }
 
-Entity createEntity( const std::string& modelFilename,
-                     const std::string& textureFilename ) {
-
-
-    bool result;
-    Loader loader = Loader();
-
-    const std::string modelPath = common::getResource( modelFilename, result );
-    assert( result );
-    const std::string texturePath = common::getResource( textureFilename, result );
-    assert( result );
-
-    Model model = OBJLoader::loadObjModel( modelPath, loader );
-    ModelTexture texture( loader.loadTexture( texturePath ) );
-    texture.setShineDamper( 10.0f );
-    texture.setReflectivity( 1.0f );
-    TexturedModel texturedModel( model, texture );
-    return Entity( texturedModel,
-                   glm::vec3( 0, 0, 0 ),
-                   glm::vec3( 0, 0, 0 ),
-                   1 );
-}
-
-
 void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int mods ) {
 
     if ( key == GLFW_KEY_ESCAPE && mods == 0 )
@@ -138,7 +114,7 @@ int main( int argc, char **argv ) {
     glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "15_transparency", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "16_fog", nullptr, nullptr );
     if ( window == nullptr ) {
         printf( "Failed to open GLFW window.\n" );
         glfwTerminate();
@@ -206,10 +182,10 @@ int main( int argc, char **argv ) {
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()
 
-    std::size_t numGrass = 300;
+    std::size_t numGrass = 500;
     for ( std::size_t i = 0; i < numGrass; ++i ) {
 
-        std::uniform_real_distribution<> dis( -200, 100.0 );
+        std::uniform_real_distribution<> dis(-0, -500.0 );
         std::uniform_real_distribution<> scaleDis( 3.0, 5.0 );
 
         double posX = dis( gen );
@@ -226,24 +202,24 @@ int main( int argc, char **argv ) {
 
     }
 
-    std::size_t numFerns = 100;
-    for ( std::size_t i = 0; i < numFerns; ++i ) {
-
-        std::uniform_real_distribution<> dis( -200, 100.0 );
-        std::uniform_real_distribution<> scaleDis( 1.5, 1.2 );
-
-        double posX = dis( gen );
-        double posZ = dis( gen );
-        double scaleXYZ = scaleDis( gen );
-
-        Entity fernEntity( fernTexturedModel,
-                       glm::vec3( 0, 0, 0 ),
-                       glm::vec3( 0, 0, 0 ),
-                       1 );
-        fernEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
-        fernEntity.setScale( scaleXYZ );
-        entities.push_back( fernEntity );
-    }
+//    std::size_t numFerns = 100;
+//    for ( std::size_t i = 0; i < numFerns; ++i ) {
+//
+//        std::uniform_real_distribution<> dis( -200, 100.0 );
+//        std::uniform_real_distribution<> scaleDis( 1.0, 2.2 );
+//
+//        double posX = dis( gen );
+//        double posZ = dis( gen );
+//        double scaleXYZ = scaleDis( gen );
+//
+//        Entity fernEntity( fernTexturedModel,
+//                       glm::vec3( 0, 0, 0 ),
+//                       glm::vec3( 0, 0, 0 ),
+//                       1 );
+//        fernEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
+//        fernEntity.setScale( scaleXYZ );
+//        entities.push_back( fernEntity );
+//    }
 
     Light light( glm::vec3( 0, 100, 0 ), glm::vec3( 1, 1, 1 ) );
 
@@ -257,13 +233,8 @@ int main( int argc, char **argv ) {
     assert( result );
 
     std::vector< Terrain > terrains;
-    int grid = 3;
-    for ( int i = 0; i < grid; ++i ) {
-        for ( int j = 0; j < grid; ++j ) {
-            Terrain terrain( -i, -j, loader, grassTexture0 );
-            terrains.push_back( terrain );
-        }
-    }
+    Terrain terrain( -1, -1, loader, grassTexture0 );
+    terrains.push_back( terrain );
 
     double speed = 2.0;
 

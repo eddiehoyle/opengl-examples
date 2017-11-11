@@ -14,6 +14,7 @@ add_subdirectory(12_specular_lighting)
 add_subdirectory(13_optimising)
 add_subdirectory(14_terrain)
 add_subdirectory(15_transparency)
+add_subdirectory(16_fog)
 
 
 # Trying new things
