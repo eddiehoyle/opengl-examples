@@ -17,8 +17,13 @@ uniform vec3 skyColour;
 
 void main() {
 
+    vec3 tmp = toLightVector;
+
+    vec3 actualLightVector = vec3( 1.0, 1.0, 0.0 ); // Directional light
+//    vec3 actualLightVector = toLightVector; // Kinda like a point light
+
     vec3 unitNormal = normalize( surfaceNormal );
-    vec3 unitLightVector = normalize( toLightVector );
+    vec3 unitLightVector = normalize( actualLightVector );
     float brightness = max( dot( unitNormal, unitLightVector ), 0.2 );
     vec3 diffuse = brightness * lightColour;
 
