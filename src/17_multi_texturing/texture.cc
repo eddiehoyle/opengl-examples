@@ -45,3 +45,39 @@ void ModelTexture::setUseFakeLighting( bool state ) {
     m_useFakeLighting = state;
 }
 
+// ---------------------------------------------------------------------------
+
+
+TerrainTexture::TerrainTexture( GLuint id )
+        : m_textureID( id ) {
+}
+
+GLuint TerrainTexture::getTextureID() const {
+    return m_textureID;
+}
+
+TerrainTexturePack::TerrainTexturePack( const TerrainTexture& backgroundTexture,
+                                        const TerrainTexture& rTexture,
+                                        const TerrainTexture& gTexture,
+                                        const TerrainTexture& bTexture )
+    : m_backgroundTexture( backgroundTexture ),
+      m_rTexture( rTexture ),
+      m_gTexture( gTexture ),
+      m_bTexture( bTexture ) {
+}
+
+TerrainTexture TerrainTexturePack::getBackgroundTexture() const {
+    return m_backgroundTexture;
+}
+
+TerrainTexture TerrainTexturePack::getRTexture() const {
+    return m_rTexture;
+}
+
+TerrainTexture TerrainTexturePack::getGTexture() const {
+    return m_gTexture;
+}
+
+TerrainTexture TerrainTexturePack::getBTexture() const {
+    return m_bTexture;
+}

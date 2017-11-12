@@ -52,6 +52,9 @@ public:
     /// Load a bool into a uniform
     void loadBoolean( GLint location, bool value );
 
+    /// Load a bool into a uniform
+    void loadInt( GLint location, GLint value );
+
     /// Load a float into a uniform
     void loadFloat( GLint location, GLfloat value );
 
@@ -117,6 +120,14 @@ public:
     TerrainShader();
     virtual void init();
     virtual void getUniformLocations();
+    void connectTextureUnits();
+
+protected:
+    GLint m_backgroundTexture;
+    GLint m_rTexture;
+    GLint m_gTexture;
+    GLint m_bTexture;
+    GLint m_blendMapTexture;
 };
 
 #endif //OPENGL_EXAMPLES_17_SHADER_HH

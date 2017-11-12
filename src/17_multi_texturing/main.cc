@@ -145,44 +145,37 @@ int main( int argc, char **argv ) {
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
     common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
+    common::DisplayManager::instance()->camera()->setPitch( 15.0f );
 
+    // ---------------------------------------------------------------
 
     bool result;
     Loader loader = Loader();
 
-    // Grass
-    const std::string grassModelPath = common::getResource( "grass.obj", result );
-    assert( result );
-    const std::string grassTexturePath = common::getResource( "grassBlades.png", result );
-    assert( result );
-    Model grassModel = OBJLoader::loadObjModel( grassModelPath, loader );
-    ModelTexture grassTexture( loader.loadTexture( grassTexturePath ) );
-    grassTexture.setShineDamper( 10.0f );
-    grassTexture.setReflectivity( 1.0f );
-    grassTexture.setHasTransparency( true );
-    grassTexture.setUseFakeLighting( true );
-    TexturedModel grassTexturedModel( grassModel, grassTexture );
+    // ---------------------------------------------------------------
 
-    // Fern
-    const std::string fernModelPath = common::getResource( "fern.obj", result );
+    // Grass
+    const std::string bladesModelPath = common::getResource( "grass.obj", result );
     assert( result );
-    const std::string fernTexturePath = common::getResource( "fern2.png", result );
+    const std::string bladesTexturePath = common::getResource( "grassBlades.png", result );
     assert( result );
-    Model fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
-    ModelTexture fernTexture( loader.loadTexture( fernTexturePath ) );
-    fernTexture.setShineDamper( 10.0f );
-    fernTexture.setReflectivity( 1.0f );
-    fernTexture.setHasTransparency( true );
-    fernTexture.setUseFakeLighting( false );
-    TexturedModel fernTexturedModel( fernModel, fernTexture );
+
+    // Model and texture
+    Model bladesModel = OBJLoader::loadObjModel( bladesModelPath, loader );
+    ModelTexture bladesTexture( loader.loadTexture( bladesTexturePath ) );
+    bladesTexture.setShineDamper( 10.0f );
+    bladesTexture.setReflectivity( 1.0f );
+    bladesTexture.setHasTransparency( true );
+    bladesTexture.setUseFakeLighting( true );
+    TexturedModel bladesTexturedModel( bladesModel, bladesTexture );
 
     // Create entities
     std::vector< Entity > entities;
 
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
 
-    std::size_t numGrass = 500;
+    std::size_t numGrass = 100;
     for ( std::size_t i = 0; i < numGrass; ++i ) {
 
         std::uniform_real_distribution<> dis(-0, -500.0 );
@@ -192,57 +185,57 @@ int main( int argc, char **argv ) {
         double posZ = dis( gen );
         double scaleXYZ = scaleDis( gen );
 
-        Entity grassEntity( grassTexturedModel,
+        Entity grassEntity( bladesTexturedModel,
                            glm::vec3( 0, 0, 0 ),
                            glm::vec3( 0, 0, 0 ),
                            1 );
         grassEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
         grassEntity.setScale( scaleXYZ );
         entities.push_back( grassEntity );
-
     }
 
-//    std::size_t numFerns = 100;
-//    for ( std::size_t i = 0; i < numFerns; ++i ) {
-//
-//        std::uniform_real_distribution<> dis( -200, 100.0 );
-//        std::uniform_real_distribution<> scaleDis( 1.0, 2.2 );
-//
-//        double posX = dis( gen );
-//        double posZ = dis( gen );
-//        double scaleXYZ = scaleDis( gen );
-//
-//        Entity fernEntity( fernTexturedModel,
-//                       glm::vec3( 0, 0, 0 ),
-//                       glm::vec3( 0, 0, 0 ),
-//                       1 );
-//        fernEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
-//        fernEntity.setScale( scaleXYZ );
-//        entities.push_back( fernEntity );
-//    }
+    // ---------------------------------------------------------------
+
+    const std::string grassyTexturePath = common::getResource( "grass1.jpg", result );
+    assert( result );
+    const std::string dirtTexturePath = common::getResource( "dirt.png", result );
+    assert( result );
+    const std::string pinkFlowersTexturePath = common::getResource( "flowers.png", result );
+    assert( result );
+    const std::string pathTexturePath = common::getResource( "path.png", result );
+    assert( result );
+    const std::string blendMapTexturePath = common::getResource( "blendMap.png", result );
+    assert( result );
+
+    TerrainTexture backgroundTexture = TerrainTexture( loader.loadTexture( grassyTexturePath ) );
+    TerrainTexture rTexture = TerrainTexture( loader.loadTexture( dirtTexturePath ) );
+    TerrainTexture gTexture = TerrainTexture( loader.loadTexture( pinkFlowersTexturePath ) );
+    TerrainTexture bTexture = TerrainTexture( loader.loadTexture( pathTexturePath ) );
+    TerrainTexture blendMapTexture = TerrainTexture( loader.loadTexture( blendMapTexturePath ) );
+
+    TerrainTexturePack texturePack( backgroundTexture,
+                                    rTexture,
+                                    gTexture,
+                                    bTexture );
+    TerrainTexture blendMap = TerrainTexture( blendMapTexture );
+
+    Terrain terrain( -1, -1, loader, texturePack, blendMap );
+
+    // ---------------------------------------------------------------
 
     Light light( glm::vec3( 0, 100, 0 ), glm::vec3( 1, 1, 1 ) );
 
-
-    // Grass texture 0
-    const std::string grass0 = common::getResource( "grass0.jpg", result );
-    GLuint grassTextureID0 = loader.loadTexture( grass0 );
-    ModelTexture grassTexture0( grassTextureID0 );
-    grassTexture0.setShineDamper( 1.0f );
-    grassTexture0.setReflectivity( 0.0f );
-    assert( result );
-
-    std::vector< Terrain > terrains;
-    Terrain terrain( -1, -1, loader, grassTexture0 );
-    terrains.push_back( terrain );
-
-    double speed = 2.0;
+    // ---------------------------------------------------------------
 
     StaticShader shader;
     TerrainShader terrainShader;
     shader.init();
     terrainShader.init();
     MasterRenderer render( shader, terrainShader );
+
+    // ---------------------------------------------------------------
+
+    double speed = 2.0;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
@@ -271,11 +264,7 @@ int main( int argc, char **argv ) {
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
-
-        for ( auto terrain : terrains ) {
-            render.processTerrain( terrain );
-        }
-
+        render.processTerrain( terrain );
         render.render( light, camera );
 
         // Swap buffers

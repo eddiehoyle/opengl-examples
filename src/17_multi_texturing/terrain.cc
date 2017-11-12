@@ -8,11 +8,21 @@
 Terrain::Terrain( int gridX,
                   int gridZ,
                   Loader& loader,
-                  ModelTexture& texture )
+                  TerrainTexturePack& texturePack,
+                  TerrainTexture& blendMap )
         : m_x( gridX * SIZE ),
           m_z( gridZ * SIZE ),
           m_model( generateTerrain( loader ) ),
-          m_texture( texture ) {
+          m_texturePack( texturePack ),
+          m_blendMap( blendMap ) {
+}
+
+TerrainTexturePack Terrain::getTexturePack() const {
+    return m_texturePack;
+}
+
+TerrainTexture Terrain::getBlendMap() const {
+    return m_blendMap;
 }
 
 Model Terrain::generateTerrain( Loader& loader ) {
@@ -72,8 +82,4 @@ float Terrain::getZ() const {
 
 Model Terrain::getModel() const {
     return m_model;
-}
-
-ModelTexture Terrain::getTexture() const {
-    return m_texture;
 }

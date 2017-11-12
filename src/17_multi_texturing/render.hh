@@ -10,8 +10,9 @@
 #include "model.hh"
 #include "entity.hh"
 #include "shader.hh"
-#include "../common/camera.hh"
 #include "terrain.hh"
+#include "../common/camera.hh"
+
 
 const GLfloat kSkyRed = 0.54;
 const GLfloat kSkyGreen = 0.824;
@@ -52,6 +53,7 @@ private:
     void prepareTerrain( const Terrain& terrain );
     void unbindTexturedModel();
     void loadModelMatrix( const Terrain& terrain );
+    void bindTextures( const Terrain& terrain );
 
 private:
     TerrainShader m_shader;

@@ -49,12 +49,11 @@ float Camera::roll() const {
 }
 
 glm::mat4 Camera::matrix() const {
-//    glm::mat4 camera = glm::lookAt(
-//            m_position, // Camera is at (4,3,3), in World Space
-//            glm::vec3( 1, 0, 0 ),
-//            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//    );
-    glm::mat4 camera = glm::translate( glm::mat4(), m_position );
+    glm::mat4 translate = glm::translate( glm::mat4(), m_position );
+    glm::mat4 rotateX = glm::rotate( glm::mat4(), glm::radians( m_pitch ), glm::vec3( 1, 0, 0 ) );
+
+    glm::mat4 camera = rotateX * translate;
+
     return camera;
 }
 

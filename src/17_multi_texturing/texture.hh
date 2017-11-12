@@ -35,4 +35,37 @@ private:
     bool m_useFakeLighting;
 };
 
+class TerrainTexture {
+
+public:
+    explicit TerrainTexture( GLuint id );
+    GLuint getTextureID() const;
+
+private:
+    GLuint m_textureID;
+};
+
+class TerrainTexturePack {
+
+public:
+    TerrainTexturePack( const TerrainTexture& backgroundTexture,
+                        const TerrainTexture& rTexture,
+                        const TerrainTexture& gTexture,
+                        const TerrainTexture& bTexture );
+
+    TerrainTexture getBackgroundTexture() const;
+    TerrainTexture getRTexture() const;
+    TerrainTexture getGTexture() const;
+    TerrainTexture getBTexture() const;
+
+
+private:
+    TerrainTexture m_backgroundTexture;
+    TerrainTexture m_rTexture;
+    TerrainTexture m_gTexture;
+    TerrainTexture m_bTexture;
+
+};
+
+
 #endif //OPENGL_EXAMPLES_17_TEXTURE_HH

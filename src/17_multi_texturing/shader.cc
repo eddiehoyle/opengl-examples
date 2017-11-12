@@ -69,6 +69,10 @@ void ShaderProgram::loadBoolean( GLint location, bool value ) {
     glUniform1f( location, value ? 1.0f : 0.0f );
 }
 
+void ShaderProgram::loadInt( GLint location, GLint value ) {
+    glUniform1i( location, value );
+}
+
 void ShaderProgram::loadFloat( GLint location, GLfloat value ) {
     glUniform1f( location, value );
 }
@@ -86,7 +90,7 @@ GLuint ShaderProgram::compile( const std::string& shader, GLenum type ) {
 
     // Compile vertex shader
     GLuint id = glCreateShader( type );
-    const char* source = shader.c_str();
+    const char *source = shader.c_str();
     glShaderSource( id, 1, &source, nullptr );
     glCompileShader( id );
     validateShader( id );
@@ -162,7 +166,8 @@ void StaticShader::init() {
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 
     // Read in fragment shader
-    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/fragment.glsl", shader_file_exists );
+    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/fragment.glsl",
+                                                           shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
 
@@ -211,13 +216,15 @@ void TerrainShader::init() {
     bool shader_file_exists;
 
     // Read in vertex shader
-    const std::string vertex_path = common::getResource( "shaders/17_multi_texturing/terrainVertex.glsl", shader_file_exists );
+    const std::string vertex_path = common::getResource( "shaders/17_multi_texturing/terrainVertex.glsl",
+                                                         shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
     assert( shader_file_exists );
 
     // Read in fragment shader
-    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/terrainFragment.glsl", shader_file_exists );
+    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/terrainFragment.glsl",
+                                                           shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
     assert( shader_file_exists );
@@ -240,6 +247,14 @@ void TerrainShader::init() {
     getUniformLocations();
 }
 
+void TerrainShader::connectTextureUnits() {
+    loadInt( m_backgroundTexture, 0 );
+    loadInt( m_rTexture, 1 );
+    loadInt( m_gTexture, 2 );
+    loadInt( m_bTexture, 3 );
+    loadInt( m_blendMapTexture, 4 );
+}
+
 void TerrainShader::getUniformLocations() {
     m_transformationMatrix = getUniformLocation( "transformationMatrix" );
     m_projectionMatrix = getUniformLocation( "projectionMatrix" );
@@ -249,4 +264,17 @@ void TerrainShader::getUniformLocations() {
     m_shineDamper = getUniformLocation( "shineDamper" );
     m_reflectivity = getUniformLocation( "reflectivity" );
     m_skyColour = getUniformLocation( "skyColour" );
+
+    // Custom
+    m_backgroundTexture = getUniformLocation( "backgroundTexture" );
+    m_rTexture = getUniformLocation( "rTexture" );
+    m_gTexture = getUniformLocation( "gTexture" );
+    m_bTexture = getUniformLocation( "bTexture" );
+    m_blendMapTexture = getUniformLocation( "blendMapTexture" );
+
+//    printf( "%d, %d, %d, %d\n",
+//            m_backgroundTexture,
+//            m_rTexture,
+//            m_gTexture,
+//            m_bTexture );
 }
