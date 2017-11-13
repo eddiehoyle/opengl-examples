@@ -27,15 +27,28 @@ public:
     void setWidth( unsigned int width );
     void setHeight( unsigned int height );
     void update( unsigned int width, unsigned int height );
+    long getCurrentTime() const;
+
+    /// Not sure yet...
+    void updateDisplay();
+
+    float getFrameTimeSeconds() const;
 
 private:
     DisplayManager();
     static DisplayManager* s_instance;
 
+
+private:
+
     unsigned int m_width;
     unsigned int m_height;
 
     Camera* m_camera;
+
+    // Frames
+    long m_lastFrameTime;
+    float m_delta;
 };
 
 } // namespace common

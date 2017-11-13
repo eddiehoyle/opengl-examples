@@ -16,6 +16,7 @@ add_subdirectory(14_terrain)
 add_subdirectory(15_transparency)
 add_subdirectory(16_fog)
 add_subdirectory(17_multi_texturing)
+add_subdirectory(18_player)
 
 # Trying new things
 add_subdirectory(dev)
