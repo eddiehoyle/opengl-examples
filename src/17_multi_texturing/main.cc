@@ -16,6 +16,7 @@
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
+#include "../common/camera.hh"
 #include "OBJLoader.hh"
 
 #ifndef GLFW_TRUE
@@ -38,65 +39,81 @@ static bool kKeyPressedD = false;
 static bool kKeyPressedQ = false;
 static bool kKeyPressedE = false;
 
-void windowResizeCallback( GLFWwindow *window, int width, int height ) {
-    common::DisplayManager::instance()->update(
-            static_cast< unsigned int >( std::max( width, 0 ) ),
-            static_cast< unsigned int >( std::max( height, 0 ) ) );
-    std::cerr << __func__ << " : " << width << ", " << height << std::endl;
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow *window);
+
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// camera
+common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow *window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    float speed = deltaTime * 18;
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera->ProcessKeyboard(common::FORWARD, speed);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera->ProcessKeyboard(common::BACKWARD, speed);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera->ProcessKeyboard(common::LEFT, speed);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera->ProcessKeyboard(common::RIGHT, speed);
 }
 
-void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int mods ) {
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
 
-    if ( key == GLFW_KEY_ESCAPE && mods == 0 )
-        glfwSetWindowShouldClose( window, GLFW_TRUE );
 
-    switch ( action ) {
-        case GLFW_PRESS:
-            switch ( key ) {
-                case GLFW_KEY_W:
-                    kKeyPressedW = true;
-                    break;
-                case GLFW_KEY_A:
-                    kKeyPressedA = true;
-                    break;
-                case GLFW_KEY_S:
-                    kKeyPressedS = true;
-                    break;
-                case GLFW_KEY_D:
-                    kKeyPressedD = true;
-                    break;
-                case GLFW_KEY_Q:
-                    kKeyPressedQ = true;
-                    break;
-                case GLFW_KEY_E:
-                    kKeyPressedE = true;
-                    break;
-            }
-            break;
-        case GLFW_RELEASE:
-            switch ( key ) {
-                case GLFW_KEY_W:
-                    kKeyPressedW = false;
-                    break;
-                case GLFW_KEY_A:
-                    kKeyPressedA = false;
-                    break;
-                case GLFW_KEY_S:
-                    kKeyPressedS = false;
-                    break;
-                case GLFW_KEY_D:
-                    kKeyPressedD = false;
-                    break;
-                case GLFW_KEY_Q:
-                    kKeyPressedQ = false;
-                    break;
-                case GLFW_KEY_E:
-                    kKeyPressedE = false;
-                    break;
-            }
-            break;
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
     }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera->ProcessMouseMovement(xoffset, yoffset);
 }
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera->ProcessMouseScroll(yoffset);
+}
+
 
 int main( int argc, char **argv ) {
 
@@ -126,11 +143,13 @@ int main( int argc, char **argv ) {
     glfwSetTime( 0.0 );
 
     // Setup callbacks
-    glfwSetKeyCallback( window, keyPressEvent );
-    glfwSetWindowSizeCallback( window, windowResizeCallback );
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
-    // Activate this context
-    glfwMakeContextCurrent( window );
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Initialize GLEW
     glewExperimental = GL_TRUE; // Needed for core profile
@@ -141,11 +160,11 @@ int main( int argc, char **argv ) {
     }
 
     // Set width/height
-    common::Camera *camera = new common::Camera();
+//    common::Camera *camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
-    common::DisplayManager::instance()->camera()->setPitch( 15.0f );
+//    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
+//    common::DisplayManager::instance()->camera()->setPitch( 15.0f );
 
     // ---------------------------------------------------------------
 
@@ -239,27 +258,15 @@ int main( int argc, char **argv ) {
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        glm::vec3 cameraPosition;
-        if ( kKeyPressedW ) {
-            cameraPosition.z += speed;
-        }
-        if ( kKeyPressedA ) {
-            cameraPosition.x += speed;
-        }
-        if ( kKeyPressedS ) {
-            cameraPosition.z -= speed;
-        }
-        if ( kKeyPressedD ) {
-            cameraPosition.x -= speed;
-        }
-        if ( kKeyPressedQ ) {
-            cameraPosition.y -= speed;
-        }
-        if ( kKeyPressedE ) {
-            cameraPosition.y += speed;
-        }
+        // per-frame time logic
+        // --------------------
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
-        common::DisplayManager::instance()->camera()->move( cameraPosition );
+        // input
+        // -----
+        processInput(window);
 
         for ( auto entity : entities ) {
             render.processEntity( entity );

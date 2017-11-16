@@ -29,11 +29,11 @@ DisplayManager::~DisplayManager() {
     delete s_instance;
 }
 
-void DisplayManager::setCamera( Camera* camera ) {
+void DisplayManager::setCamera( CameraLOGL* camera ) {
     m_camera = camera;
 }
 
-Camera* DisplayManager::camera() const {
+CameraLOGL* DisplayManager::camera() const {
     return m_camera;
 }
 

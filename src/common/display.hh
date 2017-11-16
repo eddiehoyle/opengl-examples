@@ -7,7 +7,7 @@
 
 namespace common {
 
-class Camera;
+class CameraLOGL;
 
 class DisplayManager {
 
@@ -19,8 +19,8 @@ public:
     DisplayManager& operator=( const DisplayManager& ) = delete;
     ~DisplayManager();
 
-    void setCamera( Camera* camera );
-    Camera* camera() const;
+    void setCamera( CameraLOGL* camera );
+    CameraLOGL* camera() const;
 
     unsigned int width() const;
     unsigned int height() const;
@@ -44,7 +44,7 @@ private:
     unsigned int m_width;
     unsigned int m_height;
 
-    Camera* m_camera;
+    CameraLOGL* m_camera;
 
     // Frames
     long m_lastFrameTime;

@@ -21,18 +21,14 @@ void Player::checkInputs( GLFWwindow* window ) {
 
     if ( glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS ) {
         m_currentSpeed = kRunSpeed;
-        printf( "W\n" );
     }
     if ( glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS ) {
         m_currentSpeed = -kRunSpeed;
-        printf( "S\n" );
     }
     if ( glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS ) {
         m_currentTurnSpeed = kTurnSpeed;
-        printf( "A\n" );
     }
     if ( glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS ) {
         m_currentTurnSpeed = -kTurnSpeed;
-        printf( "D\n" );
     }
 }

@@ -18,6 +18,7 @@
 #include "../common/math.hh"
 #include "OBJLoader.hh"
 #include "player.hh"
+#include "../common/input/input.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -27,78 +28,66 @@
 #define GLFW_FALSE 0
 #endif
 
-
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
 
-//// Simple key press states
-//static bool kKeyPressedW = false;
-//static bool kKeyPressedA = false;
-//static bool kKeyPressedS = false;
-//static bool kKeyPressedD = false;
-//static bool kKeyPressedQ = false;
-//static bool kKeyPressedE = false;
 
-void windowResizeCallback( GLFWwindow *window, int width, int height ) {
-    common::DisplayManager::instance()->update(
-            static_cast< unsigned int >( std::max( width, 0 ) ),
-            static_cast< unsigned int >( std::max( height, 0 ) ) );
-    std::cerr << __func__ << " : " << width << ", " << height << std::endl;
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow *window);
+
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// camera
+common::CameraLOGL cameraOgl(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
 }
 
-void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int mods ) {
 
-    if ( key == GLFW_KEY_ESCAPE && mods == 0 )
-        glfwSetWindowShouldClose( window, GLFW_TRUE );
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    cameraOgl.ProcessMouseMovement(xoffset, yoffset);
 }
-//
-//    switch ( action ) {
-//        case GLFW_PRESS:
-//            switch ( key ) {
-//                case GLFW_KEY_W:
-//                    kKeyPressedW = true;
-//                    break;
-//                case GLFW_KEY_A:
-//                    kKeyPressedA = true;
-//                    break;
-//                case GLFW_KEY_S:
-//                    kKeyPressedS = true;
-//                    break;
-//                case GLFW_KEY_D:
-//                    kKeyPressedD = true;
-//                    break;
-//                case GLFW_KEY_Q:
-//                    kKeyPressedQ = true;
-//                    break;
-//                case GLFW_KEY_E:
-//                    kKeyPressedE = true;
-//                    break;
-//            }
-//            break;
-//        case GLFW_RELEASE:
-//            switch ( key ) {
-//                case GLFW_KEY_W:
-//                    kKeyPressedW = false;
-//                    break;
-//                case GLFW_KEY_A:
-//                    kKeyPressedA = false;
-//                    break;
-//                case GLFW_KEY_S:
-//                    kKeyPressedS = false;
-//                    break;
-//                case GLFW_KEY_D:
-//                    kKeyPressedD = false;
-//                    break;
-//                case GLFW_KEY_Q:
-//                    kKeyPressedQ = false;
-//                    break;
-//                case GLFW_KEY_E:
-//                    kKeyPressedE = false;
-//                    break;
-//            }
-//            break;
-//    }
-//}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    cameraOgl.ProcessMouseScroll(yoffset);
+}
 
 int main( int argc, char **argv ) {
 
@@ -128,8 +117,8 @@ int main( int argc, char **argv ) {
     glfwSetTime( 0.0 );
 
     // Setup callbacks
-    glfwSetKeyCallback( window, keyPressEvent );
-    glfwSetWindowSizeCallback( window, windowResizeCallback );
+    glfwSetKeyCallback( window, common::glfw3KeyPressCallback );
+//    glfwSetWindowSizeCallback( window, windowResizeCallback );
 
     // Activate this context
     glfwMakeContextCurrent( window );
@@ -263,33 +252,19 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
+    common::ObserverGame* observerGame = new common::ObserverGame;
+    common::InputManager::instance()->addObserver( observerGame );
+
     double speed = 2.0;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
+        if ( observerGame->isQuit() ) {
+            glfwSetWindowShouldClose( window, GLFW_TRUE );
+        }
+
+        camera->update();
         player.checkInputs( window );
-
-        glm::vec3 cameraPosition;
-//        if ( kKeyPressedW ) {
-//            cameraPosition.z += speed;
-//        }
-//        if ( kKeyPressedA ) {
-//            cameraPosition.x += speed;
-//        }
-//        if ( kKeyPressedS ) {
-//            cameraPosition.z -= speed;
-//        }
-//        if ( kKeyPressedD ) {
-//            cameraPosition.x -= speed;
-//        }
-//        if ( kKeyPressedQ ) {
-//            cameraPosition.y -= speed;
-//        }
-//        if ( kKeyPressedE ) {
-//            cameraPosition.y += speed;
-//        }
-
-        common::DisplayManager::instance()->camera()->move( cameraPosition );
 
         for ( auto entity : entities ) {
             render.processEntity( entity );
@@ -305,9 +280,11 @@ int main( int argc, char **argv ) {
         glfwPollEvents();
     }
 
+
     // Cleanup
     render.cleanup();
     loader.cleanup();
+    common::InputManager::instance()->removeObserver( observerGame );
 
     // Tidy up camera
     delete camera;

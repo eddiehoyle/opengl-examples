@@ -74,7 +74,7 @@ public:
 
     void cleanup();
     void prepare();
-    void render( Light sun, common::Camera* camera );
+    void render( Light sun, common::CameraLOGL* camera );
     void processEntity( const Entity& entity );
     void processTerrain( const Terrain& terrain );
     void createProjectionMatrix();
