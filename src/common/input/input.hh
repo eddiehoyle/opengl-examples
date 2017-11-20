@@ -6,8 +6,9 @@
 #define OPENGL_EXAMPLES_INPUT_HH
 
 #include <set>
+#include <vector>
 #include "defs.hh"
-#include "../event/observer.hh"
+#include "../command/command.hh"
 
 class GLFWwindow;
 
@@ -26,17 +27,17 @@ public:
     ~InputManager();
 
     void input( KeyEvent event, KeyState state );
-    void addObserver( Observer* observer );
-    void removeObserver( Observer* observer );
+
+    std::vector< AbstractCommand* > commands() const;
+
+    void clear();
 
 private:
     InputManager();
     static InputManager* s_instance;
 
 private:
-
-    // Objects that listen for events
-    std::set< Observer* > m_observers;
+    std::vector< AbstractCommand* > m_commands;
 
 };
 

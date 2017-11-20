@@ -67,21 +67,8 @@ InputManager::~InputManager() {
     delete s_instance;
 }
 
-void InputManager::addObserver( Observer* observer ) {
-    m_observers.insert( observer );
-}
-
-void InputManager::removeObserver( Observer* observer ) {
-    auto iter = m_observers.find( observer );
-    if ( iter != m_observers.end() ) {
-        m_observers.erase( observer );
-    }
-}
-
 void InputManager::input( KeyEvent event, KeyState state ) {
-    for ( Observer* observer : m_observers ) {
-        observer->notify( event, state );
-    }
+
 }
 
 } // namespace common

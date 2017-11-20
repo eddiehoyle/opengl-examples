@@ -17,10 +17,10 @@ enum class KeyState {
 
 enum class KeyEvent {
     kUnknown,
-    kForward,
-    kBackward,
-    kTurnLeft,
-    kTurnRight,
+    kMoveForward,
+    kMoveBackward,
+    kMoveLeft,
+    kMoveRight,
     kCancel
 };
 

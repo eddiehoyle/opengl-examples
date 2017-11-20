@@ -8,6 +8,8 @@
 #include <cstdio>
 #include <iostream>
 #include <random>
+#include <chrono>
+#include <thread>
 
 #include "render.hh"
 #include "loader.hh"
@@ -49,7 +51,9 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
+//common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
+common::Camera* camera = new common::Camera();
+
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -57,24 +61,54 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
+float totalTime = 0.0f;
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+        return;
+    }
+
+    bool state = ( action == GLFW_PRESS || action == GLFW_REPEAT );
+    if ( key == GLFW_KEY_W ) {
+        camera->move( common::CameraMove::kForward, state );
+    }
+    if ( key == GLFW_KEY_S ) {
+        camera->move( common::CameraMove::kBackward, state );
+    }
+    if ( key == GLFW_KEY_A ) {
+        camera->move( common::CameraMove::kLeft, state );
+    }
+    if ( key == GLFW_KEY_D ) {
+        camera->move( common::CameraMove::kRight, state );
+    }
+}
+
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float speed = deltaTime * 18;
+//    std::cerr << __func__ << " : G(press)=" << (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+//              << ", G(release)=" << (glfwGetKey(window, GLFW_KEY_G)  == GLFW_RELEASE)
+//              << std::endl;
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera->ProcessKeyboard(common::FORWARD, speed);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera->ProcessKeyboard(common::BACKWARD, speed);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera->ProcessKeyboard(common::LEFT, speed);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera->ProcessKeyboard(common::RIGHT, speed);
+//    if ( glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS ) {
+//        camera->move( common::CameraMove::kForward, true );
+//    } else if ( glfwGetKey(window, GLFW_KEY_W) == GLFW_FALSE ) {
+//        camera->move( common::CameraMove::kForward, false );
+//    }
+//
+//    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+//        camera->move( common::CameraMove::kBackward, true );
+//    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+//        camera->move( common::CameraMove::kLeft, true );
+//    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+//        camera->move( common::CameraMove::kRight, true );
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -104,16 +138,20 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera->ProcessMouseMovement(xoffset, yoffset);
+    camera->look( xoffset, yoffset );
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera->ProcessMouseScroll(yoffset);
+//    std::cerr << __func__ << " : " << xoffset << ", " << yoffset << std::endl;
+    camera->zoom( yoffset );
 }
 
+double average(std::vector<double> const& v) {
+    return 1.0 * std::accumulate(v.begin(), v.end(), 0.0 ) / v.size();
+}
 
 int main( int argc, char **argv ) {
 
@@ -144,6 +182,7 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -160,11 +199,8 @@ int main( int argc, char **argv ) {
     }
 
     // Set width/height
-//    common::Camera *camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-//    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
-//    common::DisplayManager::instance()->camera()->setPitch( 15.0f );
 
     // ---------------------------------------------------------------
 
@@ -254,19 +290,21 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    double speed = 2.0;
+    const double FRAMES_PER_SECOND = 60.0;
+    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
+
+    double previous = glfwGetTime();
+    double last_second_time = 0.0;
+    unsigned int frame_count;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        // per-frame time logic
-        // --------------------
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        double current = glfwGetTime();
+        double elapsed = current - previous;
+        previous = current;
 
-        // input
-        // -----
-        processInput(window);
+        // Update camera
+        camera->update( elapsed );
 
         for ( auto entity : entities ) {
             render.processEntity( entity );
@@ -277,6 +315,10 @@ int main( int argc, char **argv ) {
         // Swap buffers
         glfwSwapBuffers( window );
         glfwPollEvents();
+
+        // Cap FPS
+        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
+        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
     }
 
     // Cleanup
