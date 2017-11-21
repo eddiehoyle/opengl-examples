@@ -20,6 +20,8 @@
 #include "../common/math.hh"
 #include "../common/camera.hh"
 #include "OBJLoader.hh"
+#include "../common/input/input.hh"
+#include "../common/controllers/controller.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -66,50 +68,27 @@ float totalTime = 0.0f;
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-        return;
-    }
-
-    bool state = ( action == GLFW_PRESS || action == GLFW_REPEAT );
-    if ( key == GLFW_KEY_W ) {
-        camera->move( common::CameraMove::kForward, state );
-    }
-    if ( key == GLFW_KEY_S ) {
-        camera->move( common::CameraMove::kBackward, state );
-    }
-    if ( key == GLFW_KEY_A ) {
-        camera->move( common::CameraMove::kLeft, state );
-    }
-    if ( key == GLFW_KEY_D ) {
-        camera->move( common::CameraMove::kRight, state );
-    }
-}
-
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
-//    std::cerr << __func__ << " : G(press)=" << (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-//              << ", G(release)=" << (glfwGetKey(window, GLFW_KEY_G)  == GLFW_RELEASE)
-//              << std::endl;
-
-//    if ( glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS ) {
-//        camera->move( common::CameraMove::kForward, true );
-//    } else if ( glfwGetKey(window, GLFW_KEY_W) == GLFW_FALSE ) {
-//        camera->move( common::CameraMove::kForward, false );
+//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+//
+//    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+//        glfwSetWindowShouldClose(window, true);
+//        return;
 //    }
 //
-//    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-//        camera->move( common::CameraMove::kBackward, true );
-//    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-//        camera->move( common::CameraMove::kLeft, true );
-//    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-//        camera->move( common::CameraMove::kRight, true );
-}
+//    bool state = ( action == GLFW_PRESS || action == GLFW_REPEAT );
+//    if ( key == GLFW_KEY_W ) {
+//        camera->move( common::CameraMove::kForward, state );
+//    }
+//    if ( key == GLFW_KEY_S ) {
+//        camera->move( common::CameraMove::kBackward, state );
+//    }
+//    if ( key == GLFW_KEY_A ) {
+//        camera->move( common::CameraMove::kLeft, state );
+//    }
+//    if ( key == GLFW_KEY_D ) {
+//        camera->move( common::CameraMove::kRight, state );
+//    }
+//}
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -182,7 +161,7 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, key_callback);
+    glfwSetKeyCallback(window, common::glfw3KeyPressCallback );
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -297,6 +276,8 @@ int main( int argc, char **argv ) {
     double last_second_time = 0.0;
     unsigned int frame_count;
 
+    common::PlayerMoveController cameraController( camera );
+
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
         double current = glfwGetTime();
@@ -304,13 +285,17 @@ int main( int argc, char **argv ) {
         previous = current;
 
         // Update camera
-        camera->update( elapsed );
+        cameraController.update( elapsed );
 
+        // Update entities
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
         render.processTerrain( terrain );
         render.render( light, camera );
+
+        // Clear inputs
+        common::InputManager::instance()->clear();
 
         // Swap buffers
         glfwSwapBuffers( window );

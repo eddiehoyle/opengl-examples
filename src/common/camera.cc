@@ -81,7 +81,7 @@ glm::mat4 Camera::perspective() const {
 void Camera::update( double elapsed ) {
 
     MoveComponent* component = getComponent< MoveComponent >();
-    if ( component ) {
+    if ( component == nullptr ) {
         return;
     }
 

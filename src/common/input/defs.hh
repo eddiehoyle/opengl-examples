@@ -8,21 +8,6 @@
 
 namespace common {
 
-enum class KeyState {
-    kUnknown,
-    kPress,
-    kRepeat,
-    kRelease
-};
-
-enum class KeyEvent {
-    kUnknown,
-    kMoveForward,
-    kMoveBackward,
-    kMoveLeft,
-    kMoveRight,
-    kCancel
-};
 
 }
 

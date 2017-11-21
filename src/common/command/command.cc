@@ -8,20 +8,30 @@
 
 namespace common {
 
-//void InputMoveForwardCommand::execute( Camera* camera, bool state ) {
-//    camera->move( CameraMove::kForward );
-//}
-//
-//void InputMoveBackwardCommand::execute( Camera* camera, bool state ) {
-//    camera->move( CameraMove::kBackward );
-//}
-//
-//void InputMoveLeftCommand::execute( Camera* camera, bool state ) {
-//    camera->move( CameraMove::kLeft );
-//}
-//
-//void InputMoveRightCommand::execute( Camera* camera, bool state ) {
-//    camera->move( CameraMove::kRight );
-//}
+Command::Command( CommandType type )
+    : m_type( type ){}
+
+InputCommand::InputCommand()
+        : Command( CommandType::None ),
+          m_action( InputAction::None ),
+          m_state( InputState::None ) {}
+
+InputCommand::InputCommand( InputAction action, InputState state, double value )
+        : Command( CommandType::Input ),
+          m_action( action ),
+          m_state( state ),
+          m_value( value ) {}
+
+InputAction InputCommand::action() const {
+    return m_action;
+}
+
+InputState InputCommand::state() const {
+    return m_state;
+}
+
+double InputCommand::value() const {
+    return m_value;
+}
 
 }

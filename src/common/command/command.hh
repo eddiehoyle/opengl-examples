@@ -7,17 +7,54 @@
 
 namespace common {
 
-class Camera;
-
-class AbstractCommand {
-public:
-    virtual ~AbstractCommand() {}
-    virtual void execute() = 0;
+enum class CommandType {
+    None,
+    Input,
+    Other
 };
 
-class MoveCommand {
-public:
+enum class InputAction {
+    None,
+    MoveForward,
+    MoveBackward,
+    MoveLeft,
+    MoveRight,
+    MouseHorizontal,
+    MouseVectical,
+    Quit
+};
 
+enum class InputState {
+    None,
+    Press,
+    Release,
+    Repeat
+};
+
+class Command {
+public:
+    virtual ~Command() {}
+protected:
+    explicit Command( CommandType type );
+    CommandType m_type;
+};
+
+class InputCommand : public Command {
+
+public:
+    InputCommand();
+    explicit InputCommand( InputAction action,
+                           InputState state,
+                           double value=0.0 );
+
+    InputAction action() const;
+    InputState state() const;
+    double value() const;
+
+private:
+    InputAction m_action;
+    InputState m_state;
+    double m_value;
 };
 
 

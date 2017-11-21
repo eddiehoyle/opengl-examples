@@ -5,50 +5,46 @@
 #include "input.hh"
 
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 namespace common {
 
-void glfw3KeyPressCallback( GLFWwindow* window, int key, int scancode, int action, int mods ) {
+void glfw3KeyPressCallback( GLFWwindow* window, int key, int scancode, int type, int mods ) {
 
-    KeyState state = KeyState::kUnknown;
-    switch ( action ) {
+    if ( key == GLFW_KEY_ESCAPE && type == GLFW_PRESS ) {
+        glfwSetWindowShouldClose( window, GLFW_TRUE );
+        return;
+    }
+
+    InputState state = InputState::None;
+    switch ( type ) {
         case GLFW_PRESS:
-            state = KeyState::kPress;
-            break;
-        case GLFW_REPEAT:
-            state = KeyState::kRepeat;
+            state = InputState::Press;
             break;
         case GLFW_RELEASE:
-            state = KeyState::kRelease;
-            break;
-        default:
-            state = KeyState::kUnknown;
+            state = InputState::Release;
             break;
     }
 
-    KeyEvent event = KeyEvent::kUnknown;
+    InputAction action = InputAction::None;
     switch ( key ) {
         case GLFW_KEY_W:
-            event = KeyEvent::kForward;
-            break;
-        case GLFW_KEY_A:
-            event = KeyEvent::kTurnLeft;
+            action = InputAction::MoveForward;
             break;
         case GLFW_KEY_S:
-            event = KeyEvent::kBackward;
+            action = InputAction::MoveBackward;
+            break;
+        case GLFW_KEY_A:
+            action = InputAction::MoveLeft;
             break;
         case GLFW_KEY_D:
-            event = KeyEvent::kTurnRight;
-            break;
-        case GLFW_KEY_ESCAPE:
-            event = KeyEvent::kCancel;
-            break;
-        default:
-            event = KeyEvent::kUnknown;
+            action = InputAction::MoveRight;
             break;
     }
 
-    InputManager::instance()->input( event, state );
+    if ( action != InputAction::None && state != InputState::None ) {
+        InputManager::instance()->add( action, state );
+    }
 }
 
 InputManager* InputManager::s_instance = nullptr;
@@ -60,15 +56,26 @@ InputManager* InputManager::instance() {
     return s_instance;
 }
 
-InputManager::InputManager() {
+InputManager::InputManager()
+    : m_commands() {
 }
 
 InputManager::~InputManager() {
     delete s_instance;
 }
 
-void InputManager::input( KeyEvent event, KeyState state ) {
-
+void InputManager::add( InputAction action, InputState state, double value ) {
+    const InputCommand command( action, state, value );
+    m_commands.push_back( command );
 }
+
+const InputCommands& InputManager::commands() const {
+    return m_commands;
+}
+
+void InputManager::clear() {
+    m_commands.clear();
+}
+
 
 } // namespace common

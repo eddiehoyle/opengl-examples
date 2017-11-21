@@ -16,10 +16,13 @@ public:
     AbstractSceneObject* object();
 
 protected:
+    explicit AbstractController( AbstractSceneObject* object );
     AbstractSceneObject* m_object;
 };
 
 class PlayerMoveController : public AbstractController {
+public:
+    PlayerMoveController( AbstractSceneObject* object );
     virtual void update( double elapsed );
 };
 

@@ -7,37 +7,36 @@
 
 #include <set>
 #include <vector>
-#include "defs.hh"
 #include "../command/command.hh"
 
 class GLFWwindow;
 
 namespace common {
 
-void glfw3KeyPressCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
+typedef std::vector< InputCommand > InputCommands;
+
+void glfw3KeyPressCallback( GLFWwindow *window, int key, int scancode, int action, int mods );
 
 class InputManager {
 
 public:
-    static InputManager* instance();
+    static InputManager *instance();
 
 public:
-    InputManager( const InputManager& ) = delete;
-    InputManager& operator=( const InputManager& ) = delete;
-    ~InputManager();
-
-    void input( KeyEvent event, KeyState state );
-
-    std::vector< AbstractCommand* > commands() const;
-
+    void add( InputAction action, InputState state, double value = 0.0 );
+    const InputCommands& commands() const;
     void clear();
 
 private:
     InputManager();
+    ~InputManager();
+    InputManager( const InputManager& ) = delete;
+    InputManager& operator=( const InputManager& ) = delete;
+
     static InputManager* s_instance;
 
 private:
-    std::vector< AbstractCommand* > m_commands;
+    InputCommands m_commands;
 
 };
 
