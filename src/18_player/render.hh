@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_18_RENDER_HH
-#define OPENGL_EXAMPLES_18_RENDER_HH
+#ifndef OPENGL_EXAMPLES_17_RENDER_HH
+#define OPENGL_EXAMPLES_17_RENDER_HH
 
 #include <map>
 #include <vector>
@@ -98,4 +98,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_18_RENDER_HH
+#endif //OPENGL_EXAMPLES_17_RENDER_HH

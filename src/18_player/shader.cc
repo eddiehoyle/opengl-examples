@@ -161,12 +161,12 @@ void StaticShader::init() {
     bool shader_file_exists;
 
     // Read in vertex shader
-    const std::string vertex_path = common::getResource( "shaders/18_player/vertex.glsl", shader_file_exists );
+    const std::string vertex_path = common::getResource( "shaders/17_multi_texturing/vertex.glsl", shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 
     // Read in fragment shader
-    const std::string fragment_path = common::getResource( "shaders/18_player/fragment.glsl",
+    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/fragment.glsl",
                                                            shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
@@ -216,14 +216,14 @@ void TerrainShader::init() {
     bool shader_file_exists;
 
     // Read in vertex shader
-    const std::string vertex_path = common::getResource( "shaders/18_player/terrainVertex.glsl",
+    const std::string vertex_path = common::getResource( "shaders/17_multi_texturing/terrainVertex.glsl",
                                                          shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
     assert( shader_file_exists );
 
     // Read in fragment shader
-    const std::string fragment_path = common::getResource( "shaders/18_player/terrainFragment.glsl",
+    const std::string fragment_path = common::getResource( "shaders/17_multi_texturing/terrainFragment.glsl",
                                                            shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
@@ -272,4 +272,9 @@ void TerrainShader::getUniformLocations() {
     m_bTexture = getUniformLocation( "bTexture" );
     m_blendMapTexture = getUniformLocation( "blendMapTexture" );
 
+//    printf( "%d, %d, %d, %d\n",
+//            m_backgroundTexture,
+//            m_rTexture,
+//            m_gTexture,
+//            m_bTexture );
 }

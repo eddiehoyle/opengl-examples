@@ -8,6 +8,8 @@
 #include <cstdio>
 #include <iostream>
 #include <random>
+#include <chrono>
+#include <thread>
 
 #include "render.hh"
 #include "loader.hh"
@@ -16,9 +18,10 @@
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
+#include "../common/camera.hh"
 #include "OBJLoader.hh"
-#include "player.hh"
 #include "../common/input/input.hh"
+#include "../common/controllers/controller.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -28,9 +31,17 @@
 #define GLFW_FALSE 0
 #endif
 
+
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
 
+// Simple key press states
+static bool kKeyPressedW = false;
+static bool kKeyPressedA = false;
+static bool kKeyPressedS = false;
+static bool kKeyPressedD = false;
+static bool kKeyPressedQ = false;
+static bool kKeyPressedE = false;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -42,7 +53,9 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-common::CameraLOGL cameraOgl(glm::vec3(0.0f, 0.0f, 3.0f));
+//common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
+common::Camera* camera = new common::Camera();
+
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -50,7 +63,7 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
+float totalTime = 0.0f;
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -79,14 +92,19 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    cameraOgl.ProcessMouseMovement(xoffset, yoffset);
+    camera->look( xoffset, yoffset );
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    cameraOgl.ProcessMouseScroll(yoffset);
+//    std::cerr << __func__ << " : " << xoffset << ", " << yoffset << std::endl;
+    camera->zoom( yoffset );
+}
+
+double average(std::vector<double> const& v) {
+    return 1.0 * std::accumulate(v.begin(), v.end(), 0.0 ) / v.size();
 }
 
 int main( int argc, char **argv ) {
@@ -105,7 +123,7 @@ int main( int argc, char **argv ) {
     glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "18_player", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "17_multi_texturing", nullptr, nullptr );
     if ( window == nullptr ) {
         printf( "Failed to open GLFW window.\n" );
         glfwTerminate();
@@ -117,11 +135,14 @@ int main( int argc, char **argv ) {
     glfwSetTime( 0.0 );
 
     // Setup callbacks
-    glfwSetKeyCallback( window, common::glfw3KeyPressCallback );
-//    glfwSetWindowSizeCallback( window, windowResizeCallback );
+    glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, common::glfw3KeyPressCallback );
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
-    // Activate this context
-    glfwMakeContextCurrent( window );
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Initialize GLEW
     glewExperimental = GL_TRUE; // Needed for core profile
@@ -132,11 +153,8 @@ int main( int argc, char **argv ) {
     }
 
     // Set width/height
-    common::Camera *camera = new common::Camera();
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, -5.0f, 0.0f ) );
-    common::DisplayManager::instance()->camera()->setPitch( 15.0f );
 
     // ---------------------------------------------------------------
 
@@ -226,65 +244,46 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    // Player model and texture
-    const std::string cubeModelPath = common::getResource( "cube.obj", result );
-    assert( result );
-    const std::string cubeTexturePath = common::getResource( "white.png", result );
-    assert( result );
+    const double FRAMES_PER_SECOND = 60.0;
+    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
 
-    Model cubeModel = OBJLoader::loadObjModel( cubeModelPath, loader );
-    ModelTexture cubeTexture( loader.loadTexture( cubeTexturePath ) );
-    cubeTexture.setShineDamper( 10.0f );
-    cubeTexture.setReflectivity( 1.0f );
-    cubeTexture.setHasTransparency( true );
-    cubeTexture.setUseFakeLighting( true );
-    TexturedModel cubeTexturedModel( cubeModel, cubeTexture );
+    double previous = glfwGetTime();
+    double last_second_time = 0.0;
+    unsigned int frame_count;
 
-    Player player( cubeTexturedModel,
-                   glm::vec3( 0, 0, 0 ),
-                   glm::vec3( 0, 0, 0 ),
-                   1 );
-
-    // ---------------------------------------------------------------
-
-    // Watching
-    // https://youtu.be/d-kuzyCkjoQ?t=383
-
-    // ---------------------------------------------------------------
-
-    common::ObserverGame* observerGame = new common::ObserverGame;
-    common::InputManager::instance()->addObserver( observerGame );
-
-    double speed = 2.0;
+    common::PlayerMoveController cameraController( camera );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        if ( observerGame->isQuit() ) {
-            glfwSetWindowShouldClose( window, GLFW_TRUE );
-        }
+        double current = glfwGetTime();
+        double elapsed = current - previous;
+        previous = current;
 
-        camera->update();
-        player.checkInputs( window );
+        // Update camera
+        cameraController.update( elapsed );
 
+        // Update entities
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
         render.processTerrain( terrain );
         render.render( light, camera );
 
-        // Update display
-        common::DisplayManager::instance()->updateDisplay();
+        // Clear inputs
+        common::InputManager::instance()->clear();
 
         // Swap buffers
         glfwSwapBuffers( window );
         glfwPollEvents();
-    }
 
+        // Cap FPS
+        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
+        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
+    }
 
     // Cleanup
     render.cleanup();
     loader.cleanup();
-    common::InputManager::instance()->removeObserver( observerGame );
 
     // Tidy up camera
     delete camera;

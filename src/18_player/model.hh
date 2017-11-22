@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 22/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_18_MODEL_HH
-#define OPENGL_EXAMPLES_18_MODEL_HH
+#ifndef OPENGL_EXAMPLES_17_MODEL_HH
+#define OPENGL_EXAMPLES_17_MODEL_HH
 
 #include <GL/glew.h>
 
@@ -49,4 +49,4 @@ private:
 
 };
 
-#endif //OPENGL_EXAMPLES_18_MODEL_HH
+#endif //OPENGL_EXAMPLES_17_MODEL_HH

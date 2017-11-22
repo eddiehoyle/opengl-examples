@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 28/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_18_ENTITY_HH
-#define OPENGL_EXAMPLES_18_ENTITY_HH
+#ifndef OPENGL_EXAMPLES_17_ENTITY_HH
+#define OPENGL_EXAMPLES_17_ENTITY_HH
 
 
 #include <glm/vec3.hpp>
@@ -49,4 +49,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_18_ENTITY_HH
+#endif //OPENGL_EXAMPLES_17_ENTITY_HH

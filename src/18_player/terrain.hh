@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 9/11/17.
 //
 
-#ifndef OPENGL_EXAMPLES_18_TERRAIN_HH
-#define OPENGL_EXAMPLES_18_TERRAIN_HH
+#ifndef OPENGL_EXAMPLES_17_TERRAIN_HH
+#define OPENGL_EXAMPLES_17_TERRAIN_HH
 
 #include "model.hh"
 #include "loader.hh"
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_18_TERRAIN_HH
+#endif //OPENGL_EXAMPLES_17_TERRAIN_HH

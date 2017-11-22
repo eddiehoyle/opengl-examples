@@ -21,7 +21,7 @@ Camera::Camera()
           m_movementSpeed( kMovementSpeed ),
           m_mouseSensitivity( 0.2 ),
           m_zoom() {
-    addComponent( new MoveComponent );
+    addComponent( new InputMoveComponent );
 }
 
 void Camera::setSpeed( double value ) {
@@ -67,7 +67,7 @@ glm::mat4 Camera::perspective() const {
 
 void Camera::update( double elapsed ) {
 
-    MoveComponent* component = getComponent< MoveComponent >();
+    InputMoveComponent* component = getComponent< InputMoveComponent >();
     if ( component == nullptr ) {
         return;
     }

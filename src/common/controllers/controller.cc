@@ -25,56 +25,119 @@ void PlayerMoveController::update( double elapsed ) {
 
 //    std::cerr << __func__ << " : commands=" << commands.size() << std::endl;
 
-    MoveComponent* move = object()->getComponent< MoveComponent >();
-    if ( move != nullptr ) {
-        for ( const InputCommand& command : commands ) {
-            switch ( command.state() ) {
-                case InputState::Press:
-                    switch ( command.action() ) {
-                        case InputAction::MoveForward:
-                            move->setForward( true );
-                            break;
-                        case InputAction::MoveBackward:
-                            move->setBackward( true );
-                            break;
-                        case InputAction::MoveLeft:
-                            move->setLeft( true );
-                            break;
-                        case InputAction::MoveRight:
-                            move->setRight( true );
-                            break;
-                        default:
-                            break;
-                    }
+    for ( InputCommand* command : commands ) {
+        switch ( command->action() ) {
+            case InputAction::MoveForward:
+            case InputAction::MoveBackward:
+            case InputAction::MoveLeft:
+            case InputAction::MoveRight:
+                InputMoveCommand *moveCommand = command->asType< InputMoveCommand >();
+                handleMove( command );
+                break;
+            case InputAction::MouseMove:
+                handleMouse( command );
+                break;
+            case InputAction::MouseScroll:
+//                InputScrollCommand* scrollCommand = inputCommand->asType< InputScrollCommand >();
+                handleScroll( command );
+                break;
+        }
+    }
+}
+
+void PlayerMoveController::handleMove( InputMoveCommand *command ) {
+
+    if ( command == nullptr ) {
+        return;
+    }
+
+    AbstractComponent* component = object()->getComponent( ComponentType::InputMove );
+    if ( component == nullptr ) {
+        return;
+    }
+
+    InputMoveCommand* moveCommand = command->asType< InputMoveCommand >();
+    InputMoveComponent* moveComponent = component->asType< InputMoveComponent >();
+
+    switch ( command->state() ) {
+        case InputState::Press:
+            switch ( command->action() ) {
+                case InputAction::MoveForward:
+                    move->setForward( true );
                     break;
-                case InputState::Release:
-                    switch ( command.action() ) {
-                        case InputAction::MoveForward:
-                            move->setForward( false );
-                            break;
-                        case InputAction::MoveBackward:
-                            move->setBackward( false );
-                            break;
-                        case InputAction::MoveLeft:
-                            move->setLeft( false );
-                            break;
-                        case InputAction::MoveRight:
-                            move->setRight( false );
-                            break;
-                        default:
-                            break;
-                    }
+                case InputAction::MoveBackward:
+                    move->setBackward( true );
+                    break;
+                case InputAction::MoveLeft:
+                    move->setLeft( true );
+                    break;
+                case InputAction::MoveRight:
+                    move->setRight( true );
                     break;
                 default:
                     break;
             }
-        }
+            break;
+        case InputState::Release:
+            switch ( command->action() ) {
+                case InputAction::MoveForward:
+                    move->setForward( false );
+                    break;
+                case InputAction::MoveBackward:
+                    move->setBackward( false );
+                    break;
+                case InputAction::MoveLeft:
+                    move->setLeft( false );
+                    break;
+                case InputAction::MoveRight:
+                    move->setRight( false );
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void PlayerMoveController::handleMouse( InputCommand* command ) {
+
+    if ( command == nullptr ) {
+        return;
     }
 
-    m_object->update( elapsed );
+    AbstractComponent* component = object()->getComponent( ComponentType::InputMouse );
+    if ( component == nullptr ) {
+        return;
+    }
 
-    // Temp
-//    common::InputManager::instance()->clear();
+    InputMouseCommand* mouseCommand = command->asType< InputMouseCommand >();
+    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
+
+    switch ( command->action() ) {
+        case InputAction::MouseMove;
+            mouseComponent->set( mouseCommand->x(), mouseCommand->y() );
+            break;
+    }
+
+}
+
+
+void PlayerMoveController::handleScroll( InputMouseCommand *command ) {
+
+    if ( command == nullptr ) {
+        return;
+    }
+
+    InputMouseComponent* mouse = object()->getComponent< InputMouseComponent >();
+
+    switch ( command->action() ) {
+        case InputAction::MouseMove;
+            mouse->set( mouse->x(), mouse->y() );
+            break;
+    }
+
 }
 
 };

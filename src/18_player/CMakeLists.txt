@@ -1,6 +1,6 @@
 set(EXERCISE 18_player)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
-add_executable(${EXERCISE} ${SOURCE_FILES} player.cc player.hh)
+add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY
         DIRECTORY ../common
         DEFINITION COMMON_LIBRARY)

@@ -6,43 +6,76 @@
 
 namespace common {
 
-MoveComponent::MoveComponent()
+ComponentType AbstractComponent::type() {
+    return ComponentType::None;
+}
+
+AbstractComponent::AbstractComponent( ComponentType type )
+    : m_type( type ) {}
+
+AbstractComponent::~AbstractComponent() {}
+
+// ------------------------------------------------------------------------------------ //
+
+InputMouseComponent::InputMouseComponent()
+    : m_x( 0 ),
+      m_y( 0 ),
+      AbstractComponent( ComponentType::InputMouse ) {}
+
+void InputMouseComponent::set( int x, int y ) {
+    m_x = x;
+    m_y = y;
+}
+
+int InputMouseComponent::x() const {
+    return m_x;
+}
+
+int InputMouseComponent::y() const {
+    return m_y;
+}
+
+
+// ------------------------------------------------------------------------------------ //
+
+
+InputMoveComponent::InputMoveComponent()
     : m_forward( false ),
       m_backward( false ),
       m_left( false ),
       m_right( false ),
-      AbstractComponent( ComponentType::kMove ) {
+      AbstractComponent( ComponentType::InputMove ) {
 }
 
-bool MoveComponent::isForward() const {
+bool InputMoveComponent::isForward() const {
     return m_forward;
 }
 
-bool MoveComponent::isBackward() const {
+bool InputMoveComponent::isBackward() const {
     return m_backward;
 }
 
-bool MoveComponent::isLeft() const {
+bool InputMoveComponent::isLeft() const {
     return m_left;
 }
 
-bool MoveComponent::isRight() const {
+bool InputMoveComponent::isRight() const {
     return m_right;
 }
 
-void MoveComponent::setForward( bool state ) {
+void InputMoveComponent::setForward( bool state ) {
     m_forward = state;
 }
 
-void MoveComponent::setBackward( bool state ) {
+void InputMoveComponent::setBackward( bool state ) {
     m_backward = state;
 }
 
-void MoveComponent::setLeft( bool state ) {
+void InputMoveComponent::setLeft( bool state ) {
     m_left = state;
 }
 
-void MoveComponent::setRight( bool state ) {
+void InputMoveComponent::setRight( bool state ) {
     m_right = state;
 }
 

@@ -24,6 +24,10 @@ class PlayerMoveController : public AbstractController {
 public:
     PlayerMoveController( AbstractSceneObject* object );
     virtual void update( double elapsed );
+
+private:
+    void handleMove( InputCommand* command );
+    void handleMouse( InputCommand* command );
 };
 
 }

@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 24/10/17.
 //
 
-#ifndef OPENGL_EXAMPLES_18_TEXTURE_HH
-#define OPENGL_EXAMPLES_18_TEXTURE_HH
+#ifndef OPENGL_EXAMPLES_17_TEXTURE_HH
+#define OPENGL_EXAMPLES_17_TEXTURE_HH
 
 
 #include <GL/glew.h>
@@ -68,4 +68,4 @@ private:
 };
 
 
-#endif //OPENGL_EXAMPLES_18_TEXTURE_HH
+#endif //OPENGL_EXAMPLES_17_TEXTURE_HH

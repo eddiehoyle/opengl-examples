@@ -17,15 +17,24 @@ public:
 
     bool hasComponent( ComponentType type );
 
-    template< class ComponentT >
-    ComponentT* getComponent() {
-        for ( const auto& component : m_components ) {
-            if ( ComponentT* ptr = dynamic_cast< ComponentT* >( component ) ) {
-                return ptr;
+    AbstractComponent* getComponent( ComponentType type ) const {
+        for ( AbstractComponent* component : m_components ) {
+            if ( component->type() == type ) {
+                return component;
             }
         }
         return nullptr;
     }
+
+//    template< class ComponentT >
+//    ComponentT* getComponent() {
+//        for ( const auto& component : m_components ) {
+//            if ( ComponentT* ptr = dynamic_cast< ComponentT* >( component ) ) {
+//                return ptr;
+//            }
+//        }
+//        return nullptr;
+//    }
 
 protected:
     std::vector< AbstractComponent* > m_components;

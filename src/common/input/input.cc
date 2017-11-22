@@ -47,6 +47,28 @@ void glfw3KeyPressCallback( GLFWwindow* window, int key, int scancode, int type,
     }
 }
 
+void glfw2MouseCallback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+}
+
+void glfw3ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+
+}
+
+
 InputManager* InputManager::s_instance = nullptr;
 
 InputManager* InputManager::instance() {
@@ -64,9 +86,29 @@ InputManager::~InputManager() {
     delete s_instance;
 }
 
-void InputManager::add( InputAction action, InputState state, double value ) {
-    const InputCommand command( action, state, value );
-    m_commands.push_back( command );
+void InputManager::add( InputCommand* command ) {
+
+}
+
+void InputManager::add( InputAction action, InputState state ) {
+
+    // TODO
+    // Create command factory
+
+//    Command* command = nullptr;
+//    switch( action ) {
+//        case InputAction::MouseMove:
+//            command = new InputMouseCommand( action, state );
+//            break;
+//        case InputAction::MoveForward:
+//        case InputAction::MoveBackward:
+//        case InputAction::MoveLeft:
+//        case InputAction::MoveRight:
+//            command = new InputMoveCommand( action, state );
+//            break;
+//    }
+
+//    m_commands.push_back( command );
 }
 
 const InputCommands& InputManager::commands() const {
@@ -74,6 +116,9 @@ const InputCommands& InputManager::commands() const {
 }
 
 void InputManager::clear() {
+    for ( InputCommands* command : m_commands ) {
+        delete command;
+    }
     m_commands.clear();
 }
 

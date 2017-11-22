@@ -2,8 +2,8 @@
 // Created by Eddie Hoyle on 23/10/17.
 //
 
-#ifndef LEARNING_OPENGL_18_SHADER_HH
-#define LEARNING_OPENGL_18_SHADER_HH
+#ifndef LEARNING_OPENGL_17_SHADER_HH
+#define LEARNING_OPENGL_17_SHADER_HH
 
 #include <GL/glew.h>
 #include <string>
@@ -130,4 +130,4 @@ protected:
     GLint m_blendMapTexture;
 };
 
-#endif //OPENGL_EXAMPLES_18_SHADER_HH
+#endif //OPENGL_EXAMPLES_17_SHADER_HH

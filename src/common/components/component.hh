@@ -8,26 +8,46 @@
 namespace common {
 
 enum class ComponentType {
-    kMove
+    None,
+    InputMove,
+    InputMouse
 };
 
 class AbstractComponent {
 public:
-    virtual ~AbstractComponent() {}
-    ComponentType type() {
-        return m_type;
+    virtual ~AbstractComponent();
+
+    ComponentType type();
+
+    template< class ComponentT >
+    ComponentT* asType() {
+        return dynamic_cast< ComponentT* >( this );
     }
 protected:
-    AbstractComponent( ComponentType type )
-            : m_type( type ) {}
+    AbstractComponent( ComponentType type );
     ComponentType m_type;
 
 };
 
-class MoveComponent : public AbstractComponent {
+class InputMouseComponent : public AbstractComponent {
 
 public:
-    MoveComponent();
+    InputMouseComponent();
+
+    void set( int x, int y );
+
+    int x() const;
+    int y() const;
+
+private:
+    int m_x;
+    int m_y;
+};
+
+class InputMoveComponent : public AbstractComponent {
+
+public:
+    InputMoveComponent();
 
     void setForward( bool m_forward );
     void setBackward( bool m_backward );
