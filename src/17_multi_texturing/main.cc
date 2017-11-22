@@ -65,31 +65,6 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 float totalTime = 0.0f;
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-
-//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-//
-//    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-//        glfwSetWindowShouldClose(window, true);
-//        return;
-//    }
-//
-//    bool state = ( action == GLFW_PRESS || action == GLFW_REPEAT );
-//    if ( key == GLFW_KEY_W ) {
-//        camera->move( common::CameraMove::kForward, state );
-//    }
-//    if ( key == GLFW_KEY_S ) {
-//        camera->move( common::CameraMove::kBackward, state );
-//    }
-//    if ( key == GLFW_KEY_A ) {
-//        camera->move( common::CameraMove::kLeft, state );
-//    }
-//    if ( key == GLFW_KEY_D ) {
-//        camera->move( common::CameraMove::kRight, state );
-//    }
-//}
-
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

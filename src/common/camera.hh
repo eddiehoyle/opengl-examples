@@ -19,14 +19,6 @@
 
 namespace common {
 
-class MoveComponent;
-
-enum class CameraMove {
-    kForward,
-    kBackward,
-    kLeft,
-    kRight
-};
 
 class Camera : public common::AbstractSceneObject {
 
@@ -35,8 +27,9 @@ public:
     /// Constructor
     Camera();
 
+    void setSpeed( double value );
+
     /// Camera control
-    void move( CameraMove direction, bool state );
     void look( float x, float y );
     void zoom( float value );
 
@@ -48,7 +41,6 @@ public:
 
     /// Perspective matrix
     glm::mat4 perspective() const;
-
 
 private:
 

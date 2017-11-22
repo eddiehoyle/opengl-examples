@@ -24,21 +24,8 @@ Camera::Camera()
     addComponent( new MoveComponent );
 }
 
-void Camera::move( CameraMove direction, bool state ) {
-
-//    double velocity = m_movementSpeed;
-//    if ( direction == CameraMove::kForward ) {
-//        m_update = m_front * velocity;
-//    }
-//    if ( direction == CameraMove::kBackward ) {
-//        m_update = m_front * -velocity;
-//    }
-//    if ( direction == CameraMove::kLeft ) {
-//        m_update = m_right * -velocity;
-//    }
-//    if ( direction == CameraMove::kRight ) {
-//        m_update = m_right * velocity;
-//    }
+void Camera::setSpeed( double value ) {
+    m_movementSpeed = std::max( 0.0, value );
 }
 
 void Camera::look( float x, float y ) {

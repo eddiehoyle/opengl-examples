@@ -7,14 +7,17 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+#include <thread>
 
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
+#include "OBJLoader.hh"
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
-#include "OBJLoader.hh"
+#include "../common/controllers/controller.hh"
+#include "../common/input/input.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -34,6 +37,22 @@ static bool kKeyPressedW = false;
 static bool kKeyPressedA = false;
 static bool kKeyPressedS = false;
 static bool kKeyPressedD = false;
+
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+common::Camera* camera = new common::Camera();
+
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+float totalTime = 0.0f;
+
 
 void windowResizeCallback( GLFWwindow *window, int width, int height ) {
     common::DisplayManager::instance()->update(
@@ -84,6 +103,27 @@ void keyPressEvent( GLFWwindow *window, int key, int scancode, int action, int m
     }
 }
 
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera->look( xoffset, yoffset );
+}
+
 int main( int argc, char **argv ) {
 
     // Initialise GLFW
@@ -112,8 +152,12 @@ int main( int argc, char **argv ) {
     glfwSetTime( 0.0 );
 
     // Setup callbacks
-    glfwSetKeyCallback( window, keyPressEvent );
+    glfwSetKeyCallback(window, common::glfw3KeyPressCallback );
+    glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetWindowSizeCallback( window, windowResizeCallback );
+
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Activate this context
     glfwMakeContextCurrent( window );
@@ -127,10 +171,9 @@ int main( int argc, char **argv ) {
     }
 
     // Set width/height
-    common::Camera *camera = new common::Camera();
+    camera->setSpeed( 10.0 );
     common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
-    common::DisplayManager::instance()->camera()->setPosition( glm::vec3( 0.0f, 0.0f, -5.0f ) );
 
     Loader loader = Loader();
     StaticShader shader = StaticShader();
@@ -216,7 +259,7 @@ int main( int argc, char **argv ) {
     Model model = OBJLoader::loadObjModel( modelPath, loader );
 
     // Texture
-    const std::string modelTexture = common::getResource( "stallTexture.jpg", result );
+    const std::string modelTexture = common::getResource( "stall.jpg", result );
     GLuint textureID = loader.loadTexture( modelTexture );
     ModelTexture texture( textureID );
 
@@ -234,10 +277,26 @@ int main( int argc, char **argv ) {
     // Move away from screen
     entity.setPosition( glm::vec3( 0.0f, 0.0f, 0.0f ) );
 
+    const double FRAMES_PER_SECOND = 60.0;
+    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
+
+    double previous = glfwGetTime();
+    double last_second_time = 0.0;
+    unsigned int frame_count;
+
     float value = 0.0;
     double speed = 0.4;
 
+    common::PlayerMoveController cameraController( camera );
+
     while ( glfwWindowShouldClose( window ) == 0 ) {
+
+        double current = glfwGetTime();
+        double elapsed = current - previous;
+        previous = current;
+
+        // Update camera
+        cameraController.update( elapsed );
 
         float xPosition = sin( value ) * 1.5;
         value += 0.04;
@@ -260,20 +319,27 @@ int main( int argc, char **argv ) {
             cameraPosition.x -= speed;
         }
 
-        common::DisplayManager::instance()->camera()->move( cameraPosition );
 
         // Prepare
         render.prepare();
         shader.start();
-        shader.loadViewMatrix( common::Camera::createViewMatrix( camera ) );
+        shader.loadViewMatrix( camera->view() );
 
         // Render
         render.render( entity, shader );
         shader.stop();
 
+
+        // Clear inputs
+        common::InputManager::instance()->clear();
+
         // Swap buffers
         glfwSwapBuffers( window );
         glfwPollEvents();
+
+        // Cap FPS
+        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
+        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
     }
 
     // Cleanup
