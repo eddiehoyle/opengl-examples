@@ -8,25 +8,25 @@
 #include <set>
 #include <vector>
 #include "../command/command.hh"
+#include "../device/device.hh"
 
 class GLFWwindow;
 
 namespace common {
 
 void glfw3KeyPressCallback( GLFWwindow *window, int key, int scancode, int action, int mods );
+void glfw3MouseScrollCallback( GLFWwindow* window, double x, double y );
+void glfw3MouseButtonCallback( GLFWwindow* window, int button, int action, int mods );
+void glfw3ProcessMouse( GLFWwindow* window );
 
 class InputManager {
-
-public:
-    static InputCommand* create( InputAction action );
 
 public:
     static InputManager *instance();
 
 public:
 
-    /// TODO
-    void add( InputCommand* command );
+    MouseDevice* mouse() const;
 
     void add( InputAction action, InputState state );
     const InputCommands& commands() const;
@@ -42,6 +42,7 @@ private:
 
 private:
     InputCommands m_commands;
+    MouseDevice* m_mouse;
 
 };
 

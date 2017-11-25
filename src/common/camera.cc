@@ -22,6 +22,7 @@ Camera::Camera()
           m_mouseSensitivity( 0.2 ),
           m_zoom() {
     addComponent( new InputMoveComponent );
+    addComponent( new InputMouseComponent );
 }
 
 void Camera::setSpeed( double value ) {
@@ -65,26 +66,55 @@ glm::mat4 Camera::perspective() const {
     return glm::mat4();
 }
 
-void Camera::update( double elapsed ) {
+void Camera::processMove( double elapsed ) {
 
-    InputMoveComponent* component = getComponent< InputMoveComponent >();
-    if ( component == nullptr ) {
-        return;
-    }
+    Component* component = getComponent( ComponentType::MoveState );
+    assert( component );
+
+    InputMoveComponent* moveComponent = component->asType< InputMoveComponent >();
+    assert( moveComponent );
 
     double velocity = m_movementSpeed * elapsed;
-    if ( component->isForward() ) {
+    if ( moveComponent->isForward() ) {
         m_position += m_front * velocity;
     }
-    if ( component->isBackward() ) {
+    if ( moveComponent->isBackward() ) {
         m_position -= m_front * velocity;
     }
-    if ( component->isLeft() ) {
+    if ( moveComponent->isLeft() ) {
         m_position -= m_right * velocity;
     }
-    if ( component->isRight() ) {
+    if ( moveComponent->isRight() ) {
         m_position += m_right * velocity;
     }
+}
+
+void Camera::processAim( double elapsed ) {
+
+    Component* component = getComponent( ComponentType::InputMouse );
+    assert( component );
+
+    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
+    assert( mouseComponent );
+
+    m_yaw += ( mouseComponent->x() * m_mouseSensitivity );
+    m_pitch += ( -mouseComponent->y() * m_mouseSensitivity );
+
+    if ( m_pitch > 89.0f ) {
+        m_pitch = 89.0f;
+    }
+
+    if ( m_pitch < -89.0f ) {
+        m_pitch = -89.0f;
+    }
+
+}
+
+void Camera::update( double elapsed ) {
+
+    processMove( elapsed );
+    processAim( elapsed );
+
 
     // Calculate the new Front vector
     glm::vec3 front;

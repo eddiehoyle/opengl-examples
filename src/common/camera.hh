@@ -43,6 +43,10 @@ public:
     glm::mat4 perspective() const;
 
 private:
+    void processMove( double elapsed );
+    void processAim( double elapsed );
+
+private:
 
     /// Vectors
     glm::vec3 m_position;

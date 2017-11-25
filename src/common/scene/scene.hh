@@ -17,8 +17,8 @@ public:
 
     bool hasComponent( ComponentType type );
 
-    AbstractComponent* getComponent( ComponentType type ) const {
-        for ( AbstractComponent* component : m_components ) {
+    Component* getComponent( ComponentType type ) const {
+        for ( Component* component : m_components ) {
             if ( component->type() == type ) {
                 return component;
             }
@@ -37,7 +37,7 @@ public:
 //    }
 
 protected:
-    std::vector< AbstractComponent* > m_components;
+    std::vector< Component* > m_components;
 
     template< class ComponentT >
     void addComponent( ComponentT* component ) {

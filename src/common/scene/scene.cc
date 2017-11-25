@@ -8,7 +8,7 @@
 namespace common {
 
 AbstractSceneObject::~AbstractSceneObject() {
-    for ( AbstractComponent* component : m_components ) {
+    for ( Component* component : m_components ) {
         delete component;
     }
 }

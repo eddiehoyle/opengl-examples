@@ -251,7 +251,7 @@ int main( int argc, char **argv ) {
     double last_second_time = 0.0;
     unsigned int frame_count;
 
-    common::PlayerMoveController cameraController( camera );
+    common::InputController cameraController( camera );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 

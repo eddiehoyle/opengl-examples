@@ -5,17 +5,25 @@
 #ifndef OPENGL_EXAMPLES_COMPONENT_HH
 #define OPENGL_EXAMPLES_COMPONENT_HH
 
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
 namespace common {
 
 enum class ComponentType {
     None,
-    InputMove,
-    InputMouse
+
+    MoveState,
+    InputMouse,
+
+    Transform
+
 };
 
-class AbstractComponent {
+class Component {
 public:
-    virtual ~AbstractComponent();
+    virtual ~Component();
 
     ComponentType type();
 
@@ -24,12 +32,12 @@ public:
         return dynamic_cast< ComponentT* >( this );
     }
 protected:
-    AbstractComponent( ComponentType type );
+    Component( ComponentType type );
     ComponentType m_type;
 
 };
 
-class InputMouseComponent : public AbstractComponent {
+class InputMouseComponent : public Component {
 
 public:
     InputMouseComponent();
@@ -44,7 +52,7 @@ private:
     int m_y;
 };
 
-class InputMoveComponent : public AbstractComponent {
+class InputMoveComponent : public Component {
 
 public:
     InputMoveComponent();
@@ -64,6 +72,22 @@ private:
     bool m_backward;
     bool m_left;
     bool m_right;
+};
+
+class TransformComponent : public Component {
+public:
+    TransformComponent();
+
+    void rotate( float x, float y, float z );
+
+    const glm::mat4& matrix() const;
+
+    glm::vec3 translation() const;
+    glm::vec3 rotation() const;
+    glm::vec3 scale() const;
+
+private:
+    glm::mat4 m_matrix;
 };
 
 }

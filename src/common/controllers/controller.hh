@@ -9,6 +9,9 @@
 
 namespace common {
 
+// Forward decl
+class InputCommand;
+
 class AbstractController {
 
 public:
@@ -20,14 +23,15 @@ protected:
     AbstractSceneObject* m_object;
 };
 
-class PlayerMoveController : public AbstractController {
+class InputController : public AbstractController {
 public:
-    PlayerMoveController( AbstractSceneObject* object );
+    InputController( AbstractSceneObject* object );
     virtual void update( double elapsed );
 
 private:
     void handleMove( InputCommand* command );
     void handleMouse( InputCommand* command );
+    void handleMouseMove();
 };
 
 }

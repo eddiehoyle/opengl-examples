@@ -17,12 +17,17 @@ enum class CommandType {
 
 enum class InputAction {
     None,
+
+    // Player
     MoveForward,
     MoveBackward,
     MoveLeft,
     MoveRight,
-    MouseMove,
-    MouseScroll,
+    Attack,
+
+    // General
+    Accept,
+    Cancel,
     Quit
 };
 
@@ -56,46 +61,17 @@ protected:
 };
 
 class InputCommand : public Command {
-
 public:
-    InputCommand();
-
+    explicit InputCommand( InputAction action,
+                           InputState state );
     InputAction action() const;
     InputState state() const;
 
 protected:
-    explicit InputCommand( InputAction action,
-                           InputState state );
 
     InputAction m_action;
     InputState m_state;
 };
-
-class InputMouseCommand : public InputCommand {
-
-public:
-    InputMouseCommand();
-    explicit InputMouseCommand( InputAction action,
-                                InputState state,
-                                int x,
-                                int y );
-
-    int x() const;
-    int y() const;
-
-private:
-    int m_x;
-    int m_y;
-};
-
-class InputMoveCommand : public InputCommand {
-
-public:
-    InputMoveCommand();
-    explicit InputMoveCommand( InputAction action,
-                               InputState state );
-};
-
 
 }
 

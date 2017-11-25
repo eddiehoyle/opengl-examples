@@ -287,7 +287,7 @@ int main( int argc, char **argv ) {
     float value = 0.0;
     double speed = 0.4;
 
-    common::PlayerMoveController cameraController( camera );
+    common::InputController cameraController( camera );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
