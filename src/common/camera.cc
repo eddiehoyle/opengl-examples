@@ -22,7 +22,8 @@ Camera::Camera()
           m_mouseSensitivity( 0.2 ),
           m_zoom() {
     addComponent( new InputMoveComponent );
-    addComponent( new InputMouseComponent );
+//    addComponent( new InputMouseComponent );
+    addComponent( new TransformComponent );
 }
 
 void Camera::setSpeed( double value ) {
@@ -90,15 +91,28 @@ void Camera::processMove( double elapsed ) {
 }
 
 void Camera::processAim( double elapsed ) {
+//
+//    Component* component = getComponent( ComponentType::InputMouse );
+//    assert( component );
+//
+//    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
+//    assert( mouseComponent );
 
-    Component* component = getComponent( ComponentType::InputMouse );
+//    m_yaw += ( mouseComponent->x() * m_mouseSensitivity );
+//    m_pitch += ( -mouseComponent->y() * m_mouseSensitivity );
+
+
+
+    Component* component = getComponent( ComponentType::Transform );
     assert( component );
 
-    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
-    assert( mouseComponent );
+    TransformComponent* transformComponent = component->asType< TransformComponent >();
+    assert( transformComponent );
 
-    m_yaw += ( mouseComponent->x() * m_mouseSensitivity );
-    m_pitch += ( -mouseComponent->y() * m_mouseSensitivity );
+    glm::vec3 rotation = transformComponent->rotation();
+
+    m_yaw = ( rotation.x * m_mouseSensitivity );
+    m_pitch = ( rotation.y * m_mouseSensitivity );
 
     if ( m_pitch > 89.0f ) {
         m_pitch = 89.0f;

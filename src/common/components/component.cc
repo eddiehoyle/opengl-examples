@@ -4,6 +4,10 @@
 
 
 #include "component.hh"
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <iostream>
 
 namespace common {
 
@@ -12,16 +16,16 @@ ComponentType Component::type() {
 }
 
 Component::Component( ComponentType type )
-    : m_type( type ) {}
+        : m_type( type ) {}
 
 Component::~Component() {}
 
 // ------------------------------------------------------------------------------------ //
 
 InputMouseComponent::InputMouseComponent()
-    : m_x( 0 ),
-      m_y( 0 ),
-      Component( ComponentType::InputMouse ) {}
+        : m_x( 0 ),
+          m_y( 0 ),
+          Component( ComponentType::InputMouse ) {}
 
 void InputMouseComponent::set( int x, int y ) {
     m_x = x;
@@ -39,11 +43,11 @@ int InputMouseComponent::y() const {
 // ------------------------------------------------------------------------------------ //
 
 InputMoveComponent::InputMoveComponent()
-    : m_forward( false ),
-      m_backward( false ),
-      m_left( false ),
-      m_right( false ),
-      Component( ComponentType::MoveState ) {
+        : m_forward( false ),
+          m_backward( false ),
+          m_left( false ),
+          m_right( false ),
+          Component( ComponentType::MoveState ) {
 }
 
 bool InputMoveComponent::isForward() const {
@@ -81,35 +85,47 @@ void InputMoveComponent::setRight( bool state ) {
 // ------------------------------------------------------------------------------------ //
 
 TransformComponent::TransformComponent()
-    : m_matrix(),
-      Component( ComponentType::Transform ){
+        : m_translate(),
+          m_rotate(),
+          m_scale( 1, 1, 1 ),
+          Component( ComponentType::Transform ) {
 }
 
-void TransformComponent::rotate( float x, float y, float z ) {
-    m_matrix = glm::rotate( glm::mat4(), glm::radians( x ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-    m_matrix = glm::rotate( glm::mat4(), glm::radians( y ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-    m_matrix = glm::rotate( glm::mat4(), glm::radians( z ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+void TransformComponent::setTranslate( float x, float y, float z ) {
+    m_translate = glm::vec3( x, y, z );
 }
 
-const glm::mat4& TransformComponent::matrix() const {
-    return m_matrix;
+void TransformComponent::setRotate( float x, float y, float z ) {
+    m_rotate = glm::quat( glm::radians( glm::vec3( x, y, z ) ) );
+}
+
+void TransformComponent::translate( float x, float y, float z ) {
+    m_translate += glm::vec3( x, y, z );
+}
+
+void TransformComponent::rotate( const glm::vec3& vec ) {
+    // https://github.com/scanberg/particle-skinning/blob/0b8cff3c3916a50da1e1047f42a863be04d80029/src/Entity.cpp
+    // Convert 'xyz' to 'zxy'
+    glm::vec3 zxy( vec.z, vec.x, vec.y );
+    glm::mat3 rotation = glm::orientate3( glm::radians( zxy ) );
+    m_rotate = ( m_rotate * glm::quat_cast( rotation ) );
+
 }
 
 glm::vec3 TransformComponent::translation() const {
-    return glm::vec3();
+    return m_translate;
 }
 
 glm::vec3 TransformComponent::rotation() const {
-
-    glm::mat4 matrix = m_matrix; // copy
-    glm::vec3 euler;
-    glm::extractEulerAngleXYZ( matrix, euler.x, euler.y, euler.z );
-    return euler;
+//    std::cerr << "TransformComponent::" << __func__ << " : rotation=" << glm::to_string( m_rotate ) << std::endl;
+    return glm::degrees( glm::eulerAngles( m_rotate ) );
 }
 
-glm::vec3 TransformComponent::scale() const {
-    return glm::vec3();
+glm::mat4 TransformComponent::matrix() const {
+    glm::mat4 translate = glm::translate( glm::mat4(), m_translate );
+    glm::mat4 rotate = glm::mat4_cast( m_rotate );
+    glm::mat4 scale = glm::scale(glm::mat4(), m_scale);
+    return translate * rotate * scale;
 }
-
 
 }

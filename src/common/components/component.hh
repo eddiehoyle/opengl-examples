@@ -78,16 +78,20 @@ class TransformComponent : public Component {
 public:
     TransformComponent();
 
-    void rotate( float x, float y, float z );
+    void setRotate( float x, float y, float z );
+    void setTranslate( float x, float y, float z );
 
-    const glm::mat4& matrix() const;
+    void translate( float x, float y, float z );
+    void rotate( const glm::vec3& vec );
 
     glm::vec3 translation() const;
     glm::vec3 rotation() const;
-    glm::vec3 scale() const;
+    glm::mat4 matrix() const;
 
 private:
-    glm::mat4 m_matrix;
+    glm::vec3 m_translate;
+    glm::quat m_rotate;
+    glm::vec3 m_scale;
 };
 
 }

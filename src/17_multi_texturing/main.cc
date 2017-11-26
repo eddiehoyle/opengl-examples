@@ -209,8 +209,13 @@ int main( int argc, char **argv ) {
     unsigned int frame_count;
 
     common::InputController controller( camera );
+    float value = 0.0f;
+
+    common::TransformComponent transform;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
+
+        value += 1.0f;
 
         double current = glfwGetTime();
         double elapsed = current - previous;
@@ -221,10 +226,15 @@ int main( int argc, char **argv ) {
         // Update camera
         controller.update( elapsed );
 
+//        transform.rotate( glm::vec3( 0.0f, 1.0f, 0.0f ) );
+//        std::cerr << glm::to_string( transform.rotation() ) << std::endl;
+
         // Update entities
         for ( auto entity : entities ) {
+//            entity.setRotation( transform.rotation() );
             render.processEntity( entity );
         }
+
         render.processTerrain( terrain );
         render.render( light, camera );
 

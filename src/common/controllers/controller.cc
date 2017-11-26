@@ -94,17 +94,30 @@ void InputController::handleMouse( InputCommand* command ) {
 
 void InputController::handleMouseMove() {
 
-    Component* component = object()->getComponent( ComponentType::InputMouse );
+//    Component* component = object()->getComponent( ComponentType::InputMouse );
+//    assert( component );
+//
+//    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
+//    assert( mouseComponent );
+//
+//    int deltaX = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
+//    int deltaY = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
+//
+////    std::cerr << "InputController::" << __func__ << " : delta=(" << deltaX << ", " << deltaY << ")" << std::endl;
+//    mouseComponent->set( deltaX, deltaY );
+
+    Component* component = object()->getComponent( ComponentType::Transform );
     assert( component );
 
-    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
-    assert( mouseComponent );
+    TransformComponent* transformComponent = component->asType< TransformComponent >();
+    assert( transformComponent );
 
     int deltaX = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
     int deltaY = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
 
 //    std::cerr << "InputController::" << __func__ << " : delta=(" << deltaX << ", " << deltaY << ")" << std::endl;
-    mouseComponent->set( deltaX, deltaY );
+    transformComponent->rotate( glm::vec3( deltaX, deltaY, 0.0f ) );
+//    transformComponent->setRotate( deltaX, deltaY, 0.0f );
 
 }
 
