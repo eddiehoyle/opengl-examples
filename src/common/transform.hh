@@ -10,17 +10,17 @@ public:
 
     /// Constructor
     Transform()
-        : m_translate(),
-        m_rotate(),
-        m_scale() {}
+            : m_translate(),
+              m_rotate(),
+              m_scale() {}
 
     /// Constructor
     explicit Transform( const glm::vec3& translate,
                         const glm::vec3& rotate,
                         const glm::vec3& scale )
-        : m_translate(),
-          m_rotate(),
-          m_scale() {}
+            : m_translate(),
+              m_rotate(),
+              m_scale() {}
 
     /// Set translates
     void setTranslate( float x, float y, float z ) {
