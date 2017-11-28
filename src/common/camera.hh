@@ -48,16 +48,16 @@ private:
 
 private:
 
-    /// Vectors
-    glm::vec3 m_position;
-    glm::vec3 m_front;
-    glm::vec3 m_up;
-    glm::vec3 m_right;
-    glm::vec3 m_worldUp;
-
-    /// Euler Angles
-    float m_yaw;
-    float m_pitch;
+//    /// Vectors
+//    glm::vec3 m_position;
+//    glm::vec3 m_front;
+//    glm::vec3 m_up;
+//    glm::vec3 m_right;
+//    glm::vec3 m_worldUp;
+//
+//    /// Euler Angles
+//    float m_yaw;
+//    float m_pitch;
 
     /// Camera options
     float m_movementSpeed;

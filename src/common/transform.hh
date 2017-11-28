@@ -5,98 +5,170 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
 
+#include <iostream>
+
+namespace common {
+
 class Transform {
 public:
 
     /// Constructor
     Transform()
-            : m_translate(),
-              m_rotate(),
+            : m_pitch(),
+              m_yaw(),
+              m_roll(),
+              m_front(),
+              m_up(),
+              m_right(),
+              m_translate(),
               m_scale() {}
 
     /// Constructor
     explicit Transform( const glm::vec3& translate,
                         const glm::vec3& rotate,
                         const glm::vec3& scale )
-            : m_translate(),
-              m_rotate(),
-              m_scale() {}
+            : m_pitch(),
+              m_yaw(),
+              m_roll(),
+              m_front(),
+              m_up(),
+              m_right(),
+              m_translate(),
+              m_scale() {
+//        setTranslate( translate.x, translate.y, translate.z );
+//        setRotate( rotate.x, rotate.y, rotate.z );
+//        setScale( scale.x, scale.y, scale.z );
+    }
 
     /// Set translates
     void setTranslate( float x, float y, float z ) {
-        m_translate = glm::translate( glm::mat4(), glm::vec3( x, y, z ) );
+        m_translate = glm::vec3( x, y, z );
     }
 
     /// Set rotation in degrees
     void setRotate( float x, float y, float z ) {
-        glm::mat4 identity;
-        glm::mat4 rotateX = glm::rotate( identity, glm::radians( x ), glm::vec3( 1, 0, 0 ) );
-        glm::mat4 rotateY = glm::rotate( identity, glm::radians( y ), glm::vec3( 0, 1, 0 ) );
-        glm::mat4 rotateZ = glm::rotate( identity, glm::radians( z ), glm::vec3( 0, 0, 1 ) );
-        m_rotate = ( rotateX * rotateY * rotateZ );
+
+        m_pitch = x;
+        m_yaw = y;
+        m_roll = z;
+
+        update();
     }
 
     /// Set scale
     void setScale( float x, float y, float z ) {
-        m_scale = glm::scale( glm::mat4(), glm::vec3( x, y, z ) );
+        m_scale += glm::vec3( x, y, z );
     }
 
     /// Translate this transform by values
     void translate( float x, float y, float z ) {
-        m_translate = glm::translate( m_translate, glm::vec3( x, y, z ) );
+        m_translate += glm::vec3( x, y, z );
     }
 
     /// Rotate this transform by degrees
-    void rotate( float x, float y, float z );
+    void rotate( float x, float y, float z ) {
+        setRotate( m_pitch + x, m_yaw + y, m_roll + z );
+    }
 
     /// Move this transform forward
-    void moveForward( float value );
+    void moveForward( float value ) {
+        m_translate += m_front * value;
+//        std::cerr << "Transform::" << __func__ << " : forward="
+//                  << glm::to_string( m_translate )
+//                  << ", front=" << glm::to_string( m_front )
+//                  << ", value=" << value
+//                  << std::endl;
+        std::cerr << "Transform::" << __func__ << " : m_translate=" << glm::to_string( m_translate ) << std::endl;
+    }
 
     /// Move this transform to the right
-    void moveRight( float value );
+    void moveRight( float value ) {
+        m_translate += m_right * value;
+//        std::cerr << "Transform::" << __func__ << " : right=" << glm::to_string( m_translate ) << std::endl;
+    }
 
     /// Move this transform up
-    void moveUp( float value );
+    void moveUp( float value ) {
+        m_translate += m_up * value;
+    }
 
     /// Scale this transform by values
     void scale( float x, float y, float z ) {
-        m_scale = glm::scale( m_scale, glm::vec3( x, y, z ) );
+        m_scale = glm::vec3( x, y, z );
     }
 
     /// Get translation
     glm::vec3 getTranslate() const {
-        return glm::vec3( m_translate[3][0],
-                          m_translate[3][1],
-                          m_translate[3][2] );
+        return m_translate;
     }
 
     /// Get euler rotation in degrees
     glm::vec3 getRotate() const {
-        glm::mat4 rotate = m_rotate; // Copy for non-const
-        float x, y, z;
-        glm::extractEulerAngleXYZ( rotate, x, y, z );
-        return glm::degrees( glm::vec3( x, y, z ) );
+        return glm::vec3();
     }
 
     /// Get scale
     glm::vec3 getScale() const {
-        glm::vec3 colX( m_scale[0][0], m_scale[0][1], m_scale[0][2] );
-        glm::vec3 colY( m_scale[1][0], m_scale[1][1], m_scale[1][2] );
-        glm::vec3 colZ( m_scale[2][0], m_scale[2][1], m_scale[2][2] );
-        return glm::vec3( glm::length( colX ),
-                          glm::length( colY ),
-                          glm::length( colZ ) );
+        return m_scale;
+    }
+
+    glm::vec3 getFront() const {
+        return m_front;
+    }
+
+    glm::vec3 getUp() const {
+        return m_up;
+    }
+
+    glm::vec3 getRight() const {
+        return m_right;
     }
 
     /// Get matrix
     glm::mat4 getMatrix() const {
-        return m_scale * m_rotate * m_translate;
+        glm::mat4 translate = glm::translate( glm::mat4(), m_translate );
+        glm::mat4 rotate = glm::lookAt( glm::vec3(), glm::vec3() + m_front, m_up );
+        glm::mat4 scale = glm::scale( glm::mat4(), m_scale );
+        return scale * rotate * translate;
     }
 
 private:
-    glm::mat4 m_translate;
-    glm::mat4 m_rotate;
-    glm::mat4 m_scale;
+
+    /// Update vectors
+    void update() {
+
+        glm::vec3 front;
+        front.x = cos( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) );
+        front.y = sin( glm::radians( m_pitch ) );
+        front.z = sin( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) );
+        m_front = glm::normalize( front );
+
+        // World up
+        glm::vec3 worldUp( 0, 1, 0 );
+
+        // Re-calculate the right and up vector
+        m_right = glm::normalize( glm::cross( m_front, worldUp ) );
+        m_up = glm::normalize( glm::cross( m_right, m_front ) );
+
+    }
+
+private:
+
+    /// Rotation
+    float m_pitch;
+    float m_yaw;
+    float m_roll;
+
+    /// Vectors
+    glm::vec3 m_front;
+    glm::vec3 m_up;
+    glm::vec3 m_right;
+
+    /// Values
+    glm::vec3 m_translate;
+    glm::vec3 m_scale;
+
 };
 
+}
 #endif //OPENGL_EXAMPLES_TRANSFORM_HH

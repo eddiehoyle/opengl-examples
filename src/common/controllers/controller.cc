@@ -43,7 +43,7 @@ void InputController::handleMove( InputCommand *command ) {
     Component* component = object()->getComponent( ComponentType::MoveState );
     assert( component );
 
-    InputMoveComponent* moveComponent = component->asType< InputMoveComponent >();
+    MoveStateComponent* moveComponent = component->asType< MoveStateComponent >();
     assert( moveComponent );
 
     switch ( command->state() ) {
@@ -94,30 +94,17 @@ void InputController::handleMouse( InputCommand* command ) {
 
 void InputController::handleMouseMove() {
 
-//    Component* component = object()->getComponent( ComponentType::InputMouse );
-//    assert( component );
-//
-//    InputMouseComponent* mouseComponent = component->asType< InputMouseComponent >();
-//    assert( mouseComponent );
-//
-//    int deltaX = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
-//    int deltaY = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
-//
-////    std::cerr << "InputController::" << __func__ << " : delta=(" << deltaX << ", " << deltaY << ")" << std::endl;
-//    mouseComponent->set( deltaX, deltaY );
-
     Component* component = object()->getComponent( ComponentType::Transform );
     assert( component );
 
     TransformComponent* transformComponent = component->asType< TransformComponent >();
     assert( transformComponent );
 
-    int deltaX = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
-    int deltaY = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
+    int pitch = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
+    int yaw = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
 
-//    std::cerr << "InputController::" << __func__ << " : delta=(" << deltaX << ", " << deltaY << ")" << std::endl;
-    transformComponent->rotate( glm::vec3( deltaX, deltaY, 0.0f ) );
-//    transformComponent->setRotate( deltaX, deltaY, 0.0f );
+//    std::cerr << "InputController::" << __func__ << " : delta=(" << yaw << ", " << pitch << ")" << std::endl;
+    transformComponent->rotate( pitch, yaw, 0.0f );
 
 }
 

@@ -9,6 +9,8 @@
 #include <glm/ext.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
+#include "../transform.hh"
+
 namespace common {
 
 enum class ComponentType {
@@ -52,10 +54,10 @@ private:
     int m_y;
 };
 
-class InputMoveComponent : public Component {
+class MoveStateComponent : public Component {
 
 public:
-    InputMoveComponent();
+    MoveStateComponent();
 
     void setForward( bool m_forward );
     void setBackward( bool m_backward );
@@ -82,16 +84,18 @@ public:
     void setTranslate( float x, float y, float z );
 
     void translate( float x, float y, float z );
-    void rotate( const glm::vec3& vec );
+    void rotate( float x, float y, float z );
+//
+//    glm::vec3 translation() const;
+//    glm::vec3 rotation() const;
+//    glm::mat4 matrix() const;
 
-    glm::vec3 translation() const;
-    glm::vec3 rotation() const;
-    glm::mat4 matrix() const;
+    common::Transform getTransform() const {
+        return m_transform;
+    }
 
 private:
-    glm::vec3 m_translate;
-    glm::quat m_rotate;
-    glm::vec3 m_scale;
+    common::Transform m_transform;
 };
 
 }
