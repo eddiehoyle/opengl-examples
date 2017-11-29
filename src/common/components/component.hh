@@ -30,11 +30,13 @@ public:
     ComponentType type();
 
     template< class ComponentT >
-    ComponentT* asType() {
-        return dynamic_cast< ComponentT* >( this );
+    ComponentT *asType() {
+        return dynamic_cast< ComponentT * >( this );
     }
+
 protected:
     Component( ComponentType type );
+
     ComponentType m_type;
 
 };
@@ -47,6 +49,7 @@ public:
     void set( int x, int y );
 
     int x() const;
+
     int y() const;
 
 private:
@@ -60,13 +63,19 @@ public:
     MoveStateComponent();
 
     void setForward( bool m_forward );
+
     void setBackward( bool m_backward );
+
     void setLeft( bool m_strafeLeft );
+
     void setRight( bool m_strafeRight );
 
     bool isForward() const;
+
     bool isBackward() const;
+
     bool isLeft() const;
+
     bool isRight() const;
 
 private:
@@ -78,24 +87,69 @@ private:
 
 class TransformComponent : public Component {
 public:
+
+    /// Constructor
     TransformComponent();
 
-    void setRotate( float x, float y, float z );
+    /// Constructor
+    explicit TransformComponent( const glm::vec3& translate,
+                                 const glm::vec3& rotate,
+                                 const glm::vec3& scale );
+
+    /// Set translates
     void setTranslate( float x, float y, float z );
 
-    void translate( float x, float y, float z );
-    void rotate( float x, float y, float z );
-//
-//    glm::vec3 translation() const;
-//    glm::vec3 rotation() const;
-//    glm::mat4 matrix() const;
+    /// Set rotation in degrees
+    void setRotate( float x, float y, float z );
 
-    common::Transform getTransform() const {
-        return m_transform;
-    }
+    /// Set scale
+    void setScale( float x, float y, float z );
+
+    /// Translate this transform by values
+    void translate( float x, float y, float z );
+
+    /// Rotate this transform by degrees
+    void rotate( float x, float y, float z );
+
+    /// Scale this transform by values
+    void scale( float x, float y, float z );
+
+    /// Move this transform forward
+    void moveForward( float value );
+
+    /// Move this transform to the right
+    void moveRight( float value );
+
+    /// Move this transform up
+    void moveUp( float value );
+
+    glm::vec3 getTranslate() const { return m_translate; }
+    glm::vec3 getFront() const { return m_front; }
+    glm::vec3 getUp() const { return m_up; }
+    glm::vec3 getRight() const { return m_right; }
+
+    /// Get composite matrix
+    glm::mat4 getMatrix() const;
 
 private:
-    common::Transform m_transform;
+
+    void update();
+
+private:
+
+    /// Rotation
+    float m_pitch;
+    float m_yaw;
+    float m_roll;
+
+    /// Vectors
+    glm::vec3 m_front;
+    glm::vec3 m_up;
+    glm::vec3 m_right;
+
+    /// Values
+    glm::vec3 m_translate;
+    glm::vec3 m_scale;
 };
 
 }

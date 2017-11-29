@@ -17,11 +17,11 @@ public:
             : m_pitch(),
               m_yaw(),
               m_roll(),
-              m_front(),
-              m_up(),
-              m_right(),
+              m_front( 0, 0, -1 ),
+              m_up( 0, 1, 0 ),
+              m_right( 1, 0, 0 ),
               m_translate(),
-              m_scale() {}
+              m_scale( 1, 1, 1 ) {}
 
     /// Constructor
     explicit Transform( const glm::vec3& translate,
@@ -35,9 +35,9 @@ public:
               m_right(),
               m_translate(),
               m_scale() {
-//        setTranslate( translate.x, translate.y, translate.z );
-//        setRotate( rotate.x, rotate.y, rotate.z );
-//        setScale( scale.x, scale.y, scale.z );
+        setTranslate( translate.x, translate.y, translate.z );
+        setRotate( rotate.x, rotate.y, rotate.z );
+        setScale( scale.x, scale.y, scale.z );
     }
 
     /// Set translates
@@ -52,12 +52,22 @@ public:
         m_yaw = y;
         m_roll = z;
 
-        update();
+        // Compute front
+        glm::vec3 front;
+        front.x = static_cast< float >( cos( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) ) );
+        front.y = static_cast< float >( sin( glm::radians( m_pitch ) ) );
+        front.z = static_cast< float >( sin( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) ) );
+        m_front = glm::normalize( front );
+
+
+        // Compute right and up vector
+        m_right = glm::normalize( glm::cross( m_front, glm::vec3( 0, 1, 0 ) ) );
+        m_up = glm::normalize( glm::cross( m_right, m_front ) );
     }
 
     /// Set scale
     void setScale( float x, float y, float z ) {
-        m_scale += glm::vec3( x, y, z );
+        m_scale = glm::vec3( x, y, z );
     }
 
     /// Translate this transform by values
@@ -70,31 +80,24 @@ public:
         setRotate( m_pitch + x, m_yaw + y, m_roll + z );
     }
 
+    /// Scale this transform by values
+    void scale( float x, float y, float z ) {
+        m_scale = glm::vec3( x, y, z );
+    }
+
     /// Move this transform forward
     void moveForward( float value ) {
         m_translate += m_front * value;
-//        std::cerr << "Transform::" << __func__ << " : forward="
-//                  << glm::to_string( m_translate )
-//                  << ", front=" << glm::to_string( m_front )
-//                  << ", value=" << value
-//                  << std::endl;
-        std::cerr << "Transform::" << __func__ << " : m_translate=" << glm::to_string( m_translate ) << std::endl;
     }
 
     /// Move this transform to the right
     void moveRight( float value ) {
         m_translate += m_right * value;
-//        std::cerr << "Transform::" << __func__ << " : right=" << glm::to_string( m_translate ) << std::endl;
     }
 
     /// Move this transform up
     void moveUp( float value ) {
         m_translate += m_up * value;
-    }
-
-    /// Scale this transform by values
-    void scale( float x, float y, float z ) {
-        m_scale = glm::vec3( x, y, z );
     }
 
     /// Get translation
@@ -126,30 +129,14 @@ public:
 
     /// Get matrix
     glm::mat4 getMatrix() const {
-        glm::mat4 translate = glm::translate( glm::mat4(), m_translate );
-        glm::mat4 rotate = glm::lookAt( glm::vec3(), glm::vec3() + m_front, m_up );
-        glm::mat4 scale = glm::scale( glm::mat4(), m_scale );
-        return scale * rotate * translate;
-    }
-
-private:
-
-    /// Update vectors
-    void update() {
-
-        glm::vec3 front;
-        front.x = cos( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) );
-        front.y = sin( glm::radians( m_pitch ) );
-        front.z = sin( glm::radians( m_yaw ) ) * cos( glm::radians( m_pitch ) );
-        m_front = glm::normalize( front );
-
-        // World up
-        glm::vec3 worldUp( 0, 1, 0 );
-
-        // Re-calculate the right and up vector
-        m_right = glm::normalize( glm::cross( m_front, worldUp ) );
-        m_up = glm::normalize( glm::cross( m_right, m_front ) );
-
+        glm::mat4 identity;
+        glm::mat4 translate = glm::translate( identity, m_translate );
+        glm::mat4 rotateX = glm::rotate( identity, m_pitch, glm::vec3( 1, 0, 0 ) );
+        glm::mat4 rotateY = glm::rotate( identity, m_yaw, glm::vec3( 0, 1, 0 ) );
+        glm::mat4 rotateZ = glm::rotate( identity, m_roll, glm::vec3( 0, 0, 1 ) );
+        glm::mat4 rotate = rotateX * rotateY * rotateZ;
+        glm::mat4 scale = glm::scale( identity, m_scale );
+        return translate * rotate * scale;
     }
 
 private:

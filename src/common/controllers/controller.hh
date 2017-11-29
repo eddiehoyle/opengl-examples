@@ -32,6 +32,9 @@ private:
     void handleMove( InputCommand* command );
     void handleMouse( InputCommand* command );
     void handleMouseMove();
+
+private:
+    float m_pitch;
 };
 
 }

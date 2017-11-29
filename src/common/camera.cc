@@ -60,20 +60,16 @@ void Camera::zoom( float value ) {
 
 glm::mat4 Camera::view() const {
 
-//    return glm::lookAt( m_position, m_position + m_front, m_up );
-
     Component* component = getComponent( ComponentType::Transform );
     assert( component );
 
     TransformComponent* transformComponent = component->asType< TransformComponent >();
     assert( transformComponent );
 
-    glm::vec3 position = transformComponent->getTransform().getTranslate();
-//    std::cerr << "Camera::" << __func__ << " : position=" << glm::to_string( position ) << std::endl;
-    glm::vec3 front = transformComponent->getTransform().getFront();
-    glm::vec3 up = transformComponent->getTransform().getUp();
+    glm::vec3 position = transformComponent->getTranslate();
+    glm::vec3 front = transformComponent->getFront();
+    glm::vec3 up = transformComponent->getUp();
     return glm::lookAt( position, position + front, up );
-
 }
 
 glm::mat4 Camera::perspective() const {
@@ -97,16 +93,16 @@ void Camera::processMove( double elapsed ) {
 
     double velocity = m_movementSpeed * elapsed;
     if ( moveComponent->isForward() ) {
-        transformComponent->getTransform().moveForward( velocity );
+        transformComponent->moveForward( velocity );
     }
     if ( moveComponent->isBackward() ) {
-        transformComponent->getTransform().moveForward( -velocity );
+        transformComponent->moveForward( -velocity );
     }
     if ( moveComponent->isLeft() ) {
-        transformComponent->getTransform().moveRight( -velocity );
+        transformComponent->moveRight( -velocity );
     }
     if ( moveComponent->isRight() ) {
-        transformComponent->getTransform().moveRight( velocity );
+        transformComponent->moveRight( velocity );
     }
 }
 
@@ -162,14 +158,14 @@ void Camera::update( double elapsed ) {
 //    m_up = glm::normalize( glm::cross( m_right, m_front ) );
 
     //
-    Component* component = getComponent( ComponentType::Transform );
-    assert( component );
+//    Component* component = getComponent( ComponentType::Transform );
+//    assert( component );
+//
+//    TransformComponent* transformComponent = component->asType< TransformComponent >();
+//    assert( transformComponent );
 
-    TransformComponent* transformComponent = component->asType< TransformComponent >();
-    assert( transformComponent );
-
-    glm::vec3 position = transformComponent->getTransform().getTranslate();
-    std::cerr << "Camera::" << __func__ << " : position=" << glm::to_string( position ) << std::endl;
+//    glm::vec3 position = transformComponent->getTranslate();
+//    std::cerr << "Camera::" << __func__ << " : position=" << glm::to_string( position ) << std::endl;
 
 //    m_front = transformComponent->getTransform().getFront();
 //    m_up = transformComponent->getTransform().getUp();

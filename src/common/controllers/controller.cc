@@ -8,15 +8,16 @@
 
 namespace common {
 
-AbstractController::AbstractController( AbstractSceneObject* object )
+AbstractController::AbstractController( AbstractSceneObject *object )
         : m_object( object ) {}
 
-AbstractSceneObject* AbstractController::object() {
+AbstractSceneObject *AbstractController::object() {
     return m_object;
 }
 
-InputController::InputController( AbstractSceneObject* object )
-    : AbstractController( object ) {
+InputController::InputController( AbstractSceneObject *object )
+        : m_pitch( 0 ),
+          AbstractController( object ) {
 }
 
 void InputController::update( double elapsed ) {
@@ -26,7 +27,7 @@ void InputController::update( double elapsed ) {
 
     // Handle commands next
     const InputCommands& commands = InputManager::instance()->commands();
-    for ( InputCommand* command : commands ) {
+    for ( InputCommand *command : commands ) {
         handleMove( command );
         handleMouse( command );
     }
@@ -40,10 +41,10 @@ void InputController::handleMove( InputCommand *command ) {
 
     assert( command );
 
-    Component* component = object()->getComponent( ComponentType::MoveState );
+    Component *component = object()->getComponent( ComponentType::MoveState );
     assert( component );
 
-    MoveStateComponent* moveComponent = component->asType< MoveStateComponent >();
+    MoveStateComponent *moveComponent = component->asType< MoveStateComponent >();
     assert( moveComponent );
 
     switch ( command->state() ) {
@@ -88,22 +89,34 @@ void InputController::handleMove( InputCommand *command ) {
     }
 }
 
-void InputController::handleMouse( InputCommand* command ) {
+void InputController::handleMouse( InputCommand *command ) {
 
 }
 
 void InputController::handleMouseMove() {
 
-    Component* component = object()->getComponent( ComponentType::Transform );
+    Component *component = object()->getComponent( ComponentType::Transform );
     assert( component );
 
-    TransformComponent* transformComponent = component->asType< TransformComponent >();
+    TransformComponent *transformComponent = component->asType< TransformComponent >();
     assert( transformComponent );
 
-    int pitch = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
-    int yaw = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
+    float pitch = static_cast< float >( InputManager::instance()->mouse()->y() -
+                                        InputManager::instance()->mouse()->prevY() );
+    float yaw = static_cast< float >( InputManager::instance()->mouse()->x() -
+                                      InputManager::instance()->mouse()->prevX() );
 
-//    std::cerr << "InputController::" << __func__ << " : delta=(" << yaw << ", " << pitch << ")" << std::endl;
+    // m_pitch is the wrong value here.
+    // pitch should be 0.0f when facing forward
+//    m_pitch += pitch;
+//    if ( m_pitch > 89.0f ) {
+//        pitch = 0.0f;
+//    }
+//    if ( m_pitch < -89.0f ) {
+//        pitch = 0.0f;
+//    }
+
+    std::cerr << "InputController::" << __func__ << " : pitch=" << m_pitch << ", delta=(" << yaw << ", " << pitch << ")" << std::endl;
     transformComponent->rotate( pitch, yaw, 0.0f );
 
 }
