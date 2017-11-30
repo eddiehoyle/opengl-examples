@@ -145,6 +145,14 @@ void TransformComponent::scale( float x, float y, float z ) {
     m_scale = glm::vec3( x, y, z );
 }
 
+void TransformComponent::look( float x, float y, float z ) {
+
+    glm::mat4 matrix = glm::lookAt( m_translate, m_translate + glm::vec3( x, y, z ), m_up );
+
+    // TODO
+    // Extra vectors from matrix and set
+}
+
 void TransformComponent::moveForward( float value ) {
     m_translate += m_front * value;
 }

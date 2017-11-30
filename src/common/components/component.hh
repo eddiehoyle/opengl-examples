@@ -114,6 +114,9 @@ public:
     /// Scale this transform by values
     void scale( float x, float y, float z );
 
+    /// Look at point
+    void look( float x, float y, float z );
+
     /// Move this transform forward
     void moveForward( float value );
 

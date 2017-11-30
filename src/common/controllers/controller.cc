@@ -106,16 +106,6 @@ void InputController::handleMouseMove() {
     float yaw = static_cast< float >( InputManager::instance()->mouse()->x() -
                                       InputManager::instance()->mouse()->prevX() );
 
-    // m_pitch is the wrong value here.
-    // pitch should be 0.0f when facing forward
-//    m_pitch += pitch;
-//    if ( m_pitch > 89.0f ) {
-//        pitch = 0.0f;
-//    }
-//    if ( m_pitch < -89.0f ) {
-//        pitch = 0.0f;
-//    }
-
     std::cerr << "InputController::" << __func__ << " : pitch=" << m_pitch << ", delta=(" << yaw << ", " << pitch << ")" << std::endl;
     transformComponent->rotate( pitch, yaw, 0.0f );
 

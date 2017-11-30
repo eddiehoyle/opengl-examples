@@ -209,6 +209,10 @@ int main( int argc, char **argv ) {
     unsigned int frame_count;
 
     common::InputController controller( camera );
+    common::Component* component = camera->getComponent( common::ComponentType::Transform );
+    common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
+    transformComponent->look( -1, 0, -1 );
+
     float value = 0.0f;
 
     common::TransformComponent transform;
