@@ -48,6 +48,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
+void glfw3WindowFocusCallback(GLFWwindow* window, int state ) {
+    common::DisplayManager::instance()->setFocused( static_cast< bool >( state ) );
+}
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -97,6 +101,7 @@ int main( int argc, char **argv ) {
     glfwSetKeyCallback( window, common::glfw3KeyPressCallback );
     glfwSetScrollCallback( window, common::glfw3MouseScrollCallback );
     glfwSetMouseButtonCallback( window, common::glfw3MouseButtonCallback );
+    glfwSetWindowFocusCallback( window, glfw3WindowFocusCallback );
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -211,7 +216,6 @@ int main( int argc, char **argv ) {
     common::InputController controller( camera );
     common::Component* component = camera->getComponent( common::ComponentType::Transform );
     common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
-    transformComponent->look( -1, 0, -1 );
 
     float value = 0.0f;
 

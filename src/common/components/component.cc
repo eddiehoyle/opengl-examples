@@ -84,6 +84,17 @@ void MoveStateComponent::setRight( bool state ) {
 
 // ------------------------------------------------------------------------------------ //
 
+glm::mat4 look( TransformComponent* component ) {
+    return look( component, component->getFront() );
+}
+
+glm::mat4 look( TransformComponent* component, const glm::vec3& point ) {
+    const glm::vec3 position = component->getTranslate();
+    const glm::vec3 front = component->getFront();
+    const glm::vec3 up = component->getUp();
+    return glm::lookAt( position, position + point, up );
+}
+
 TransformComponent::TransformComponent()
         : m_pitch(),
           m_yaw(),
@@ -143,14 +154,6 @@ void TransformComponent::rotate( float x, float y, float z ) {
 
 void TransformComponent::scale( float x, float y, float z ) {
     m_scale = glm::vec3( x, y, z );
-}
-
-void TransformComponent::look( float x, float y, float z ) {
-
-    glm::mat4 matrix = glm::lookAt( m_translate, m_translate + glm::vec3( x, y, z ), m_up );
-
-    // TODO
-    // Extra vectors from matrix and set
 }
 
 void TransformComponent::moveForward( float value ) {

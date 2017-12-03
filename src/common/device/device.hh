@@ -35,6 +35,7 @@ class MouseDevice : public Device {
 
 public:
     MouseDevice();
+    void initialize( int x, int y );
 
     void set( int x, int y );
     void setX( int x );
@@ -46,6 +47,8 @@ public:
     int prevY() const;
 
 private:
+    int m_initX;
+    int m_initY;
     int m_x;
     int m_y;
     int m_prevX;

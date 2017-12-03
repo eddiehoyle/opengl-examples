@@ -9,19 +9,20 @@
 #include <glm/ext.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "../transform.hh"
-
 namespace common {
 
 enum class ComponentType {
     None,
-
     MoveState,
     InputMouse,
-
     Transform
 
 };
+
+class Component;
+class MoveStateComponent;
+class InputMouseComponent;
+class TransformComponent;
 
 class Component {
 public:
@@ -85,6 +86,10 @@ private:
     bool m_right;
 };
 
+glm::mat4 look( TransformComponent* component );
+
+glm::mat4 look( TransformComponent* component, const glm::vec3& point );
+
 class TransformComponent : public Component {
 public:
 
@@ -114,9 +119,6 @@ public:
     /// Scale this transform by values
     void scale( float x, float y, float z );
 
-    /// Look at point
-    void look( float x, float y, float z );
-
     /// Move this transform forward
     void moveForward( float value );
 
@@ -130,6 +132,9 @@ public:
     glm::vec3 getFront() const { return m_front; }
     glm::vec3 getUp() const { return m_up; }
     glm::vec3 getRight() const { return m_right; }
+    float getPitch() const { return m_pitch; }
+    float getYaw() const { return m_yaw; }
+    float getRoll() const { return m_roll; }
 
     /// Get composite matrix
     glm::mat4 getMatrix() const;

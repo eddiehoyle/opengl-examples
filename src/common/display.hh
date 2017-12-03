@@ -22,6 +22,9 @@ public:
     void setCamera( Camera* camera );
     Camera* camera() const;
 
+    void setFocused( bool state ) { m_focused = state; }
+    bool isFocused() { return m_focused; }
+
     unsigned int width() const;
     unsigned int height() const;
     void setWidth( unsigned int width );
@@ -43,7 +46,8 @@ private:
     unsigned int m_width;
     unsigned int m_height;
 
-//    CameraLOGL* m_camera;
+    bool m_focused;
+
     Camera* m_camera;
 
     // Frames

@@ -66,10 +66,11 @@ glm::mat4 Camera::view() const {
     TransformComponent* transformComponent = component->asType< TransformComponent >();
     assert( transformComponent );
 
-    glm::vec3 position = transformComponent->getTranslate();
-    glm::vec3 front = transformComponent->getFront();
-    glm::vec3 up = transformComponent->getUp();
-    return glm::lookAt( position, position + front, up );
+//    glm::vec3 position = transformComponent->getTranslate();
+//    glm::vec3 front = transformComponent->getFront();
+//    glm::vec3 up = transformComponent->getUp();
+//    return glm::lookAt( position, position + front, up );
+    return common::look( transformComponent );
 }
 
 glm::mat4 Camera::perspective() const {
