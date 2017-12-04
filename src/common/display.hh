@@ -5,9 +5,13 @@
 #ifndef OPENGL_EXAMPLES_DISPLAY_HH
 #define OPENGL_EXAMPLES_DISPLAY_HH
 
+class GLFWwindow;
+
 namespace common {
 
 class Camera;
+
+void glfw3WindowFocusCallback(GLFWwindow* window, int state );
 
 class DisplayManager {
 

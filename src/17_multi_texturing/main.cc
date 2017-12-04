@@ -31,51 +31,9 @@
 #define GLFW_FALSE 0
 #endif
 
-
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
 
-// Simple key press states
-static bool kKeyPressedW = false;
-static bool kKeyPressedA = false;
-static bool kKeyPressedS = false;
-static bool kKeyPressedD = false;
-static bool kKeyPressedQ = false;
-static bool kKeyPressedE = false;
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-
-void glfw3WindowFocusCallback(GLFWwindow* window, int state ) {
-    bool focused = static_cast< bool >( state );
-    common::DisplayManager::instance()->setFocused( focused );
-
-    std::cerr << __func__ << " : focused=" << focused << std::endl;
-    if ( focused ) {
-        double x, y;
-        glfwGetCursorPos( window, &x, &y );
-        common::InputManager::instance()->mouse()->init( x, y );
-    }
-}
-
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-
-// camera
-//common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
-common::Camera* camera = new common::Camera();
-
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
-float lastFrame = 0.0f;
-float totalTime = 0.0f;
 
 int main( int argc, char **argv ) {
 
@@ -109,7 +67,7 @@ int main( int argc, char **argv ) {
     glfwSetKeyCallback( window, common::glfw3KeyPressCallback );
     glfwSetScrollCallback( window, common::glfw3MouseScrollCallback );
     glfwSetMouseButtonCallback( window, common::glfw3MouseButtonCallback );
-    glfwSetWindowFocusCallback( window, glfw3WindowFocusCallback );
+    glfwSetWindowFocusCallback( window, common::glfw3WindowFocusCallback );
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -121,6 +79,10 @@ int main( int argc, char **argv ) {
         glfwTerminate();
         return 1;
     }
+
+
+    // Camera
+    common::Camera* camera = new common::Camera();
 
     // Set width/height
     common::DisplayManager::instance()->setCamera( camera );
@@ -216,40 +178,27 @@ int main( int argc, char **argv ) {
 
     const double FRAMES_PER_SECOND = 60.0;
     const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
-
-    double previous = glfwGetTime();
-    double last_second_time = 0.0;
-    unsigned int frame_count;
+    double prevTime = glfwGetTime();
 
     common::InputController controller( camera );
     common::Component* component = camera->getComponent( common::ComponentType::Transform );
     common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
     transformComponent->setTranslate( 0, 20, 0 );
-    transformComponent->setRotate( -10, 225, 0 );
-
-    float value = 0.0f;
-
-    common::TransformComponent transform;
+    transformComponent->setRotate( 0, 225, 0 );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        value += 1.0f;
-
-        double current = glfwGetTime();
-        double elapsed = current - previous;
-        previous = current;
+        double currentTime = glfwGetTime();
+        double elapsed = currentTime - prevTime;
+        prevTime = currentTime;
 
         common::glfw3ProcessMouse( window );
 
         // Update camera
         controller.update( elapsed );
 
-//        transform.rotate( glm::vec3( 0.0f, 1.0f, 0.0f ) );
-//        std::cerr << glm::to_string( transform.rotation() ) << std::endl;
-
         // Update entities
         for ( auto entity : entities ) {
-//            entity.setRotation( transform.rotation() );
             render.processEntity( entity );
         }
 

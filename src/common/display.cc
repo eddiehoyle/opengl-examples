@@ -4,11 +4,26 @@
 
 #include "display.hh"
 #include "camera.hh"
+#include "input/input.hh"
 
 #include <chrono>
 #include <ctime>
+#include <GLFW/glfw3.h>
 
 namespace common {
+
+
+void glfw3WindowFocusCallback(GLFWwindow* window, int state ) {
+    bool focused = static_cast< bool >( state );
+    common::DisplayManager::instance()->setFocused( focused );
+
+    std::cerr << __func__ << " : focused=" << focused << std::endl;
+    if ( focused ) {
+        double x, y;
+        glfwGetCursorPos( window, &x, &y );
+        common::InputManager::instance()->mouse()->init( x, y );
+    }
+}
 
 DisplayManager *DisplayManager::s_instance = nullptr;
 

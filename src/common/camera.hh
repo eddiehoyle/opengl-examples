@@ -29,10 +29,6 @@ public:
 
     void setSpeed( double value );
 
-    /// Camera control
-    void look( float x, float y );
-    void zoom( float value );
-
     /// Update
     virtual void update( double elapsed );
 
@@ -42,22 +38,8 @@ public:
     /// Perspective matrix
     glm::mat4 perspective() const;
 
-private:
-    void processMove( double elapsed );
-    void processAim( double elapsed );
 
 private:
-
-//    /// Vectors
-//    glm::vec3 m_position;
-//    glm::vec3 m_front;
-//    glm::vec3 m_up;
-//    glm::vec3 m_right;
-//    glm::vec3 m_worldUp;
-//
-//    /// Euler Angles
-//    float m_yaw;
-//    float m_pitch;
 
     /// Camera options
     float m_movementSpeed;
