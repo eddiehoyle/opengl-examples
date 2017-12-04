@@ -21,6 +21,13 @@ MouseDevice::MouseDevice()
           Device( DeviceType::Mouse ){
 }
 
+void MouseDevice::init( int x, int y ) {
+    m_initX = x;
+    m_initY = y;
+    m_prevX = x;
+    m_prevY = y;
+}
+
 void MouseDevice::set( int x, int y ) {
     setX( x );
     setY( y );
@@ -28,12 +35,12 @@ void MouseDevice::set( int x, int y ) {
 
 void MouseDevice::setX( int x ) {
     m_prevX = m_x;
-    m_x = x;
+    m_x = x - m_initX;
 }
 
 void MouseDevice::setY( int y ) {
     m_prevY = m_y;
-    m_y = y;
+    m_y = y - m_initY;
 }
 
 int MouseDevice::x() const {

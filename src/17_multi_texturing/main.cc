@@ -49,7 +49,15 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 void glfw3WindowFocusCallback(GLFWwindow* window, int state ) {
-    common::DisplayManager::instance()->setFocused( static_cast< bool >( state ) );
+    bool focused = static_cast< bool >( state );
+    common::DisplayManager::instance()->setFocused( focused );
+
+    std::cerr << __func__ << " : focused=" << focused << std::endl;
+    if ( focused ) {
+        double x, y;
+        glfwGetCursorPos( window, &x, &y );
+        common::InputManager::instance()->mouse()->init( x, y );
+    }
 }
 
 // settings
@@ -216,6 +224,8 @@ int main( int argc, char **argv ) {
     common::InputController controller( camera );
     common::Component* component = camera->getComponent( common::ComponentType::Transform );
     common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
+    transformComponent->setTranslate( 0, 20, 0 );
+    transformComponent->setRotate( -10, 225, 0 );
 
     float value = 0.0f;
 

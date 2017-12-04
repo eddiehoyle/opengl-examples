@@ -17,10 +17,18 @@ AbstractSceneObject *AbstractController::object() {
 
 InputController::InputController( AbstractSceneObject *object )
         : m_pitch( 0 ),
+          m_prevX( 0 ),
+          m_prevY( 0 ),
+          m_initialised( false ),
           AbstractController( object ) {
 }
 
 void InputController::update( double elapsed ) {
+
+    if ( !m_initialised ) {
+        m_prevX = InputManager::instance()->mouse()->x();
+        m_prevY = InputManager::instance()->mouse()->y();
+    }
 
     // Handle mouse move first
     handleMouseMove();
@@ -34,6 +42,9 @@ void InputController::update( double elapsed ) {
 
     // Update object
     m_object->update( elapsed );
+
+    // First update complete
+    m_initialised = true;
 
 }
 
@@ -106,8 +117,28 @@ void InputController::handleMouseMove() {
     float yaw = static_cast< float >( InputManager::instance()->mouse()->x() -
                                       InputManager::instance()->mouse()->prevX() );
 
-    std::cerr << "InputController::" << __func__ << " : pitch=" << m_pitch << ", delta=(" << yaw << ", " << pitch << ")" << std::endl;
-    transformComponent->rotate( pitch, yaw, 0.0f );
+    pitch *= 0.3;
+    yaw *= 0.3;
+
+    float maxPitch = 89.0f;
+    float minPitch = -89.0f;
+
+    float prevPitch = m_pitch;
+    m_pitch += pitch;
+
+    if ( ( prevPitch + pitch ) >= maxPitch ) {
+        pitch = std::max( maxPitch - prevPitch, 0.0f );
+        m_pitch = maxPitch;
+    }
+
+    if ( ( prevPitch + pitch ) <= minPitch ) {
+        pitch = -std::max( prevPitch - minPitch, 0.0f );
+        m_pitch = minPitch;
+    }
+
+//    std::cerr << "InputController::handleMouseMove() : mouse=(" << -pitch << ", " << yaw << ")" << std::endl;
+
+    transformComponent->rotate( -pitch, yaw, 0.0f );
 
 }
 

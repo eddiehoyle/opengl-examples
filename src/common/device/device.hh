@@ -35,8 +35,7 @@ class MouseDevice : public Device {
 
 public:
     MouseDevice();
-    void initialize( int x, int y );
-
+    void init( int x, int y );
     void set( int x, int y );
     void setX( int x );
     void setY( int y );

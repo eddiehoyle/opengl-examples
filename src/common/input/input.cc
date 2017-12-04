@@ -4,6 +4,7 @@
 
 #include "input.hh"
 #include "../device/device.hh"
+#include "../display.hh"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -57,9 +58,13 @@ void glfw3MouseButtonCallback( GLFWwindow *window, int button, int action, int m
 }
 
 void glfw3ProcessMouse( GLFWwindow* window ) {
-    double x, y;
-    glfwGetCursorPos( window, &x, &y );
-    InputManager::instance()->mouse()->set( x, y );
+
+    if ( common::DisplayManager::instance()->isFocused() ) {
+        double x, y;
+        glfwGetCursorPos( window, &x, &y );
+        InputManager::instance()->mouse()->set( x, y );
+    }
+
 }
 
 InputManager *InputManager::s_instance = nullptr;
