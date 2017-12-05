@@ -26,6 +26,7 @@ void MouseDevice::init( int x, int y ) {
     m_initY = y;
     m_prevX = x;
     m_prevY = y;
+    set( x, y );
 }
 
 void MouseDevice::set( int x, int y ) {

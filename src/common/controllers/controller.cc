@@ -5,8 +5,12 @@
 #include <iostream>
 #include "controller.hh"
 #include "../input/input.hh"
+#include "../display.hh"
 
 namespace common {
+
+float MAX_PITCH = 89.0f;
+float MIN_PITCH = -89.0f;
 
 AbstractController::AbstractController( AbstractSceneObject *object )
         : m_object( object ) {}
@@ -16,18 +20,14 @@ AbstractSceneObject *AbstractController::object() {
 }
 
 InputController::InputController( AbstractSceneObject *object )
-        : m_pitch( 0 ),
-          m_prevX( 0 ),
-          m_prevY( 0 ),
-          m_initialised( false ),
-          AbstractController( object ) {
+        : AbstractController( object ) {
 }
 
 void InputController::update( double elapsed ) {
 
-    if ( !m_initialised ) {
-        m_prevX = InputManager::instance()->mouse()->x();
-        m_prevY = InputManager::instance()->mouse()->y();
+    // InputController::update()
+    if ( !DisplayManager::instance()->isFocused() ) {
+        return;
     }
 
     // Handle mouse move first
@@ -42,9 +42,6 @@ void InputController::update( double elapsed ) {
 
     // Update object
     m_object->update( elapsed );
-
-    // First update complete
-    m_initialised = true;
 
 }
 
@@ -120,23 +117,17 @@ void InputController::handleMouseMove() {
     pitch *= 0.3;
     yaw *= 0.3;
 
-    float maxPitch = 89.0f;
-    float minPitch = -89.0f;
+    float prevPitch = -transformComponent->getPitch();
 
-    float prevPitch = m_pitch;
-    m_pitch += pitch;
-
-    if ( ( prevPitch + pitch ) >= maxPitch ) {
-        pitch = std::max( maxPitch - prevPitch, 0.0f );
-        m_pitch = maxPitch;
+    if ( ( prevPitch + pitch ) >= MAX_PITCH ) {
+        pitch = std::max( MAX_PITCH - prevPitch, 0.0f );
     }
 
-    if ( ( prevPitch + pitch ) <= minPitch ) {
-        pitch = -std::max( prevPitch - minPitch, 0.0f );
-        m_pitch = minPitch;
+    if ( ( prevPitch + pitch ) <= MIN_PITCH ) {
+        pitch = -std::max( prevPitch - MIN_PITCH, 0.0f );
     }
 
-//    std::cerr << "InputController::handleMouseMove() : mouse=(" << -pitch << ", " << yaw << ")" << std::endl;
+    std::cerr << "InputController::handleMouseMove() : mouse=(" << -pitch << ", " << yaw << ")" << std::endl;
 
     transformComponent->rotate( -pitch, yaw, 0.0f );
 

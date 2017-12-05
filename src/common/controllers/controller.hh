@@ -34,11 +34,8 @@ private:
     void handleMouseMove();
 
 private:
-    float m_pitch;
     float m_prevX;
     float m_prevY;
-
-    bool m_initialised;
 };
 
 }

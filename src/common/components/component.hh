@@ -126,6 +126,9 @@ public:
     glm::vec3 getFront() const { return m_front; }
     glm::vec3 getUp() const { return m_up; }
     glm::vec3 getRight() const { return m_right; }
+    float getPitch() const { return m_pitch; }
+    float getYaw() const { return m_yaw; }
+    float getRoll() const { return m_roll; }
 
     /// Get composite matrix
     glm::mat4 getMatrix() const;
