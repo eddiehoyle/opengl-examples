@@ -46,6 +46,7 @@ private:
     float m_mouseSensitivity;
     float m_zoom;
 };
+
 } // namespace common
 
 #endif //OPENGL_EXAMPLES_CAMERA_HH

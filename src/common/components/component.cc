@@ -45,8 +45,10 @@ int InputMouseComponent::y() const {
 MoveStateComponent::MoveStateComponent()
         : m_forward( false ),
           m_backward( false ),
-          m_left( false ),
-          m_right( false ),
+          m_strafeLeft( false ),
+          m_strafeRight( false ),
+          m_turnLeft( false ),
+          m_turnRight( false ),
           Component( ComponentType::MoveState ) {
 }
 
@@ -58,12 +60,20 @@ bool MoveStateComponent::isBackward() const {
     return m_backward;
 }
 
-bool MoveStateComponent::isLeft() const {
-    return m_left;
+bool MoveStateComponent::isStrafeLeft() const {
+    return m_strafeLeft;
 }
 
-bool MoveStateComponent::isRight() const {
-    return m_right;
+bool MoveStateComponent::isStrafeRight() const {
+    return m_strafeRight;
+}
+
+bool MoveStateComponent::isTurningLeft() const {
+    return m_turnLeft;
+}
+
+bool MoveStateComponent::isTurningRight() const {
+    return m_turnRight;
 }
 
 void MoveStateComponent::setForward( bool state ) {
@@ -74,12 +84,20 @@ void MoveStateComponent::setBackward( bool state ) {
     m_backward = state;
 }
 
-void MoveStateComponent::setLeft( bool state ) {
-    m_left = state;
+void MoveStateComponent::setStrafeLeft( bool state ) {
+    m_strafeLeft = state;
 }
 
-void MoveStateComponent::setRight( bool state ) {
-    m_right = state;
+void MoveStateComponent::setStrafeRight( bool state ) {
+    m_strafeRight = state;
+}
+
+void MoveStateComponent::setTurningLeft( bool state ) {
+    m_turnLeft = state;
+}
+
+void MoveStateComponent::setTurningRight( bool state ) {
+    m_turnRight = state;
 }
 
 // ------------------------------------------------------------------------------------ //

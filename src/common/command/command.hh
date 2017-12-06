@@ -23,6 +23,8 @@ enum class InputAction {
     MoveBackward,
     MoveLeft,
     MoveRight,
+    TurnLeft,
+    TurnRight,
     Attack,
 
     // General

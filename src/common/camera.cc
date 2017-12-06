@@ -44,10 +44,10 @@ void Camera::update( double elapsed ) {
     if ( moveComponent->isBackward() ) {
         transformComponent->moveForward( -velocity );
     }
-    if ( moveComponent->isLeft() ) {
+    if ( moveComponent->isStrafeLeft() ) {
         transformComponent->moveRight( -velocity );
     }
-    if ( moveComponent->isRight() ) {
+    if ( moveComponent->isStrafeRight() ) {
         transformComponent->moveRight( velocity );
     }
 

@@ -16,26 +16,13 @@ class AbstractController {
 
 public:
     virtual void update( double elapsed ) = 0;
-    AbstractSceneObject* object();
+
+    AbstractSceneObject *object();
 
 protected:
-    explicit AbstractController( AbstractSceneObject* object );
-    AbstractSceneObject* m_object;
-};
+    explicit AbstractController( AbstractSceneObject *object );
 
-class InputController : public AbstractController {
-public:
-    InputController( AbstractSceneObject* object );
-    virtual void update( double elapsed );
-
-private:
-    void handleMove( InputCommand* command );
-    void handleMouse( InputCommand* command );
-    void handleMouseMove();
-
-private:
-    float m_prevX;
-    float m_prevY;
+    AbstractSceneObject *m_object;
 };
 
 }

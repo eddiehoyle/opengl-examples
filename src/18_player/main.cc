@@ -22,6 +22,7 @@
 #include "OBJLoader.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"
+#include "../common/controllers/fpsController.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -31,81 +32,9 @@
 #define GLFW_FALSE 0
 #endif
 
-
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
 
-// Simple key press states
-static bool kKeyPressedW = false;
-static bool kKeyPressedA = false;
-static bool kKeyPressedS = false;
-static bool kKeyPressedD = false;
-static bool kKeyPressedQ = false;
-static bool kKeyPressedE = false;
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-
-// camera
-//common::CameraLOGL* camera = new common::CameraLOGL(glm::vec3(0.0f, 0.0f, 3.0f));
-common::Camera* camera = new common::Camera();
-
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
-float lastFrame = 0.0f;
-float totalTime = 0.0f;
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
-
-
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera->look( xoffset, yoffset );
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-//    std::cerr << __func__ << " : " << xoffset << ", " << yoffset << std::endl;
-    camera->zoom( yoffset );
-}
-
-double average(std::vector<double> const& v) {
-    return 1.0 * std::accumulate(v.begin(), v.end(), 0.0 ) / v.size();
-}
 
 int main( int argc, char **argv ) {
 
@@ -123,7 +52,7 @@ int main( int argc, char **argv ) {
     glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "17_multi_texturing", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( kWindowWidth, kWindowHeight, "18_player", nullptr, nullptr );
     if ( window == nullptr ) {
         printf( "Failed to open GLFW window.\n" );
         glfwTerminate();
@@ -136,10 +65,10 @@ int main( int argc, char **argv ) {
 
     // Setup callbacks
     glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, common::glfw3KeyPressCallback );
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetKeyCallback( window, common::glfw3KeyPressCallback );
+    glfwSetScrollCallback( window, common::glfw3MouseScrollCallback );
+    glfwSetMouseButtonCallback( window, common::glfw3MouseButtonCallback );
+    glfwSetWindowFocusCallback( window, common::glfw3WindowFocusCallback );
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -151,6 +80,10 @@ int main( int argc, char **argv ) {
         glfwTerminate();
         return 1;
     }
+
+
+    // Camera
+    common::Camera* camera = new common::Camera();
 
     // Set width/height
     common::DisplayManager::instance()->setCamera( camera );
@@ -246,26 +179,30 @@ int main( int argc, char **argv ) {
 
     const double FRAMES_PER_SECOND = 60.0;
     const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
+    double prevTime = glfwGetTime();
 
-    double previous = glfwGetTime();
-    double last_second_time = 0.0;
-    unsigned int frame_count;
-
-    common::InputController cameraController( camera );
+    common::FpsController controller( camera );
+    common::Component* component = camera->getComponent( common::ComponentType::Transform );
+    common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
+    transformComponent->setTranslate( 0, 20, 0 );
+    transformComponent->setRotate( 0, 225, 0 );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        double current = glfwGetTime();
-        double elapsed = current - previous;
-        previous = current;
+        double currentTime = glfwGetTime();
+        double elapsed = currentTime - prevTime;
+        prevTime = currentTime;
+
+        common::glfw3ProcessMouse( window );
 
         // Update camera
-        cameraController.update( elapsed );
+        controller.update( elapsed );
 
         // Update entities
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
+
         render.processTerrain( terrain );
         render.render( light, camera );
 
