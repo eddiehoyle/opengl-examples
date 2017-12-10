@@ -31,6 +31,7 @@ void TankController::update( double elapsed ) {
 
     // Update object
     m_object->update( elapsed );
+
 }
 
 void TankController::handleMove( InputCommand *command ) {

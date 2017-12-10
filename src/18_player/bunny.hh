@@ -16,7 +16,7 @@ public:
     /// Constructor
     Bunny();
 
-    const Entity& getEntity() const;
+    Entity& getEntity() const;
 
     /// Update
     virtual void update( double elapsed );

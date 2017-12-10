@@ -53,7 +53,7 @@ private:
 class EntityComponent : public common::Component {
 public:
     explicit EntityComponent( const Entity& entity );
-    const Entity& getEntity() const;
+    Entity& getEntity();
 private:
     Entity m_entity;
 };

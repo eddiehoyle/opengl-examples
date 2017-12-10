@@ -120,7 +120,7 @@ void FpsController::handleMouseMove() {
         pitch = -std::max( prevPitch - MIN_PITCH, 0.0f );
     }
 
-    std::cerr << "InputController::handleMouseMove() : mouse=(" << -pitch << ", " << yaw << ")" << std::endl;
+//    std::cerr << "InputController::handleMouseMove() : mouse=(" << -pitch << ", " << yaw << ")" << std::endl;
 
     transformComponent->rotate( -pitch, yaw, 0.0f );
 

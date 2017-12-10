@@ -39,7 +39,7 @@ Bunny::Bunny() {
     addComponent( new EntityComponent( bunnyEntity ) );
 }
 
-const Entity& Bunny::getEntity() const {
+Entity& Bunny::getEntity() const {
     EntityComponent* entityComponent =
             getComponent( common::ComponentType::Entity )->asType< EntityComponent >();
     assert( entityComponent );

@@ -61,6 +61,6 @@ EntityComponent::EntityComponent( const Entity& entity )
           Component( common::ComponentType::Entity ){
 }
 
-const Entity& EntityComponent::getEntity() const {
+Entity& EntityComponent::getEntity() {
     return m_entity;
 }

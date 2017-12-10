@@ -25,6 +25,7 @@
 #include "../common/controllers/fpsController.hh"
 #include "../common/components/transformComponent.hh"
 #include "bunny.hh"
+#include "../common/controllers/tankController.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -163,8 +164,7 @@ int main( int argc, char **argv ) {
 //    entities.push_back( bunnyEntity );
 
     Bunny* bunny = new Bunny();
-    Entity bunnyEntity = bunny->getEntity();
-    entities.push_back( bunnyEntity );
+    Entity& bunnyEntity = bunny->getEntity();
 
     // ---------------------------------------------------------------
 
@@ -211,11 +211,18 @@ int main( int argc, char **argv ) {
     const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
     double prevTime = glfwGetTime();
 
-    common::FpsController controller( camera );
+    common::TankController bunnyController( bunny );
+    common::TransformComponent* bunnyTransformComponent =
+            bunny->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
+    bunnyTransformComponent->setTranslate( -50, 0, -50 );
+
+    std::cerr << glm::to_string( bunnyTransformComponent->getTranslate() ) << std::endl;
+
+    common::FpsController cameraController( camera );
     common::Component* component = camera->getComponent( common::ComponentType::Transform );
     common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
     transformComponent->setTranslate( 0, 20, 0 );
-    transformComponent->setRotate( 0, 225, 0 );
+    transformComponent->setRotate( 20, 225, 0 );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
@@ -226,7 +233,15 @@ int main( int argc, char **argv ) {
         common::glfw3ProcessMouse( window );
 
         // Update camera
-        controller.update( elapsed );
+//        cameraController.update( elapsed );
+        bunnyController.update( elapsed );
+
+        bunnyEntity.setPosition( bunnyTransformComponent->getTranslate() );
+        bunnyEntity.setRotation( glm::vec3( bunnyTransformComponent->getPitch(),
+                                            bunnyTransformComponent->getYaw(),
+                                            bunnyTransformComponent->getRoll() ) );
+
+        render.processEntity( bunnyEntity );
 
         // Update entities
         for ( auto entity : entities ) {
@@ -254,6 +269,7 @@ int main( int argc, char **argv ) {
 
     // Tidy up camera
     delete camera;
+    delete bunny;
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
