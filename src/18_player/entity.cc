@@ -54,3 +54,13 @@ float Entity::getScale() const {
     return m_scale;
 }
 
+// ------------------------------------------------------------
+
+EntityComponent::EntityComponent( const Entity& entity )
+        : m_entity( entity ),
+          Component( common::ComponentType::Entity ){
+}
+
+const Entity& EntityComponent::getEntity() const {
+    return m_entity;
+}

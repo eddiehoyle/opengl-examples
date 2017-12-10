@@ -3,8 +3,8 @@
 //
 
 #include "camera.hh"
-#include <iostream>
-#include "components/component.hh"
+#include "../components/moveComponent.hh"
+#include "../components/transformComponent.hh"
 
 namespace common {
 

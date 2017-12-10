@@ -11,7 +11,7 @@
 #include "entity.hh"
 #include "shader.hh"
 #include "terrain.hh"
-#include "../common/camera.hh"
+#include "../common/scene/camera.hh"
 
 
 const GLfloat kSkyRed = 0.54;

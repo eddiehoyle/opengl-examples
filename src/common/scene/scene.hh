@@ -26,16 +26,6 @@ public:
         return nullptr;
     }
 
-//    template< class ComponentT >
-//    ComponentT* getComponent() {
-//        for ( const auto& component : m_components ) {
-//            if ( ComponentT* ptr = dynamic_cast< ComponentT* >( component ) ) {
-//                return ptr;
-//            }
-//        }
-//        return nullptr;
-//    }
-
 protected:
     std::vector< Component* > m_components;
 

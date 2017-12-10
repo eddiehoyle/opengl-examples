@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 
-#include "scene/scene.hh"
+#include "scene.hh"
 
 namespace common {
 

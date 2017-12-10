@@ -10,7 +10,7 @@
 #include "model.hh"
 #include "entity.hh"
 #include "shader.hh"
-#include "../common/camera.hh"
+#include "../common/scene/camera.hh"
 
 typedef std::pair< TexturedModel, std::vector< Entity > > EntityPair;
 typedef std::map< EntityPair::first_type, EntityPair::second_type > EntityMap;

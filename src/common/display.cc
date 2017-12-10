@@ -3,7 +3,7 @@
 //
 
 #include "display.hh"
-#include "camera.hh"
+#include "scene/camera.hh"
 #include "input/input.hh"
 
 #include <chrono>

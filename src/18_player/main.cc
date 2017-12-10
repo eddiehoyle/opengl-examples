@@ -14,15 +14,17 @@
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
+#include "OBJLoader.hh"
 
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
-#include "../common/camera.hh"
-#include "OBJLoader.hh"
+#include "../common/scene/camera.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"
 #include "../common/controllers/fpsController.hh"
+#include "../common/components/transformComponent.hh"
+#include "bunny.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -135,6 +137,34 @@ int main( int argc, char **argv ) {
         grassEntity.setScale( scaleXYZ );
         entities.push_back( grassEntity );
     }
+
+    // ---------------------------------------------------------------
+
+    // Bunny
+//    const std::string bunnyModelPath = common::getResource( "bunny.obj", result );
+//    assert( result );
+//    const std::string bunnyTexturePath = common::getResource( "white.png", result );
+//    assert( result );
+
+//    // Model and texture
+//    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
+//    ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
+//    bunnyTexture.setShineDamper( 10.0f );
+//    bunnyTexture.setReflectivity( 1.0f );
+//    bunnyTexture.setHasTransparency( false );
+//    bunnyTexture.setUseFakeLighting( false );
+//    TexturedModel bunnyTexturedModel( bunnyModel, bunnyTexture );
+//
+//    Entity bunnyEntity( bunnyTexturedModel,
+//                        glm::vec3( 0, 0, 0 ),
+//                        glm::vec3( 0, 0, 0 ),
+//                        1 );
+//
+//    entities.push_back( bunnyEntity );
+
+    Bunny* bunny = new Bunny();
+    Entity bunnyEntity = bunny->getEntity();
+    entities.push_back( bunnyEntity );
 
     // ---------------------------------------------------------------
 

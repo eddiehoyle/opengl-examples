@@ -8,6 +8,7 @@
 
 #include <glm/vec3.hpp>
 #include "model.hh"
+#include "../common/components/component.hh"
 
 class Entity {
 
@@ -44,8 +45,17 @@ private:
     glm::vec3 m_rotation;
     float m_scale;
 
+};
 
+// ------------------------------------------------------------
 
+/// A simple
+class EntityComponent : public common::Component {
+public:
+    explicit EntityComponent( const Entity& entity );
+    const Entity& getEntity() const;
+private:
+    Entity m_entity;
 };
 
 

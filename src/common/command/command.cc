@@ -4,7 +4,7 @@
 
 #include "command.hh"
 
-#include "../camera.hh"
+#include "../scene/camera.hh"
 
 namespace common {
 

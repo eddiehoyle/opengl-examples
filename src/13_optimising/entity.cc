@@ -53,4 +53,3 @@ void Entity::setScale( float scale ) {
 float Entity::getScale() const {
     return m_scale;
 }
-

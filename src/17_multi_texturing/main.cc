@@ -18,7 +18,7 @@
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
-#include "../common/camera.hh"
+#include "../common/scene/camera.hh"
 #include "OBJLoader.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"

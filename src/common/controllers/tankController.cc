@@ -7,6 +7,8 @@
 #include "../display.hh"
 #include "../command/command.hh"
 #include "../input/input.hh"
+#include "../components/moveComponent.hh"
+#include "../components/transformComponent.hh"
 
 namespace common {
 

@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <GL/glew.h>
-#include "camera.hh"
+#include "scene/camera.hh"
 
 namespace common {
 
