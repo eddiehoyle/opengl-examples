@@ -22,6 +22,10 @@ glm::mat4 look( TransformComponent* component, const glm::vec3& point ) {
     return glm::lookAt( position, position + point, up );
 }
 
+glm::mat4 look( TransformComponent* source, TransformComponent* target ) {
+    return glm::lookAt( source->getTranslate(), source->getTranslate() + target->getTranslate(), source->getUp() );
+}
+
 TransformComponent::TransformComponent()
         : m_pitch(),
           m_yaw(),

@@ -59,15 +59,15 @@ void Bunny::update( double elapsed ) {
 
     double velocity = 100.0 * elapsed;
     if ( moveStateComponent->isForward() ) {
-        transformComponent->moveForward( velocity );
-    }
-    if ( moveStateComponent->isBackward() ) {
         transformComponent->moveForward( -velocity );
     }
-    if ( moveStateComponent->isStrafeLeft() ) {
-        transformComponent->moveRight( -velocity );
+    if ( moveStateComponent->isBackward() ) {
+        transformComponent->moveForward( velocity );
     }
-    if ( moveStateComponent->isStrafeRight() ) {
-        transformComponent->moveRight( velocity );
+    if ( moveStateComponent->isTurningLeft() ) {
+        transformComponent->rotate( 0, -velocity * 3, 0 );
+    }
+    if ( moveStateComponent->isTurningRight() ) {
+        transformComponent->rotate( 0, velocity * 3, 0 );
     }
 }

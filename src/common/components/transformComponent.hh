@@ -18,6 +18,8 @@ glm::mat4 look( TransformComponent* component );
 
 glm::mat4 look( TransformComponent* component, const glm::vec3& point );
 
+glm::mat4 look( TransformComponent* source, TransformComponent* target );
+
 class TransformComponent : public Component {
 public:
 

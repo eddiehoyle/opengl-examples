@@ -47,16 +47,16 @@ void TankController::handleMove( InputCommand *command ) {
     switch ( command->state() ) {
         case InputState::Press:
             switch ( command->action() ) {
-                case InputAction::MoveForward:
+                case InputAction::MoveForward2:
                     moveComponent->setForward( true );
                     break;
-                case InputAction::MoveBackward:
+                case InputAction::MoveBackward2:
                     moveComponent->setBackward( true );
                     break;
-                case InputAction::TurnLeft:
+                case InputAction::TurnLeft2:
                     moveComponent->setTurningLeft( true );
                     break;
-                case InputAction::TurnRight:
+                case InputAction::TurnRight2:
                     moveComponent->setTurningRight( true );
                     break;
                 default:
@@ -65,16 +65,16 @@ void TankController::handleMove( InputCommand *command ) {
             break;
         case InputState::Release:
             switch ( command->action() ) {
-                case InputAction::MoveForward:
+                case InputAction::MoveForward2:
                     moveComponent->setForward( false );
                     break;
-                case InputAction::MoveBackward:
+                case InputAction::MoveBackward2:
                     moveComponent->setBackward( false );
                     break;
-                case InputAction::TurnLeft:
+                case InputAction::TurnLeft2:
                     moveComponent->setTurningLeft( false );
                     break;
-                case InputAction::TurnRight:
+                case InputAction::TurnRight2:
                     moveComponent->setTurningRight( false );
                     break;
                 default:

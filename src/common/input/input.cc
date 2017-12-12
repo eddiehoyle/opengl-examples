@@ -42,6 +42,18 @@ void glfw3KeyPressCallback( GLFWwindow *window, int key, int scancode, int type,
         case GLFW_KEY_D:
             action = InputAction::MoveRight;
             break;
+        case GLFW_KEY_UP:
+            action = InputAction::MoveForward2;
+            break;
+        case GLFW_KEY_DOWN:
+            action = InputAction::MoveBackward2;
+            break;
+        case GLFW_KEY_LEFT:
+            action = InputAction::TurnLeft2;
+            break;
+        case GLFW_KEY_RIGHT:
+            action = InputAction::TurnRight2;
+            break;
     }
 
     if ( action != InputAction::None && state != InputState::None ) {

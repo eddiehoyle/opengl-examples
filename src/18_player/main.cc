@@ -207,22 +207,24 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    const double FRAMES_PER_SECOND = 60.0;
-    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
-    double prevTime = glfwGetTime();
-
+    // Bunny controller
     common::TankController bunnyController( bunny );
     common::TransformComponent* bunnyTransformComponent =
             bunny->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
     bunnyTransformComponent->setTranslate( -50, 0, -50 );
 
-    std::cerr << glm::to_string( bunnyTransformComponent->getTranslate() ) << std::endl;
-
+    // Camera controller
     common::FpsController cameraController( camera );
-    common::Component* component = camera->getComponent( common::ComponentType::Transform );
-    common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
-    transformComponent->setTranslate( 0, 20, 0 );
-    transformComponent->setRotate( 20, 225, 0 );
+    common::TransformComponent* cameraTransformComponent =
+            camera->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
+    cameraTransformComponent->setTranslate( 0, 20, 0 );
+    cameraTransformComponent->setRotate( 0, 225, 0 );
+
+    // ---------------------------------------------------------------
+
+    const double FRAMES_PER_SECOND = 60.0;
+    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
+    double prevTime = glfwGetTime();
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
@@ -233,7 +235,7 @@ int main( int argc, char **argv ) {
         common::glfw3ProcessMouse( window );
 
         // Update camera
-//        cameraController.update( elapsed );
+        cameraController.update( elapsed );
         bunnyController.update( elapsed );
 
         bunnyEntity.setPosition( bunnyTransformComponent->getTranslate() );
