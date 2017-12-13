@@ -26,6 +26,7 @@ enum class InputAction {
     TurnLeft,
     TurnRight,
     Attack,
+    Jump,
 
     // Player2
     MoveForward2,

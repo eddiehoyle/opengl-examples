@@ -20,6 +20,9 @@ public:
 
     /// Update
     virtual void update( double elapsed );
+
+private:
+    float m_upwardsSpeed;
 };
 
 

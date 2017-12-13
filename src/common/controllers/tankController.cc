@@ -59,6 +59,9 @@ void TankController::handleMove( InputCommand *command ) {
                 case InputAction::TurnRight2:
                     moveComponent->setTurningRight( true );
                     break;
+                case InputAction::Jump:
+                    moveComponent->setJump( true );
+                    break;
                 default:
                     break;
             }
@@ -76,6 +79,9 @@ void TankController::handleMove( InputCommand *command ) {
                     break;
                 case InputAction::TurnRight2:
                     moveComponent->setTurningRight( false );
+                    break;
+                case InputAction::Jump:
+                    moveComponent->setJump( false );
                     break;
                 default:
                     break;

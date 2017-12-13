@@ -64,4 +64,12 @@ void MoveStateComponent::setTurningRight( bool state ) {
     m_turnRight = state;
 }
 
+void MoveStateComponent::setJump( bool state ) {
+    m_jumping = state;
+}
+
+bool MoveStateComponent::isJumping() const {
+    return m_jumping;
+}
+
 }

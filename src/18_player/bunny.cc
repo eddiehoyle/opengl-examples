@@ -9,7 +9,14 @@
 #include "../common/components/moveComponent.hh"
 #include "OBJLoader.hh"
 
-Bunny::Bunny() {
+const float kJumpVelocity = 4.0f;
+const float kGravity = -500.0f;
+const float kTerrainHeight = 0.0f;
+
+
+Bunny::Bunny()
+    : m_upwardsSpeed( 0 ) {
+
     addComponent( new common::MoveStateComponent );
     addComponent( new common::TransformComponent );
 
@@ -70,4 +77,18 @@ void Bunny::update( double elapsed ) {
     if ( moveStateComponent->isTurningRight() ) {
         transformComponent->rotate( 0, velocity * 3, 0 );
     }
+
+
+// bunny.cc update()
+// add logic
+    if ( moveStateComponent->isJumping() && ( transformComponent->getTranslate().y == kTerrainHeight ) ) {
+        m_upwardsSpeed = kJumpVelocity * 30.0f; // <-- fix
+    }
+
+    m_upwardsSpeed += kGravity * elapsed;
+    transformComponent->translate( 0.0f, m_upwardsSpeed * elapsed, 0.0f );
+
+// reset
+    if ( transformComponent->getTranslate().y < kTerrainHeight ) {
+        transformComponent->setTranslate( transformComponent->getTranslate().x, kTerrainHeight, transformComponent->getTranslate().z );
 }
