@@ -13,6 +13,7 @@ MoveStateComponent::MoveStateComponent()
           m_strafeRight( false ),
           m_turnLeft( false ),
           m_turnRight( false ),
+          m_jumping( false ),
           Component( ComponentType::MoveState ) {
 }
 

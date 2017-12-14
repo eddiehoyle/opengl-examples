@@ -90,5 +90,7 @@ void Bunny::update( double elapsed ) {
 
 // reset
     if ( transformComponent->getTranslate().y < kTerrainHeight ) {
-        transformComponent->setTranslate( transformComponent->getTranslate().x, kTerrainHeight, transformComponent->getTranslate().z );
+        transformComponent->setTranslate( transformComponent->getTranslate().x, kTerrainHeight,
+                                          transformComponent->getTranslate().z );
+    }
 }

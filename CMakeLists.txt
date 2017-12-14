@@ -10,9 +10,7 @@ set(CMAKE_MODULE_PATH ${OPENGL_EXAMPLES_ROOT_DIR}/cmake)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLM REQUIRED)
-
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
+find_package(glfw3 REQUIRED)
 
 include_directories(
         ${OPENGL_EXAMPLES_EXTERNAL_DIR}
