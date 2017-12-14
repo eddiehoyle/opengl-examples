@@ -22,6 +22,8 @@
 #include "OBJLoader.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"
+#include "../common/components/transformComponent.hh"
+#include "../common/controllers/fpsController.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -180,7 +182,7 @@ int main( int argc, char **argv ) {
     const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
     double prevTime = glfwGetTime();
 
-    common::InputController controller( camera );
+    common::FpsController controller( camera );
     common::Component* component = camera->getComponent( common::ComponentType::Transform );
     common::TransformComponent* transformComponent = component->asType< common::TransformComponent >();
     transformComponent->setTranslate( 0, 20, 0 );
