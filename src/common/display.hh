@@ -23,9 +23,6 @@ public:
     DisplayManager& operator=( const DisplayManager& ) = delete;
     ~DisplayManager();
 
-    void setCamera( Camera* camera );
-    Camera* camera() const;
-
     void setFocused( bool state ) { m_focused = state; }
     bool isFocused() { return m_focused; }
 

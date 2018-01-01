@@ -16,7 +16,6 @@ namespace common {
 void glfw3WindowFocusCallback(GLFWwindow* window, int state ) {
     bool focused = static_cast< bool >( state );
     common::DisplayManager::instance()->setFocused( focused );
-
     std::cerr << __func__ << " : focused=" << focused << std::endl;
     if ( focused ) {
         double x, y;
@@ -44,13 +43,13 @@ DisplayManager::~DisplayManager() {
     delete s_instance;
 }
 
-void DisplayManager::setCamera( Camera* camera ) {
-    m_camera = camera;
-}
-
-Camera* DisplayManager::camera() const {
-    return m_camera;
-}
+//void DisplayManager::setCamera( Camera* camera ) {
+//    m_camera = camera;
+//}
+//
+//Camera* DisplayManager::camera() const {
+//    return m_camera;
+//}
 
 unsigned int DisplayManager::width() const {
     return m_width;

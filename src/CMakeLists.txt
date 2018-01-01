@@ -17,6 +17,7 @@ add_subdirectory(15_transparency)
 add_subdirectory(16_fog)
 add_subdirectory(17_multi_texturing)
 add_subdirectory(18_player)
+add_subdirectory(19_third_person)
 
 # Trying new things
 add_subdirectory(dev)

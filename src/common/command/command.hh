@@ -37,7 +37,11 @@ enum class InputAction {
     // General
     Accept,
     Cancel,
-    Quit
+    Quit,
+
+    // Other
+    LMB,
+    RMB
 };
 
 enum class InputState {

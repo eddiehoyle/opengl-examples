@@ -37,10 +37,10 @@ void glfw3KeyPressCallback( GLFWwindow *window, int key, int scancode, int type,
             action = InputAction::MoveBackward;
             break;
         case GLFW_KEY_A:
-            action = InputAction::MoveLeft;
+            action = InputAction::TurnLeft;
             break;
         case GLFW_KEY_D:
-            action = InputAction::MoveRight;
+            action = InputAction::TurnRight;
             break;
         case GLFW_KEY_UP:
             action = InputAction::MoveForward2;

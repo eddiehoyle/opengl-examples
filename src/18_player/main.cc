@@ -11,21 +11,24 @@
 #include <chrono>
 #include <thread>
 
+#include "camera.hh"
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
 #include "OBJLoader.hh"
 
+
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
-#include "../common/scene/camera.hh"
+//#include "../common/scene/camera.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"
 #include "../common/controllers/fpsController.hh"
 #include "../common/components/transformComponent.hh"
 #include "bunny.hh"
 #include "../common/controllers/tankController.hh"
+#include "player.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -86,10 +89,10 @@ int main( int argc, char **argv ) {
 
 
     // Camera
-    common::Camera* camera = new common::Camera();
+    Camera* camera = new Camera();
 
     // Set width/height
-    common::DisplayManager::instance()->setCamera( camera );
+//    common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
 
     // ---------------------------------------------------------------
@@ -163,8 +166,8 @@ int main( int argc, char **argv ) {
 //
 //    entities.push_back( bunnyEntity );
 
-    Bunny* bunny = new Bunny();
-    Entity& bunnyEntity = bunny->getEntity();
+//    Bunny* bunny = new Bunny();
+//    Entity& bunnyEntity = bunny->getEntity();
 
     // ---------------------------------------------------------------
 
@@ -207,51 +210,81 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    // Bunny controller
-    common::TankController bunnyController( bunny );
-    common::TransformComponent* bunnyTransformComponent =
-            bunny->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
-    bunnyTransformComponent->setTranslate( -50, 0, -50 );
-
-    // Camera controller
-    common::FpsController cameraController( camera );
-    common::TransformComponent* cameraTransformComponent =
-            camera->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
-    cameraTransformComponent->setTranslate( 0, 20, 0 );
-    cameraTransformComponent->setRotate( 0, 225, 0 );
+//    // Bunny controller
+//    common::TankController bunnyController( bunny );
+//    common::TransformComponent* bunnyTransformComponent =
+//            bunny->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
+//    bunnyTransformComponent->setTranslate( -50, 0, -50 );
+//
+//    // Camera controller
+//    common::FpsController cameraController( camera );
+//    common::TransformComponent* cameraTransformComponent =
+//            camera->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
+//    cameraTransformComponent->setTranslate( 0, 20, 0 );
+//    cameraTransformComponent->setRotate( 0, 225, 0 );
 
     // ---------------------------------------------------------------
 
-    const double FRAMES_PER_SECOND = 60.0;
-    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
-    double prevTime = glfwGetTime();
+    camera->setPosition( glm::vec3( 30, 10, 30 ) );
+    camera->setYaw( 45 );
+
+    // ---------------------------------------------------------------
+
+    const std::string bunnyModelPath = common::getResource( "bunny2.obj", result );
+    assert( result );
+    const std::string bunnyTexturePath = common::getResource( "white.png", result );
+    assert( result );
+
+    // Model and texture
+    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
+    ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
+    bunnyTexture.setShineDamper( 10.0f );
+    bunnyTexture.setReflectivity( 1.0f );
+    bunnyTexture.setHasTransparency( false );
+    bunnyTexture.setUseFakeLighting( false );
+    TexturedModel bunnyTexturedModel( bunnyModel, bunnyTexture );
+
+    Player player( bunnyTexturedModel,
+                   glm::vec3( 0, 0, 0 ),
+                   glm::vec3( 0, 0, 0 ),
+                   1 );
+
+//    entities.push_back( player );
+
+
+//    const double FRAMES_PER_SECOND = 60.0;
+//    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
+//    double prevTime = glfwGetTime();
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        double currentTime = glfwGetTime();
-        double elapsed = currentTime - prevTime;
-        prevTime = currentTime;
+
+//        double currentTime = glfwGetTime();
+//        double elapsed = currentTime - prevTime;
+//        prevTime = currentTime;
 
         common::glfw3ProcessMouse( window );
 
-        // Update camera
-        cameraController.update( elapsed );
-        bunnyController.update( elapsed );
-
-        bunnyEntity.setPosition( bunnyTransformComponent->getTranslate() );
-        bunnyEntity.setRotation( glm::vec3( bunnyTransformComponent->getPitch(),
-                                            bunnyTransformComponent->getYaw(),
-                                            bunnyTransformComponent->getRoll() ) );
-
-        render.processEntity( bunnyEntity );
+//        // Update camera
+//        cameraController.update( elapsed );
+//        bunnyController.update( elapsed );
+//
+//        bunnyEntity.setPosition( bunnyTransformComponent->getTranslate() );
+//        bunnyEntity.setRotation( glm::vec3( bunnyTransformComponent->getPitch(),
+//                                            bunnyTransformComponent->getYaw(),
+//                                            bunnyTransformComponent->getRoll() ) );
+        player.move();
+        render.processEntity( player );
+        render.processTerrain( terrain );
 
         // Update entities
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
 
-        render.processTerrain( terrain );
         render.render( light, camera );
+
+        common::DisplayManager::instance()->updateDisplay();
 
         // Clear inputs
         common::InputManager::instance()->clear();
@@ -260,9 +293,9 @@ int main( int argc, char **argv ) {
         glfwSwapBuffers( window );
         glfwPollEvents();
 
-        // Cap FPS
-        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
-        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
+//        // Cap FPS
+//        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
+//        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
     }
 
     // Cleanup
@@ -271,7 +304,7 @@ int main( int argc, char **argv ) {
 
     // Tidy up camera
     delete camera;
-    delete bunny;
+//    delete bunny;
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();

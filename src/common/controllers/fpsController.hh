@@ -9,7 +9,6 @@
 
 namespace common {
 
-
 class FpsController : public AbstractController {
 public:
     FpsController( AbstractSceneObject* object );
@@ -18,10 +17,6 @@ public:
 private:
     void handleMove( InputCommand* command );
     void handleMouseMove();
-
-private:
-    float m_prevX;
-    float m_prevY;
 };
 
 }

@@ -219,7 +219,7 @@ void MasterRenderer::disableCulling() {
     glDisable( GL_CULL_FACE );
 }
 
-void MasterRenderer::render( Light sun, common::Camera *camera ) {
+void MasterRenderer::render( Light sun, Camera *camera ) {
 
     prepare();
 
