@@ -230,7 +230,7 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    const std::string bunnyModelPath = common::getResource( "bunny2.obj", result );
+    const std::string bunnyModelPath = common::getResource( "bunny.obj", result );
     assert( result );
     const std::string bunnyTexturePath = common::getResource( "white.png", result );
     assert( result );

@@ -28,8 +28,14 @@ public:
 
     MouseDevice* mouse() const;
 
+    /// @deprecated
     void add( InputAction action, InputState state );
+
+    void add( InputCommand* command );
+    void add( ZoomCommand* command );
+
     const InputCommands& commands() const;
+    const ZoomCommands& zoomCommands() const;
     void clear();
 
 private:
@@ -42,6 +48,7 @@ private:
 
 private:
     InputCommands m_commands;
+    ZoomCommands m_zoomCommands;
     MouseDevice* m_mouse;
 
 };

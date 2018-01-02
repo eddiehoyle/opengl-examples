@@ -28,4 +28,18 @@ InputState InputCommand::state() const {
     return m_state;
 }
 
+ZoomCommand::ZoomCommand( InputAction action, double value )
+        : Command( CommandType::Input ),
+          m_action( action ),
+          m_value( value ) {}
+
+InputAction ZoomCommand::action() const {
+    return m_action;
 }
+
+double ZoomCommand::value() const {
+    return m_value;
+}
+
+}
+

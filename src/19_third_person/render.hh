@@ -11,7 +11,7 @@
 #include "entity.hh"
 #include "shader.hh"
 #include "terrain.hh"
-#include "../common/scene/camera.hh"
+#include "camera.hh"
 
 
 const GLfloat kSkyRed = 0.54;
@@ -74,7 +74,7 @@ public:
 
     void cleanup();
     void prepare();
-    void render( Light sun, common::Camera* camera );
+    void render( Light sun, const Camera& camera );
     void processEntity( const Entity& entity );
     void processTerrain( const Terrain& terrain );
     void createProjectionMatrix();

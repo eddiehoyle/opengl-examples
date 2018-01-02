@@ -3,6 +3,7 @@
 //
 
 #include "camera.hh"
+#include "player.hh"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -59,4 +60,3 @@ glm::mat4 Camera::matrix() const {
 glm::mat4 Camera::view() const {
     return glm::inverse( matrix() );
 }
-

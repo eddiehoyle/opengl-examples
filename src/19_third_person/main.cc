@@ -11,22 +11,24 @@
 #include <chrono>
 #include <thread>
 
+#include "camera.hh"
 #include "render.hh"
 #include "loader.hh"
 #include "shader.hh"
 #include "OBJLoader.hh"
-#include "bunny.hh"
-#include "controller.hh"
+
 
 #include "../common/display.hh"
 #include "../common/resources.hh"
 #include "../common/math.hh"
-#include "../common/scene/camera.hh"
+//#include "../common/scene/camera.hh"
 #include "../common/input/input.hh"
 #include "../common/controllers/controller.hh"
 #include "../common/controllers/fpsController.hh"
 #include "../common/components/transformComponent.hh"
+#include "bunny.hh"
 #include "../common/controllers/tankController.hh"
+#include "player.hh"
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -86,11 +88,8 @@ int main( int argc, char **argv ) {
     }
 
 
-    // Camera
-    common::Camera* camera = new common::Camera();
-
     // Set width/height
-    common::DisplayManager::instance()->setCamera( camera );
+//    common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
 
     // ---------------------------------------------------------------
@@ -142,8 +141,30 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    Bunny* bunny = new Bunny();
-    Entity& bunnyEntity = bunny->getEntity();
+    // Bunny
+//    const std::string bunnyModelPath = common::getResource( "bunny.obj", result );
+//    assert( result );
+//    const std::string bunnyTexturePath = common::getResource( "white.png", result );
+//    assert( result );
+
+//    // Model and texture
+//    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
+//    ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
+//    bunnyTexture.setShineDamper( 10.0f );
+//    bunnyTexture.setReflectivity( 1.0f );
+//    bunnyTexture.setHasTransparency( false );
+//    bunnyTexture.setUseFakeLighting( false );
+//    TexturedModel bunnyTexturedModel( bunnyModel, bunnyTexture );
+//
+//    Entity bunnyEntity( bunnyTexturedModel,
+//                        glm::vec3( 0, 0, 0 ),
+//                        glm::vec3( 0, 0, 0 ),
+//                        1 );
+//
+//    entities.push_back( bunnyEntity );
+
+//    Bunny* bunny = new Bunny();
+//    Entity& bunnyEntity = bunny->getEntity();
 
     // ---------------------------------------------------------------
 
@@ -199,42 +220,56 @@ int main( int argc, char **argv ) {
 //    cameraTransformComponent->setTranslate( 0, 20, 0 );
 //    cameraTransformComponent->setRotate( 0, 225, 0 );
 
-    ThirdPersonController tpsController( bunny, camera );
+    // ---------------------------------------------------------------
+
+//    camera->setPosition( glm::vec3( 30, 10, 30 ) );
+//    camera->setYaw( 135 );
 
     // ---------------------------------------------------------------
 
-    const double FRAMES_PER_SECOND = 60.0;
-    const double MS_PER_FRAME = 1000.0 / FRAMES_PER_SECOND;
-    double prevTime = glfwGetTime();
+    const std::string bunnyModelPath = common::getResource( "bunny.obj", result );
+    assert( result );
+    const std::string bunnyTexturePath = common::getResource( "white.png", result );
+    assert( result );
+
+    // Model and texture
+    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
+    ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
+    bunnyTexture.setShineDamper( 10.0f );
+    bunnyTexture.setReflectivity( 1.0f );
+    bunnyTexture.setHasTransparency( false );
+    bunnyTexture.setUseFakeLighting( false );
+    TexturedModel bunnyTexturedModel( bunnyModel, bunnyTexture );
+
+    Player player( bunnyTexturedModel,
+                   glm::vec3( 0, 0, 0 ),
+                   glm::vec3( 0, 0, 0 ),
+                   1 );
+
+
+    // Camera
+    Camera camera = Camera( &player );
+
+    float value = 0;
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
-        double currentTime = glfwGetTime();
-        double elapsed = currentTime - prevTime;
-        prevTime = currentTime;
-
         common::glfw3ProcessMouse( window );
 
-        tpsController.update( elapsed );
+        camera.move();
+        player.move();
 
-//        // Update camera
-//        cameraController.update( elapsed );
-//        bunnyController.update( elapsed );
-//
-//        bunnyEntity.setPosition( bunnyTransformComponent->getTranslate() );
-//        bunnyEntity.setRotation( glm::vec3( bunnyTransformComponent->getPitch(),
-//                                            bunnyTransformComponent->getYaw(),
-//                                            bunnyTransformComponent->getRoll() ) );
-
-        render.processEntity( bunnyEntity );
+        render.processEntity( player );
+        render.processTerrain( terrain );
 
         // Update entities
         for ( auto entity : entities ) {
             render.processEntity( entity );
         }
 
-        render.processTerrain( terrain );
         render.render( light, camera );
+
+        common::DisplayManager::instance()->updateDisplay();
 
         // Clear inputs
         common::InputManager::instance()->clear();
@@ -243,9 +278,9 @@ int main( int argc, char **argv ) {
         glfwSwapBuffers( window );
         glfwPollEvents();
 
-        // Cap FPS
-        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
-        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
+//        // Cap FPS
+//        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
+//        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
     }
 
     // Cleanup
@@ -253,8 +288,8 @@ int main( int argc, char **argv ) {
     loader.cleanup();
 
     // Tidy up camera
-    delete camera;
-    delete bunny;
+//    delete camera;
+//    delete bunny;
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();

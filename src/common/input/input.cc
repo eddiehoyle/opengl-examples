@@ -60,16 +60,40 @@ void glfw3KeyPressCallback( GLFWwindow *window, int key, int scancode, int type,
     }
 
     if ( action != InputAction::None && state != InputState::None ) {
-        InputManager::instance()->add( action, state );
+        InputManager::instance()->add( new InputCommand( action, state ) );
     }
 }
 
 void glfw3MouseScrollCallback( GLFWwindow *window, double x, double y ) {
-
+    InputManager::instance()->add( new ZoomCommand( InputAction::Zoom , y ) );
 }
 
-void glfw3MouseButtonCallback( GLFWwindow *window, int button, int action, int mods ) {
+void glfw3MouseButtonCallback( GLFWwindow *window, int button, int type, int mods ) {
 
+    InputState state = InputState::None;
+    switch ( type ) {
+        case GLFW_PRESS:
+            state = InputState::Press;
+            break;
+        case GLFW_RELEASE:
+            state = InputState::Release;
+            break;
+    }
+
+    InputAction action = InputAction::None;
+    switch ( button ) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            action = InputAction::LMB;
+            break;
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            action = InputAction::RMB;
+            break;
+    }
+
+
+    if ( action != InputAction::None && state != InputState::None ) {
+        InputManager::instance()->add( new InputCommand( action, state ) );
+    }
 }
 
 void glfw3ProcessMouse( GLFWwindow* window ) {
@@ -109,6 +133,18 @@ void InputManager::add( InputAction action, InputState state ) {
     m_commands.push_back( new InputCommand( action, state ) );
 }
 
+void InputManager::add( InputCommand* command ) {
+    m_commands.push_back( command );
+}
+
+void InputManager::add( ZoomCommand* command ) {
+    m_zoomCommands.push_back( command );
+}
+
+const ZoomCommands& InputManager::zoomCommands() const {
+    return m_zoomCommands;
+}
+
 const InputCommands& InputManager::commands() const {
     return m_commands;
 }
@@ -117,7 +153,11 @@ void InputManager::clear() {
     for ( InputCommand* command : m_commands ) {
         delete command;
     }
+    for ( ZoomCommand* command : m_zoomCommands ) {
+        delete command;
+    }
     m_commands.clear();
+    m_zoomCommands.clear();
 }
 
 

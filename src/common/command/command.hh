@@ -41,7 +41,8 @@ enum class InputAction {
 
     // Other
     LMB,
-    RMB
+    RMB,
+    Zoom
 };
 
 enum class InputState {
@@ -54,9 +55,11 @@ enum class InputState {
 /// Forward Declare
 class Command;
 class InputCommand;
+class ZoomCommand;
 
 typedef std::vector< Command* > Commands;
 typedef std::vector< InputCommand* > InputCommands;
+typedef std::vector< ZoomCommand* > ZoomCommands;
 
 
 class Command {
@@ -75,8 +78,7 @@ protected:
 
 class InputCommand : public Command {
 public:
-    explicit InputCommand( InputAction action,
-                           InputState state );
+    explicit InputCommand( InputAction action, InputState state );
     InputAction action() const;
     InputState state() const;
 
@@ -84,6 +86,18 @@ protected:
 
     InputAction m_action;
     InputState m_state;
+};
+
+class ZoomCommand : public Command {
+public:
+    explicit ZoomCommand( InputAction action, double value );
+    InputAction action() const;
+    double value() const;
+
+protected:
+
+    InputAction m_action;
+    double m_value;
 };
 
 }
