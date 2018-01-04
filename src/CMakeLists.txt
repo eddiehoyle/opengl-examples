@@ -18,6 +18,7 @@ add_subdirectory(16_fog)
 add_subdirectory(17_multi_texturing)
 add_subdirectory(18_player)
 add_subdirectory(19_third_person)
+add_subdirectory(20_mipmapping)
 
 # Trying new things
 add_subdirectory(dev)
