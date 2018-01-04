@@ -123,7 +123,7 @@ int main( int argc, char **argv ) {
     std::size_t numGrass = 100;
     for ( std::size_t i = 0; i < numGrass; ++i ) {
 
-        std::uniform_real_distribution<> dis(-0, -500.0 );
+        std::uniform_real_distribution<> dis(0.0, 500.0 );
         std::uniform_real_distribution<> scaleDis( 3.0, 5.0 );
 
         double posX = dis( gen );
@@ -138,33 +138,6 @@ int main( int argc, char **argv ) {
         grassEntity.setScale( scaleXYZ );
         entities.push_back( grassEntity );
     }
-
-    // ---------------------------------------------------------------
-
-    // Bunny
-//    const std::string bunnyModelPath = common::getResource( "bunny.obj", result );
-//    assert( result );
-//    const std::string bunnyTexturePath = common::getResource( "white.png", result );
-//    assert( result );
-
-//    // Model and texture
-//    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
-//    ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
-//    bunnyTexture.setShineDamper( 10.0f );
-//    bunnyTexture.setReflectivity( 1.0f );
-//    bunnyTexture.setHasTransparency( false );
-//    bunnyTexture.setUseFakeLighting( false );
-//    TexturedModel bunnyTexturedModel( bunnyModel, bunnyTexture );
-//
-//    Entity bunnyEntity( bunnyTexturedModel,
-//                        glm::vec3( 0, 0, 0 ),
-//                        glm::vec3( 0, 0, 0 ),
-//                        1 );
-//
-//    entities.push_back( bunnyEntity );
-
-//    Bunny* bunny = new Bunny();
-//    Entity& bunnyEntity = bunny->getEntity();
 
     // ---------------------------------------------------------------
 
@@ -191,7 +164,7 @@ int main( int argc, char **argv ) {
                                     bTexture );
     TerrainTexture blendMap = TerrainTexture( blendMapTexture );
 
-    Terrain terrain( -1, -1, loader, texturePack, blendMap );
+    Terrain terrain( 0, 0, loader, texturePack, blendMap );
 
     // ---------------------------------------------------------------
 
@@ -204,26 +177,6 @@ int main( int argc, char **argv ) {
     shader.init();
     terrainShader.init();
     MasterRenderer render( shader, terrainShader );
-
-    // ---------------------------------------------------------------
-
-//    // Bunny controller
-//    common::TankController bunnyController( bunny );
-//    common::TransformComponent* bunnyTransformComponent =
-//            bunny->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
-//    bunnyTransformComponent->setTranslate( -50, 0, -50 );
-//
-//    // Camera controller
-//    common::FpsController cameraController( camera );
-//    common::TransformComponent* cameraTransformComponent =
-//            camera->getComponent( common::ComponentType::Transform )->asType< common::TransformComponent >();
-//    cameraTransformComponent->setTranslate( 0, 20, 0 );
-//    cameraTransformComponent->setRotate( 0, 225, 0 );
-
-    // ---------------------------------------------------------------
-
-//    camera->setPosition( glm::vec3( 30, 10, 30 ) );
-//    camera->setYaw( 135 );
 
     // ---------------------------------------------------------------
 
@@ -256,8 +209,8 @@ int main( int argc, char **argv ) {
 
         common::glfw3ProcessMouse( window );
 
-        camera.move();
         player.move();
+        camera.move();
 
         render.processEntity( player );
         render.processTerrain( terrain );
@@ -277,10 +230,6 @@ int main( int argc, char **argv ) {
         // Swap buffers
         glfwSwapBuffers( window );
         glfwPollEvents();
-
-//        // Cap FPS
-//        double sleep_time = std::max( 0.0, MS_PER_FRAME - elapsed );
-//        std::this_thread::sleep_for( std::chrono::milliseconds( ( unsigned int )sleep_time ) );
     }
 
     // Cleanup

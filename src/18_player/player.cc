@@ -9,7 +9,7 @@
 #include "../common/display.hh"
 
 static const float RUN_SPEED = 20;
-static const float TURN_SPEED = 160;
+static const float TURN_SPEED = 10;
 static const float GRAVITY = -100;
 static const float JUMP_POWER = 30;
 
