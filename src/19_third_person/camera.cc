@@ -3,7 +3,6 @@
 //
 
 #include "camera.hh"
-#include "texture.hh"
 #include "../common/command/command.hh"
 #include "../common/input/input.hh"
 #include <glm/glm.hpp>
@@ -99,7 +98,6 @@ void Camera::calculateZoom() {
     for ( ZoomCommand* command : commands ) {
         m_distanceFromPlayer -= command->value();
     }
-//    std::cerr << "m_distanceFromPlayer=" << m_distanceFromPlayer << std::endl;
 }
 
 void Camera::calculatePitch() {
@@ -113,48 +111,13 @@ void Camera::calculatePitch() {
     } else {
         m_pitch -= delta;
     }
-
-//    using namespace common;
-//    const InputCommands& commands = InputManager::instance()->commands();
-//
-//    for ( InputCommand* command : commands ) {
-//        if ( command->action() == InputAction::RMB ) {
-//            m_pitchActive = command->state() == InputState::Press;
-//            break;
-//        }
-//    }
-//    if ( m_pitchActive ) {
-//        double delta = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
-//        delta *= SENSITIVITY;
-//        if ( m_pitch - delta < 0 ) {
-//            m_pitch = 0.0;
-//        } else if ( m_pitch - delta > 90 ) {
-//            m_pitch = 90.0;
-//        } else {
-//            m_pitch -= delta;
-//        }
-//    }
 }
 
 void Camera::calculateAngleAroundPlayer() {
     using namespace common;
     double delta = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
     delta *= SENSITIVITY;
-    m_angleAroundPlayer -= delta;
-
-//    const InputCommands& commands = InputManager::instance()->commands();
-//
-//    for ( InputCommand* command : commands ) {
-//        if ( command->action() == InputAction::LMB ) {
-//            m_yawActive = command->state() == InputState::Press;
-//            break;
-//        }
-//    }
-//    if ( m_yawActive ) {
-//        double delta = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
-//        delta *= SENSITIVITY;
-//        m_angleAroundPlayer -= delta;
-//    }
+    m_angleAroundPlayer += delta;
 }
 
 float Camera::calculateHorizontalDistance() {
