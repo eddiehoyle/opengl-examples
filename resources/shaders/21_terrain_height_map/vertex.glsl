@@ -35,8 +35,12 @@ void main( void ) {
 
     mat4 normalMatrix = transpose( inverse( transformationMatrix ) );
     surfaceNormal = ( normalMatrix * vec4( actualNormal, 0.0 ) ).xyz;
-    toLightVector = lightPosition - worldPosition.xyz;
     toCameraVector = ( inverse( viewMatrix ) * vec4( 0.0, 0.0, 0.0, 1.0 ) ).xyz - worldPosition.xyz;
+
+    // TODO
+    // Does the light need to be a vector from vertex to light?
+    // Removing the worldPosition actually makes this work
+    toLightVector = lightPosition;// - worldPosition.xyz; // Does not work if this is uncommented, should I be dpi
 
     float distance = length( positionRelativeToCam.xyz );
     visibility = exp( -pow( ( distance * density ), gradient ) );

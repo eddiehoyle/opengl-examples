@@ -42,7 +42,6 @@ void main( void ) {
     // Removing the worldPosition actually makes this work
     toLightVector = lightPosition;// - worldPosition.xyz; // Does not work if this is uncommented, should I be dpi
 
-
     float distance = length( positionRelativeToCam.xyz );
     visibility = exp( -pow( ( distance * density ), gradient ) );
     visibility = clamp( visibility, visibilityClamp, visibilityClamp );

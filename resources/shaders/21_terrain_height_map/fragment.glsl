@@ -19,8 +19,8 @@ void main() {
 
     vec3 tmp = toLightVector;
 
-    vec3 actualLightVector = vec3( 0.0, 1.0, 0.0 ); // Directional light
-//    vec3 actualLightVector = toLightVector; // Kinda like a point light
+//    vec3 actualLightVector = vec3( 0.0, 1.0, 0.0 ); // Forced directional light
+    vec3 actualLightVector = toLightVector; // Directional light
 
     vec3 unitNormal = normalize( surfaceNormal );
     vec3 unitLightVector = normalize( actualLightVector );
