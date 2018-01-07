@@ -15,7 +15,6 @@ find_package(glfw3 3.2 REQUIRED)
 include_directories(
         ${OPENGL_EXAMPLES_EXTERNAL_DIR}
         ${GLFW_INCLUDE_DIRS}
-        ${LRN_EXTERNAL_DIR}
         ${GLM_INCLUDE_DIRS}
         ${GLEW_INCLUDE_DIR}
 )
