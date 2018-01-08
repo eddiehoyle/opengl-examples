@@ -20,6 +20,7 @@ add_subdirectory(18_player)
 add_subdirectory(19_third_person)
 add_subdirectory(20_mipmapping)
 add_subdirectory(21_terrain_height_map)
+add_subdirectory(22_terrain_collision)
 
 # Trying new things
 add_subdirectory(dev)
