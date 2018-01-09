@@ -24,8 +24,11 @@ public:
     TerrainTexturePack getTexturePack() const;
     TerrainTexture getBlendMap() const;
 
+
     float getHeight( int x, int z, int width, int bytesperpixel, unsigned char *image );
     glm::vec3 calculateNormal( int x, int z, int width, int bytesperpixel, unsigned char *image );
+
+    float getHeightOfTerrain( float worldX, float worldZ ) const;
 
 private:
     float m_x;
@@ -33,6 +36,8 @@ private:
     Model m_model;
     TerrainTexturePack m_texturePack;
     TerrainTexture m_blendMap;
+
+    std::vector< float > m_heights;
 
 };
 

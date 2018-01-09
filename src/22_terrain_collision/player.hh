@@ -7,6 +7,7 @@
 
 
 #include "entity.hh"
+#include "terrain.hh"
 
 class Player : public Entity {
 
@@ -16,7 +17,7 @@ public:
             const glm::vec3& rotation,
             float scale );
 
-    void move();
+    void move( const Terrain& terrain );
     void checkInputs();
 
 private:

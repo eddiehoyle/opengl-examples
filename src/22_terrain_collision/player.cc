@@ -7,6 +7,7 @@
 #include "player.hh"
 #include "../common/input/input.hh"
 #include "../common/display.hh"
+#include "terrain.hh"
 
 static const float RUN_SPEED = 100;
 static const float TURN_SPEED = 160;
@@ -27,7 +28,7 @@ Player::Player( const TexturedModel& model,
           m_isInAir( false )
 {}
 
-void Player::move() {
+void Player::move( const Terrain& terrain ) {
     checkInputs();
     double elapsed = common::DisplayManager::instance()->getFrameTimeSeconds();
     float rotation = m_currentTurnSpeed * elapsed;
@@ -37,9 +38,10 @@ void Player::move() {
     float dz = distance * std::cos( glm::radians( getRotation().y ) );
     m_upwardsSpeed += GRAVITY * elapsed;
     increasePosition( dx, m_upwardsSpeed * elapsed, dz );
-    if ( getPosition().y < TERRAIN_HEIGHT ) {
+    float terrainHeight = terrain.getHeightOfTerrain( getPosition().x, getPosition().z );
+    if ( getPosition().y < terrainHeight ) {
         m_upwardsSpeed = 0;
-        setPosition( glm::vec3( getPosition().x, TERRAIN_HEIGHT, getPosition().z ) );
+        setPosition( glm::vec3( getPosition().x, terrainHeight, getPosition().z ) );
         m_isInAir = false;
     }
 }

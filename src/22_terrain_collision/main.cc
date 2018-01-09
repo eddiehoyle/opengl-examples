@@ -211,7 +211,7 @@ int main( int argc, char **argv ) {
 
         common::glfw3ProcessMouse( window );
 
-        player.move();
+        player.move( terrain );
         camera.move();
 
         render.processEntity( player );

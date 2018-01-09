@@ -13,6 +13,12 @@
 namespace common {
 
 /// TODO
+float barryCentric( const glm::vec3& p1,
+                    const glm::vec3& p2,
+                    const glm::vec3& p3,
+                    const glm::vec2& pos );
+
+/// TODO
 glm::mat4 createTransformationMatrix( const glm::vec3& translate,
                                       const glm::vec3& rotate,
                                       GLfloat scale );

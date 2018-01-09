@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 #include <glm/ext.hpp>
 #include "terrain.hh"
+#include "../common/math.hh"
 
 const float SIZE = 500;
 const float MAX_HEIGHT = 40;
@@ -35,7 +36,36 @@ TerrainTexture Terrain::getBlendMap() const {
     return m_blendMap;
 }
 
+float Terrain::getHeightOfTerrain( float worldX, float worldZ ) const {
+    float terrainX = worldX - m_x;
+    float terrainZ = worldZ - m_z;
+    int length = static_cast< int >( std::sqrt( m_heights.size() ) );
+    float gridSquareSize = SIZE / static_cast< float >( length - 1 );
+    float gridX = std::floor( terrainX / gridSquareSize );
+    float gridZ = std::floor( terrainZ / gridSquareSize );
+    std::cerr << __func__ << " : length=" << length << std::endl;
+    if ( gridX >= length - 1 || gridZ >= length - 1 || gridX < 0 || gridZ < 0 ) {
+        return 0.0f;
+    }
+    float xCoord = std::fmod( terrainX, gridSquareSize ) / gridSquareSize;
+    float zCoord = std::fmod( terrainZ, gridSquareSize ) / gridSquareSize;
+    float answer;
+    if ( xCoord <= 1.0f - zCoord ) {
+        answer = common::barryCentric( glm::vec3( 0, m_heights[ ( int )gridX * ( int )gridZ ], 0 ),
+                                       glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( int )gridZ ], 0 ),
+                                       glm::vec3( 1, m_heights[ ( ( int )gridX ) * ( int )gridZ + 1 ], 1 ),
+                                       glm::vec2( xCoord, zCoord ) );
+    } else {
+        answer = common::barryCentric( glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( int )gridZ ], 0 ),
+                                       glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( ( int )gridZ + 1 ) ], 1 ),
+                                       glm::vec3( 0, m_heights[ ( ( int )gridX ) * ( int )gridZ + 1 ], 1 ),
+                                       glm::vec2( xCoord, zCoord ) );
+    }
+    return answer;
+}
+
 Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
+
 
     int VERTEX_COUNT = 128;
 
@@ -50,7 +80,8 @@ Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
     }
 
     VERTEX_COUNT = height;
-    std::cerr << __func__ << " : height=" << height << std::endl;
+
+//    m_heights.resize( VERTEX_COUNT * VERTEX_COUNT );
 
     int count = VERTEX_COUNT * VERTEX_COUNT;
     float vertices[count * 3];
@@ -61,9 +92,13 @@ Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
     int vertexPointer = 0;
     for(int i=0;i<VERTEX_COUNT;i++){
         for(int j=0;j<VERTEX_COUNT;j++){
+
+            float height = getHeight(j, i, width, bytesperpixel, data);
             vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-            vertices[vertexPointer*3+1] = getHeight(j, i, width, bytesperpixel, data);
+            vertices[vertexPointer*3+1] = height;
             vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
+
+            m_heights[ i * j ] = height;
 
             glm::vec3 normal = calculateNormal(j, i, width, bytesperpixel, data);
             normals[vertexPointer*3] = normal.x;
