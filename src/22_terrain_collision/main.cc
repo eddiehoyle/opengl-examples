@@ -87,57 +87,13 @@ int main( int argc, char **argv ) {
         return 1;
     }
 
-
     // Set width/height
-//    common::DisplayManager::instance()->setCamera( camera );
     common::DisplayManager::instance()->update( kWindowWidth, kWindowHeight );
 
     // ---------------------------------------------------------------
 
     bool result;
     Loader loader = Loader();
-
-    // ---------------------------------------------------------------
-
-    // Grass
-    const std::string bladesModelPath = common::getResource( "grass.obj", result );
-    assert( result );
-    const std::string bladesTexturePath = common::getResource( "grassBlades.png", result );
-    assert( result );
-
-    // Model and texture
-    Model bladesModel = OBJLoader::loadObjModel( bladesModelPath, loader );
-    ModelTexture bladesTexture( loader.loadTexture( bladesTexturePath ) );
-    bladesTexture.setShineDamper( 10.0f );
-    bladesTexture.setReflectivity( 1.0f );
-    bladesTexture.setHasTransparency( true );
-    bladesTexture.setUseFakeLighting( true );
-    TexturedModel bladesTexturedModel( bladesModel, bladesTexture );
-
-    // Create entities
-    std::vector< Entity > entities;
-
-    std::random_device rd;  // Will be used to obtain a seed for the random number engine
-    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
-
-    std::size_t numGrass = 100;
-    for ( std::size_t i = 0; i < numGrass; ++i ) {
-
-        std::uniform_real_distribution<> dis(0.0, 500.0 );
-        std::uniform_real_distribution<> scaleDis( 3.0, 5.0 );
-
-        double posX = dis( gen );
-        double posZ = dis( gen );
-        double scaleXYZ = scaleDis( gen );
-
-        Entity grassEntity( bladesTexturedModel,
-                           glm::vec3( 0, 0, 0 ),
-                           glm::vec3( 0, 0, 0 ),
-                           1 );
-        grassEntity.setPosition( glm::vec3( posX, 0.0, posZ ) );
-        grassEntity.setScale( scaleXYZ );
-        entities.push_back( grassEntity );
-    }
 
     // ---------------------------------------------------------------
 
@@ -166,6 +122,48 @@ int main( int argc, char **argv ) {
 
     const std::string heightMapPath = common::getResource( "heightmap.png", result );
     Terrain terrain( 0, 0, loader, texturePack, blendMap, heightMapPath );
+
+    // ---------------------------------------------------------------
+
+    // Fern
+    const std::string fernModelPath = common::getResource( "fern.obj", result );
+    assert( result );
+    const std::string fernTexturePath = common::getResource( "fern2.png", result );
+    assert( result );
+
+    // Model and texture
+    Model fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
+    ModelTexture fernTexture( loader.loadTexture( fernTexturePath ) );
+    fernTexture.setShineDamper( 10.0f );
+    fernTexture.setReflectivity( 1.0f );
+    fernTexture.setHasTransparency( true );
+    fernTexture.setUseFakeLighting( true );
+    TexturedModel fernTexturedModel( fernModel, fernTexture );
+
+    // Create entities
+    std::vector< Entity > entities;
+
+    int terrainSize = 500;
+    int numEntities = 500;
+
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
+
+    for ( int i = 0; i < numEntities; ++i ) {
+
+        std::uniform_real_distribution<> dis(0.0, terrainSize );
+
+        double posX = dis( gen );
+        double posZ = dis( gen );
+        double posY = terrain.getHeightOfTerrain( posX, posZ );
+
+        Entity fernEntity( fernTexturedModel,
+                           glm::vec3( posX, posY, posZ ),
+                           glm::vec3( 0, 0, 0 ),
+                           1 );
+
+        entities.push_back( fernEntity );
+    }
 
     // ---------------------------------------------------------------
 
@@ -200,7 +198,6 @@ int main( int argc, char **argv ) {
                    glm::vec3( 0, 0, 0 ),
                    glm::vec3( 0, 0, 0 ),
                    1 );
-
 
     // Camera
     Camera camera = Camera( &player );
@@ -239,10 +236,6 @@ int main( int argc, char **argv ) {
     // Cleanup
     render.cleanup();
     loader.cleanup();
-
-    // Tidy up camera
-//    delete camera;
-//    delete bunny;
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();

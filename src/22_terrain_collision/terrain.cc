@@ -53,15 +53,15 @@ float Terrain::getHeightOfTerrain( float worldX, float worldZ ) const {
     float answer;
     if ( xCoord <= ( 1.0f - zCoord ) ) {
         answer = common::barryCentric(
-                glm::vec3( 0, m_heights[ gridX ][ gridZ ], 0 ),
-                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ ], 0 ),
-                glm::vec3( 0, m_heights[ gridX ][ gridZ + 1 ], 1 ),
+                glm::vec3( 0, m_heights[ gridX     ][ gridZ     ], 0 ),
+                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ     ], 0 ),
+                glm::vec3( 0, m_heights[ gridX     ][ gridZ + 1 ], 1 ),
                 glm::vec2( xCoord, zCoord ) );
     } else {
         answer = common::barryCentric(
-                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ ], 0 ),
+                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ     ], 0 ),
                 glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ + 1 ], 1 ),
-                glm::vec3( 0, m_heights[ gridX ][ gridZ + 1 ], 1 ),
+                glm::vec3( 0, m_heights[ gridX     ][ gridZ + 1 ], 1 ),
                 glm::vec2( xCoord, zCoord ) );
     }
     return answer;
@@ -101,7 +101,7 @@ Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
     for(int i=0;i<VERTEX_COUNT;i++){
         for(int j=0;j<VERTEX_COUNT;j++){
 
-            float height = getHeight(j, i, width, bytesperpixel, data);
+            float height = getHeightMapHeight( j, i, width, bytesperpixel, data );
             vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
             vertices[vertexPointer*3+1] = height;
             vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
@@ -154,7 +154,7 @@ Model Terrain::getModel() const {
     return m_model;
 }
 
-float Terrain::getHeight( int x, int z, int width, int bytesperpixel, unsigned char *image ) {
+float Terrain::getHeightMapHeight( int x, int z, int width, int bytesperpixel, unsigned char *image ) {
     if ( x < 0 || x >= width || z < 0 || z >= width ) {
         return 0.0f;
     }
@@ -174,10 +174,10 @@ float Terrain::getHeight( int x, int z, int width, int bytesperpixel, unsigned c
 }
 
 glm::vec3 Terrain::calculateNormal( int x, int z, int width, int bytesperpixel, unsigned char *image ) {
-    float heightL = getHeight( x-1, z, width, bytesperpixel, image );
-    float heightR = getHeight( x+1, z, width, bytesperpixel, image );
-    float heightD = getHeight( x, z-1, width, bytesperpixel, image );
-    float heightU = getHeight( x, z+1, width, bytesperpixel, image );
+    float heightL = getHeightMapHeight( x - 1, z, width, bytesperpixel, image );
+    float heightR = getHeightMapHeight( x + 1, z, width, bytesperpixel, image );
+    float heightD = getHeightMapHeight( x, z - 1, width, bytesperpixel, image );
+    float heightU = getHeightMapHeight( x, z + 1, width, bytesperpixel, image );
     glm::vec3 normal = glm::normalize( glm::vec3( heightL - heightR,
                                                   2.0f,
                                                   heightD - heightU ) );

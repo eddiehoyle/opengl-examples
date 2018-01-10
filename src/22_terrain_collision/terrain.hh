@@ -25,7 +25,7 @@ public:
     TerrainTexture getBlendMap() const;
 
 
-    float getHeight( int x, int z, int width, int bytesperpixel, unsigned char *image );
+    float getHeightMapHeight( int x, int z, int width, int bytesperpixel, unsigned char *image );
     glm::vec3 calculateNormal( int x, int z, int width, int bytesperpixel, unsigned char *image );
 
     float getHeightOfTerrain( float worldX, float worldZ ) const;
