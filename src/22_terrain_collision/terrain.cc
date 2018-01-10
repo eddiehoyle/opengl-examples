@@ -23,9 +23,11 @@ Terrain::Terrain( int gridX,
                   const std::string& heightMap )
         : m_x( gridX * SIZE ),
           m_z( gridZ * SIZE ),
-          m_model( generateTerrain( loader, heightMap ) ),
+          m_model( Model( 0, 0 ) ),
           m_texturePack( texturePack ),
-          m_blendMap( blendMap ) {
+          m_blendMap( blendMap ),
+          m_heights() {
+    m_model = Model( generateTerrain( loader, heightMap ) );
 }
 
 TerrainTexturePack Terrain::getTexturePack() const {
@@ -39,27 +41,28 @@ TerrainTexture Terrain::getBlendMap() const {
 float Terrain::getHeightOfTerrain( float worldX, float worldZ ) const {
     float terrainX = worldX - m_x;
     float terrainZ = worldZ - m_z;
-    int length = static_cast< int >( std::sqrt( m_heights.size() ) );
+    int length = m_heights.size();
     float gridSquareSize = SIZE / static_cast< float >( length - 1 );
-    float gridX = std::floor( terrainX / gridSquareSize );
-    float gridZ = std::floor( terrainZ / gridSquareSize );
-    std::cerr << __func__ << " : length=" << length << std::endl;
+    int gridX = static_cast< int >( std::floor( terrainX / gridSquareSize ) );
+    int gridZ = static_cast< int >( std::floor( terrainZ / gridSquareSize ) );
     if ( gridX >= length - 1 || gridZ >= length - 1 || gridX < 0 || gridZ < 0 ) {
         return 0.0f;
     }
     float xCoord = std::fmod( terrainX, gridSquareSize ) / gridSquareSize;
     float zCoord = std::fmod( terrainZ, gridSquareSize ) / gridSquareSize;
     float answer;
-    if ( xCoord <= 1.0f - zCoord ) {
-        answer = common::barryCentric( glm::vec3( 0, m_heights[ ( int )gridX * ( int )gridZ ], 0 ),
-                                       glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( int )gridZ ], 0 ),
-                                       glm::vec3( 1, m_heights[ ( ( int )gridX ) * ( int )gridZ + 1 ], 1 ),
-                                       glm::vec2( xCoord, zCoord ) );
+    if ( xCoord <= ( 1.0f - zCoord ) ) {
+        answer = common::barryCentric(
+                glm::vec3( 0, m_heights[ gridX ][ gridZ ], 0 ),
+                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ ], 0 ),
+                glm::vec3( 0, m_heights[ gridX ][ gridZ + 1 ], 1 ),
+                glm::vec2( xCoord, zCoord ) );
     } else {
-        answer = common::barryCentric( glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( int )gridZ ], 0 ),
-                                       glm::vec3( 1, m_heights[ ( ( int )gridX + 1 ) * ( ( int )gridZ + 1 ) ], 1 ),
-                                       glm::vec3( 0, m_heights[ ( ( int )gridX ) * ( int )gridZ + 1 ], 1 ),
-                                       glm::vec2( xCoord, zCoord ) );
+        answer = common::barryCentric(
+                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ ], 0 ),
+                glm::vec3( 1, m_heights[ gridX + 1 ][ gridZ + 1 ], 1 ),
+                glm::vec3( 0, m_heights[ gridX ][ gridZ + 1 ], 1 ),
+                glm::vec2( xCoord, zCoord ) );
     }
     return answer;
 }
@@ -81,7 +84,12 @@ Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
 
     VERTEX_COUNT = height;
 
-//    m_heights.resize( VERTEX_COUNT * VERTEX_COUNT );
+    m_heights.resize( VERTEX_COUNT );
+    for (int i=0;i<VERTEX_COUNT;++i) {
+        for (int j=0;j<VERTEX_COUNT;++j) {
+            m_heights[i] = std::vector< float >( VERTEX_COUNT );
+        }
+    }
 
     int count = VERTEX_COUNT * VERTEX_COUNT;
     float vertices[count * 3];
@@ -98,7 +106,7 @@ Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
             vertices[vertexPointer*3+1] = height;
             vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
 
-            m_heights[ i * j ] = height;
+            m_heights[j][i] = height;
 
             glm::vec3 normal = calculateNormal(j, i, width, bytesperpixel, data);
             normals[vertexPointer*3] = normal.x;

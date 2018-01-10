@@ -37,7 +37,7 @@ private:
     TerrainTexturePack m_texturePack;
     TerrainTexture m_blendMap;
 
-    std::vector< float > m_heights;
+    std::vector< std::vector< float > > m_heights;
 
 };
 

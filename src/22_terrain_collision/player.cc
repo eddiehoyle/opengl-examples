@@ -9,10 +9,10 @@
 #include "../common/display.hh"
 #include "terrain.hh"
 
-static const float RUN_SPEED = 100;
+static const float RUN_SPEED = 50;
 static const float TURN_SPEED = 160;
 static const float GRAVITY = -100;
-static const float JUMP_POWER = 30;
+static const float JUMP_POWER = 50;
 
 static const float TERRAIN_HEIGHT = 0;
 
