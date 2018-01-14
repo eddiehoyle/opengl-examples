@@ -32,7 +32,7 @@ void Render::render( const Entity& entity, StaticShader& shader ) {
 
     TexturedModel texturedModel = entity.getTexturedModel();
 
-    Model model = texturedModel.getModel();
+    RawModel model = texturedModel.getModel();
     ModelTexture texture = texturedModel.getTexture();
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );

@@ -256,7 +256,7 @@ int main( int argc, char **argv ) {
 
     bool result;
     const std::string modelPath = common::getResource( "stall.obj", result );
-    Model model = OBJLoader::loadObjModel( modelPath, loader );
+    RawModel model = OBJLoader::loadObjModel( modelPath, loader );
 
     // Texture
     const std::string modelTexture = common::getResource( "stall.jpg", result );

@@ -9,12 +9,12 @@
 
 #include "texture.hh"
 
-class Model {
+class RawModel {
 
 public:
 
     /// Constructor
-    Model( GLint vaoID, GLint vertexCount );
+    RawModel( GLint vaoID, GLint vertexCount );
 
     /// Get the VAO ID for this model
     GLint getVaoID() const;
@@ -31,12 +31,12 @@ private:
 class TexturedModel {
 
 public:
-    explicit TexturedModel( const Model& model, const ModelTexture& texture );
-    Model getModel() const;
+    explicit TexturedModel( const RawModel& model, const ModelTexture& texture );
+    RawModel getModel() const;
     ModelTexture getTexture() const;
 
 private:
-    Model m_model;
+    RawModel m_model;
     ModelTexture m_texture;
 
 };

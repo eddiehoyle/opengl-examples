@@ -74,7 +74,7 @@ int main( int argc, char **argv ) {
             3, 1, 2
     };
 
-    Model model = loader.loadToVao( vertices, indices );
+    RawModel model = loader.loadToVao( vertices, indices );
 
     while ( glfwWindowShouldClose( window ) == 0 ) {
 

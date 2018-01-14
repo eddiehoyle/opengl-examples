@@ -104,7 +104,7 @@ int main( int argc, char **argv ) {
     assert( result );
 
     // Model and texture
-    Model bladesModel = OBJLoader::loadObjModel( bladesModelPath, loader );
+    RawModel bladesModel = OBJLoader::loadObjModel( bladesModelPath, loader );
     ModelTexture bladesTexture( loader.loadTexture( bladesTexturePath ) );
     bladesTexture.setShineDamper( 10.0f );
     bladesTexture.setReflectivity( 1.0f );

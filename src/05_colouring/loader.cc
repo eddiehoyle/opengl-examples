@@ -5,13 +5,13 @@
 #include "loader.hh"
 #include <GL/glew.h>
 
-Model Loader::loadToVao( const std::vector< GLfloat >& positions,
+RawModel Loader::loadToVao( const std::vector< GLfloat >& positions,
                          const std::vector< GLuint >& indices ) {
     GLint vaoID = createVaoID();
     bindIndicesBuffer( indices );
     storeDataInAttributeList( 0, positions );
     unbindVao();
-    return Model( vaoID, indices.size() );
+    return RawModel( vaoID, indices.size() );
 }
 
 GLint Loader::createVaoID() {

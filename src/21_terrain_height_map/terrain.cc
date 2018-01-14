@@ -35,7 +35,7 @@ TerrainTexture Terrain::getBlendMap() const {
     return m_blendMap;
 }
 
-Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
+RawModel Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
 
     int VERTEX_COUNT = 128;
 
@@ -107,7 +107,7 @@ float Terrain::getZ() const {
     return m_z;
 }
 
-Model Terrain::getModel() const {
+RawModel Terrain::getModel() const {
     return m_model;
 }
 

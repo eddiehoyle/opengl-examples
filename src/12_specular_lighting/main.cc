@@ -140,7 +140,7 @@ int main( int argc, char **argv ) {
     const std::string modelPath = common::getResource( "dragon.obj", result );
     assert( result );
 
-    Model model = OBJLoader::loadObjModel( modelPath, loader );
+    RawModel model = OBJLoader::loadObjModel( modelPath, loader );
 
     // Texture
     const std::string modelTexture = common::getResource( "rock.png", result );

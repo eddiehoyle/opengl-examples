@@ -5,12 +5,12 @@
 #include "loader.hh"
 #include <GL/glew.h>
 
-Model Loader::loadToVao( const std::vector< GLfloat >& positions ) {
+RawModel Loader::loadToVao( const std::vector< GLfloat >& positions ) {
     GLint vaoID = createVaoID();
     storeDataInAttributeList( 0, positions );
     unbindVao();
     GLint vertexCount = positions.size() / 3;
-    return Model( vaoID, vertexCount );
+    return RawModel( vaoID, vertexCount );
 }
 
 GLint Loader::createVaoID() {

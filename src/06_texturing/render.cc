@@ -14,7 +14,7 @@ void Render::prepare() {
 
 void Render::render( const TexturedModel& texturedModel ) {
 
-    Model model = texturedModel.getModel();
+    RawModel model = texturedModel.getModel();
     ModelTexture texture = texturedModel.getTexture();
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );

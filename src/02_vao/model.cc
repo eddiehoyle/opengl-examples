@@ -4,15 +4,15 @@
 
 #include "model.hh"
 
-Model::Model( GLint vaoID, GLint vertexCount )
+RawModel::RawModel( GLint vaoID, GLint vertexCount )
         : m_vaoID( vaoID ),
           m_vertexCount( vertexCount ) {
 }
 
-GLint Model::getVaoID() const {
+GLint RawModel::getVaoID() const {
     return m_vaoID;
 }
 
-GLint Model::getVertexCount() const {
+GLint RawModel::getVertexCount() const {
     return m_vertexCount;
 }

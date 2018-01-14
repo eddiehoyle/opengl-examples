@@ -8,12 +8,12 @@
 #include <GL/glew.h>
 
 
-class Model {
+class RawModel {
 
 public:
 
     /// Constructor
-    Model( GLint vaoID, GLint vertexCount );
+    RawModel( GLint vaoID, GLint vertexCount );
 
     /// Get the VAO ID for this model
     GLint getVaoID() const;

@@ -8,7 +8,7 @@
 #include "../common/obj/parser.hh"
 #include "../common/obj/tiny_obj_loader.hh"
 
-Model OBJLoader::loadObjModel( const std::string& path, Loader loader ) {
+RawModel OBJLoader::loadObjModel( const std::string& path, Loader loader ) {
 
     common::Shape shape;
     common::load_obj( path, shape );

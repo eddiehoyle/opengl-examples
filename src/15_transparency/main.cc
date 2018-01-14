@@ -57,7 +57,7 @@ Entity createEntity( const std::string& modelFilename,
     const std::string texturePath = common::getResource( textureFilename, result );
     assert( result );
 
-    Model model = OBJLoader::loadObjModel( modelPath, loader );
+    RawModel model = OBJLoader::loadObjModel( modelPath, loader );
     ModelTexture texture( loader.loadTexture( texturePath ) );
     texture.setShineDamper( 10.0f );
     texture.setReflectivity( 1.0f );
@@ -179,7 +179,7 @@ int main( int argc, char **argv ) {
     assert( result );
     const std::string grassTexturePath = common::getResource( "grassBlades.png", result );
     assert( result );
-    Model grassModel = OBJLoader::loadObjModel( grassModelPath, loader );
+    RawModel grassModel = OBJLoader::loadObjModel( grassModelPath, loader );
     ModelTexture grassTexture( loader.loadTexture( grassTexturePath ) );
     grassTexture.setShineDamper( 10.0f );
     grassTexture.setReflectivity( 1.0f );
@@ -192,7 +192,7 @@ int main( int argc, char **argv ) {
     assert( result );
     const std::string fernTexturePath = common::getResource( "fern2.png", result );
     assert( result );
-    Model fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
+    RawModel fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
     ModelTexture fernTexture( loader.loadTexture( fernTexturePath ) );
     fernTexture.setShineDamper( 10.0f );
     fernTexture.setReflectivity( 1.0f );

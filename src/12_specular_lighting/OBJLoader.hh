@@ -13,7 +13,7 @@
 class OBJLoader {
 
 public:
-    static Model loadObjModel( const std::string& path,
+    static RawModel loadObjModel( const std::string& path,
                                Loader loader );
 };
 

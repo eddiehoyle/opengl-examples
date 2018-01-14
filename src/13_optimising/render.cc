@@ -48,7 +48,7 @@ void Render::render( const EntityMap& entityMap ) {
 }
 
 void Render::prepareTexturedModel( const TexturedModel& texturedModel ) {
-    Model model = texturedModel.getModel();
+    RawModel model = texturedModel.getModel();
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );
     glEnableVertexAttribArray( 1 );

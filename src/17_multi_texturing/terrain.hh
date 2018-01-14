@@ -19,17 +19,17 @@ public:
                       TerrainTexturePack& texturePack,
                       TerrainTexture& blendMap );
 
-    Model generateTerrain( Loader& loader );
+    RawModel generateTerrain( Loader& loader );
     float getX() const;
     float getZ() const;
-    Model getModel() const;
+    RawModel getModel() const;
     TerrainTexturePack getTexturePack() const;
     TerrainTexture getBlendMap() const;
 
 private:
     float m_x;
     float m_z;
-    Model m_model;
+    RawModel m_model;
     TerrainTexturePack m_texturePack;
     TerrainTexture m_blendMap;
 

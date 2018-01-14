@@ -30,13 +30,13 @@ ShaderProgram::ShaderProgram()
 //    bool shader_file_exists;
 //
 //    // Read in vertex shader
-//    const std::string vertex_path = common::getResource( "shaders/15_transparency/vertex.glsl", shader_file_exists );
+//    const std::string vertex_path = common::getResource( "shaders/15_transparency/staticVertex.glsl", shader_file_exists );
 //    const std::string vertex_source = common::read_file( vertex_path );
 //    m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 //    assert( shader_file_exists );
 //
 //    // Read in fragment shader
-//    const std::string fragment_path = common::getResource( "shaders/15_transparency/fragment.glsl", shader_file_exists );
+//    const std::string fragment_path = common::getResource( "shaders/15_transparency/staticFragment.glsl", shader_file_exists );
 //    const std::string fragment_source = common::read_file( fragment_path );
 //    m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
 //    assert( shader_file_exists );

@@ -153,7 +153,7 @@ int main( int argc, char **argv ) {
     const std::string treeModelPath = common::getResource( "tree.obj", result );
     assert( result );
 
-    Model model = OBJLoader::loadObjModel( treeModelPath, loader );
+    RawModel model = OBJLoader::loadObjModel( treeModelPath, loader );
 
     // Texture
     const std::string treeTexturePath = common::getResource( "green.png", result );

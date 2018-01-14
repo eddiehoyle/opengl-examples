@@ -15,16 +15,16 @@ class Terrain {
 
 public:
     explicit Terrain( int gridX, int gridZ, Loader& loader, ModelTexture& texture );
-    Model generateTerrain( Loader& loader );
+    RawModel generateTerrain( Loader& loader );
     float getX() const;
     float getZ() const;
-    Model getModel() const;
+    RawModel getModel() const;
     ModelTexture getTexture() const;
 
 private:
     float m_x;
     float m_z;
-    Model m_model;
+    RawModel m_model;
     ModelTexture m_texture;
 
 };

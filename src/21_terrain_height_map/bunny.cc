@@ -30,7 +30,7 @@ Bunny::Bunny()
     Loader loader = Loader();
 
     // Model, texture, entity
-    Model bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
+    RawModel bunnyModel = OBJLoader::loadObjModel( bunnyModelPath, loader );
     ModelTexture bunnyTexture( loader.loadTexture( bunnyTexturePath ) );
     bunnyTexture.setShineDamper( 10.0f );
     bunnyTexture.setReflectivity( 1.0f );

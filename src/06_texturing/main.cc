@@ -96,7 +96,7 @@ int main( int argc, char **argv ) {
 
 
     // Model
-    Model model = loader.loadToVao( vertices, textureCoods, indices );
+    RawModel model = loader.loadToVao( vertices, textureCoods, indices );
 
     // Texture
 //    const std::string cat = "/Users/eddiehoyle/Code/cpp/opengl-examples/resources/cat.png";

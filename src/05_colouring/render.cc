@@ -12,7 +12,7 @@ void Render::prepare() {
     glClearColor( 0.2, 0, 0.5, 1 );
 }
 
-void Render::render( const Model& model ) {
+void Render::render( const RawModel& model ) {
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );
     glDrawElements( GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0 );

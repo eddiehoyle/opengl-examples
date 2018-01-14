@@ -18,7 +18,7 @@ Camera::Camera()
           m_roll( 0 ),
           m_distanceFromPlayer( 50 ),
           m_angleAroundPlayer( 0 ),
-          m_player( new Player( TexturedModel( Model( 0, 0 ), ModelTexture( 0 ) ),
+          m_player( new Player( TexturedModel( RawModel( 0, 0 ), ModelTexture( 0 ) ),
                             glm::vec3(),
                             glm::vec3(),
                             1 ) ) {

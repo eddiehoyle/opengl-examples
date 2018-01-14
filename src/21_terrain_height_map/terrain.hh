@@ -17,10 +17,10 @@ public:
                       TerrainTexture& blendMap,
                       const std::string& heightMap );
 
-    Model generateTerrain( Loader& loader, const std::string& heightMap );
+    RawModel generateTerrain( Loader& loader, const std::string& heightMap );
     float getX() const;
     float getZ() const;
-    Model getModel() const;
+    RawModel getModel() const;
     TerrainTexturePack getTexturePack() const;
     TerrainTexture getBlendMap() const;
 
@@ -30,7 +30,7 @@ public:
 private:
     float m_x;
     float m_z;
-    Model m_model;
+    RawModel m_model;
     TerrainTexturePack m_texturePack;
     TerrainTexture m_blendMap;
 

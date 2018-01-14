@@ -14,7 +14,7 @@ class Loader {
 public:
 
     /// Create a model from some vertices
-    Model loadToVao( const std::vector< GLfloat >& positions );
+    RawModel loadToVao( const std::vector< GLfloat >& positions );
 
     /// Clean up the vao/vbos
     void cleanup();

@@ -15,7 +15,7 @@ public:
     void prepare();
 
     /// Render this model
-    void render( const Model& model );
+    void render( const RawModel& model );
 
 
 

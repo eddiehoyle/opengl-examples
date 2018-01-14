@@ -9,12 +9,12 @@
 
 #include "texture.hh"
 
-class Model {
+class RawModel {
 
 public:
 
     /// Constructor
-    Model( GLint vaoID, GLint vertexCount );
+    RawModel( GLint vaoID, GLint vertexCount );
 
     /// Get the VAO ID for this model
     GLint getVaoID() const;
@@ -23,7 +23,7 @@ public:
     GLint getVertexCount() const;
 
     /// For std::map
-    bool operator<( const Model& rhs ) const {
+    bool operator<( const RawModel& rhs ) const {
         return getVaoID() < rhs.getVaoID();
     }
 
@@ -36,15 +36,15 @@ private:
 class TexturedModel {
 
 public:
-    explicit TexturedModel( const Model& model, const ModelTexture& texture );
-    Model getModel() const;
+    explicit TexturedModel( const RawModel& model, const ModelTexture& texture );
+    RawModel getModel() const;
     ModelTexture getTexture() const;
     bool operator<( const TexturedModel& rhs ) const {
         return getModel().getVaoID() < rhs.getModel().getVaoID();
     }
 
 private:
-    Model m_model;
+    RawModel m_model;
     ModelTexture m_texture;
 
 };

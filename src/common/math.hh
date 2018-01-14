@@ -23,6 +23,9 @@ glm::mat4 createTransformationMatrix( const glm::vec3& translate,
                                       const glm::vec3& rotate,
                                       GLfloat scale );
 
+glm::mat4 createTransformationMatrix( const glm::vec2& translate,
+                                      const glm::vec2& scale );
+
 /// TODO
 glm::mat4 createProjectionMatrix( const float& fov,
                                   const float& width,

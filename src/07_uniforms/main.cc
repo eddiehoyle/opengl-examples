@@ -102,7 +102,7 @@ int main( int argc, char **argv ) {
 //    glm::mat4 matrix = common::createTransformationMatrix( translate, rotate, scale );
 
     // Model
-    Model model = loader.loadToVao( vertices, textureCoods, indices );
+    RawModel model = loader.loadToVao( vertices, textureCoods, indices );
 
     // Texture
     bool result;

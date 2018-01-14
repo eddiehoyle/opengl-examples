@@ -15,7 +15,7 @@ Terrain::Terrain( int gridX,
           m_texture( texture ) {
 }
 
-Model Terrain::generateTerrain( Loader& loader ) {
+RawModel Terrain::generateTerrain( Loader& loader ) {
 
     int count = VERTEX_COUNT * VERTEX_COUNT;
     float vertices[count * 3];
@@ -70,7 +70,7 @@ float Terrain::getZ() const {
     return m_z;
 }
 
-Model Terrain::getModel() const {
+RawModel Terrain::getModel() const {
     return m_model;
 }
 

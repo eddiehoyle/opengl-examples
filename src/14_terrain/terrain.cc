@@ -15,7 +15,7 @@ Terrain::Terrain( int gridX,
           m_texture( texture ) {
 }
 
-Model Terrain::generateTerrain( Loader& loader ) {
+RawModel Terrain::generateTerrain( Loader& loader ) {
 
     // TODO
     // Fix this! These coordinates are wrong
@@ -104,7 +104,7 @@ float Terrain::getZ() const {
     return m_z;
 }
 
-Model Terrain::getModel() const {
+RawModel Terrain::getModel() const {
     return m_model;
 }
 

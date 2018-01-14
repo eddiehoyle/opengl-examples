@@ -23,11 +23,11 @@ Terrain::Terrain( int gridX,
                   const std::string& heightMap )
         : m_x( gridX * SIZE ),
           m_z( gridZ * SIZE ),
-          m_model( Model( 0, 0 ) ),
+          m_model( RawModel( 0, 0 ) ),
           m_texturePack( texturePack ),
           m_blendMap( blendMap ),
           m_heights() {
-    m_model = Model( generateTerrain( loader, heightMap ) );
+    m_model = RawModel( generateTerrain( loader, heightMap ) );
 }
 
 TerrainTexturePack Terrain::getTexturePack() const {
@@ -67,7 +67,7 @@ float Terrain::getHeightOfTerrain( float worldX, float worldZ ) const {
     return answer;
 }
 
-Model Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
+RawModel Terrain::generateTerrain( Loader& loader, const std::string& heightMap ) {
 
 
     int VERTEX_COUNT = 128;
@@ -150,7 +150,7 @@ float Terrain::getZ() const {
     return m_z;
 }
 
-Model Terrain::getModel() const {
+RawModel Terrain::getModel() const {
     return m_model;
 }
 

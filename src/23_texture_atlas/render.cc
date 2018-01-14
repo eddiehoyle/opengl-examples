@@ -38,7 +38,7 @@ void EntityRenderer::render( const EntityMap& entityMap ) {
 }
 
 void EntityRenderer::prepareTexturedModel( const TexturedModel& texturedModel ) {
-    Model model = texturedModel.getModel();
+    RawModel model = texturedModel.getModel();
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );
     glEnableVertexAttribArray( 1 );
@@ -107,7 +107,7 @@ void TerrainRenderer::render( const std::vector< Terrain >& terrains ) {
 
 void TerrainRenderer::prepareTerrain( const Terrain& terrain ) {
 
-    Model model = terrain.getModel();
+    RawModel model = terrain.getModel();
 
     glBindVertexArray( model.getVaoID() );
     glEnableVertexAttribArray( 0 );

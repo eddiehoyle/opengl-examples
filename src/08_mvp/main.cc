@@ -211,7 +211,7 @@ int main( int argc, char **argv ) {
     };
 
     // Model
-    Model model = loader.loadToVao( vertices, textureCoods, indices );
+    RawModel model = loader.loadToVao( vertices, textureCoods, indices );
 
     // Texture
     bool result;

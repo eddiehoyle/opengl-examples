@@ -10,7 +10,7 @@
 #include <stb_image.h>
 #include <iostream>
 
-Model Loader::loadToVao( const std::vector< GLfloat >& positions,
+RawModel Loader::loadToVao( const std::vector< GLfloat >& positions,
                          const std::vector< GLfloat >& textureCoords,
                          const std::vector< GLuint >& indices ) {
     GLint vaoID = createVaoID();
@@ -18,7 +18,7 @@ Model Loader::loadToVao( const std::vector< GLfloat >& positions,
     storeDataInAttributeList( 0, 3, positions );
     storeDataInAttributeList( 1, 2, textureCoords );
     unbindVao();
-    return Model( vaoID, indices.size() );
+    return RawModel( vaoID, indices.size() );
 }
 
 GLint Loader::createVaoID() {
