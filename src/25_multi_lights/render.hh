@@ -89,7 +89,7 @@ public:
 
     void cleanup();
     void prepare();
-    void render( Light sun, const Camera& camera );
+    void render( const std::vector< Light >& lights, const Camera& camera );
     void processEntity( const Entity& entity );
     void processTerrain( const Terrain& terrain );
     void createProjectionMatrix();

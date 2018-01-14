@@ -53,7 +53,7 @@ public:
     void loadViewMatrix( const glm::mat4& mat );
 
     /// TODO
-    void loadLight( const Light& light );
+    void loadLights( const std::vector< Light >& light );
 
     /// Load a bool into a uniform
     void loadBoolean( GLint location, bool value );
@@ -104,14 +104,13 @@ protected:
     GLint m_transformationMatrix;
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
-    GLint m_lightPosition;
-    GLint m_lightColour;
     GLint m_shineDamper;
     GLint m_reflectivity;
     GLint m_skyColour;
     GLint m_numberOfRows;
     GLint m_offset;
-
+    std::vector< GLint > m_lightPosition;
+    std::vector< GLint > m_lightColour;
 };
 
 class StaticShader : public ShaderProgram {

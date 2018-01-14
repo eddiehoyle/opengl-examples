@@ -258,20 +258,20 @@ void MasterRenderer::disableCulling() {
     glDisable( GL_CULL_FACE );
 }
 
-void MasterRenderer::render( Light sun, const Camera& camera ) {
+void MasterRenderer::render( const std::vector< Light >& lights, const Camera& camera ) {
 
     prepare();
 
     m_shader.start();
     m_shader.loadSkyColour( kSkyRed, kSkyGreen, kSkyBlue );
-    m_shader.loadLight( sun );
+    m_shader.loadLights( lights );
     m_shader.loadViewMatrix( camera.view() );
     m_renderer.render( m_entities );
     m_shader.stop();
 
     m_terrainShader.start();
     m_terrainShader.loadSkyColour( kSkyRed, kSkyGreen, kSkyBlue );
-    m_terrainShader.loadLight( sun );
+    m_terrainShader.loadLights( lights );
     m_terrainShader.loadViewMatrix( camera.view() );
     m_terrainRenderer.render( m_terrains );
     m_terrainShader.stop();

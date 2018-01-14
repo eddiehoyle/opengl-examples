@@ -16,15 +16,20 @@
 
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include "shader.hh"
 #include "../common/io.hh"
 #include "../common/resources.hh"
 
+static const int MAX_LIGHTS = 4;
+
 ShaderProgram::ShaderProgram()
         : m_vertexShaderID( 0 ),
           m_fragmentShaderID( 0 ),
-          m_programID( 0 ) {
+          m_programID( 0 ),
+          m_lightPosition( MAX_LIGHTS ),
+          m_lightColour( MAX_LIGHTS ) {
 }
 
 ShaderProgram::~ShaderProgram() {
@@ -68,9 +73,16 @@ void ShaderProgram::loadViewMatrix( const glm::mat4& mat ) {
     loadMatrix( m_viewMatrix, mat );
 }
 
-void ShaderProgram::loadLight( const Light& light ) {
-    loadVector( m_lightPosition, light.getPosition() );
-    loadVector( m_lightColour, light.getColour() );
+void ShaderProgram::loadLights( const std::vector< Light >& lights ) {
+    for ( int i = 0; i < MAX_LIGHTS; ++i ) {
+        if ( i < lights.size() ) {
+            loadVector( m_lightPosition[i], lights[i].getPosition() );
+            loadVector( m_lightColour[i], lights[i].getColour() );
+        } else {
+            loadVector( m_lightPosition[i], glm::vec3( 0, 0, 0 ) );
+            loadVector( m_lightColour[i], glm::vec3( 0, 0, 0 ) );
+        }
+    }
 }
 
 void ShaderProgram::loadBoolean( GLint location, bool value ) {
@@ -216,16 +228,27 @@ void StaticShader::getUniformLocations() {
     m_transformationMatrix = getUniformLocation( "transformationMatrix" );
     m_projectionMatrix = getUniformLocation( "projectionMatrix" );
     m_viewMatrix = getUniformLocation( "viewMatrix" );
-    m_lightPosition = getUniformLocation( "lightPosition" );
-    m_lightColour = getUniformLocation( "lightColour" );
     m_shineDamper = getUniformLocation( "shineDamper" );
     m_reflectivity = getUniformLocation( "reflectivity" );
+    m_useFakeLighting = getUniformLocation( "useFakeLighting" );
     m_skyColour = getUniformLocation( "skyColour" );
     m_numberOfRows = getUniformLocation( "numberOfRows" );
     m_offset = getUniformLocation( "offset" );
 
-    // Custom
-    m_useFakeLighting = getUniformLocation( "useFakeLighting" );
+    for ( int i = 0; i < MAX_LIGHTS; ++i ) {
+
+        std::stringstream positionStream;
+        positionStream << "lightPosition[";
+        positionStream << i;
+        positionStream << "]";
+        m_lightPosition[i] = getUniformLocation( positionStream.str() );
+
+        std::stringstream colourStream;
+        colourStream << "lightColour[";
+        colourStream << i;
+        colourStream << "]";
+        m_lightColour[i] = getUniformLocation( colourStream.str() );
+    }
 }
 
 // ------------------------------------------------------------------
@@ -290,8 +313,8 @@ void TerrainShader::getUniformLocations() {
     m_transformationMatrix = getUniformLocation( "transformationMatrix" );
     m_projectionMatrix = getUniformLocation( "projectionMatrix" );
     m_viewMatrix = getUniformLocation( "viewMatrix" );
-    m_lightPosition = getUniformLocation( "lightPosition" );
-    m_lightColour = getUniformLocation( "lightColour" );
+//    m_lightPosition = getUniformLocation( "lightPosition" );
+//    m_lightColour = getUniformLocation( "lightColour" );
     m_shineDamper = getUniformLocation( "shineDamper" );
     m_reflectivity = getUniformLocation( "reflectivity" );
     m_skyColour = getUniformLocation( "skyColour" );
@@ -302,6 +325,21 @@ void TerrainShader::getUniformLocations() {
     m_gTexture = getUniformLocation( "gTexture" );
     m_bTexture = getUniformLocation( "bTexture" );
     m_blendMapTexture = getUniformLocation( "blendMapTexture" );
+
+    for ( int i = 0; i < MAX_LIGHTS; ++i ) {
+
+        std::stringstream positionStream;
+        positionStream << "lightPosition[";
+        positionStream << i;
+        positionStream << "]";
+        m_lightPosition[i] = getUniformLocation( positionStream.str() );
+
+        std::stringstream colourStream;
+        colourStream << "lightColour[";
+        colourStream << i;
+        colourStream << "]";
+        m_lightColour[i] = getUniformLocation( colourStream.str() );
+    }
 }
 
 // ------------------------------------------------------------------

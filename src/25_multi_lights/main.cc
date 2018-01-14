@@ -198,7 +198,10 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     // Light pointing straight down
-    Light light( glm::vec3( 0.0f, 1.0f, 0.0f ), glm::vec3( 1, 1, 1 ) );
+    std::vector< Light > lights;
+    lights.push_back( Light( glm::vec3( 0.0f, 10.0f, -70.0f ), glm::vec3( 1, 1, 1 ) ) );
+    lights.push_back( Light( glm::vec3( -200.0f, 10.0f, -200.0f ), glm::vec3( 5, 0, 0 ) ) );
+    lights.push_back( Light( glm::vec3( 200.0f, 10.0f, 200.0f ), glm::vec3( 0, 0, 5 ) ) );
 
     // ---------------------------------------------------------------
 
@@ -258,7 +261,7 @@ int main( int argc, char **argv ) {
             render.processEntity( entity );
         }
 
-        render.render( light, camera );
+        render.render( lights, camera );
 
         // Render guis last
         guiRenderer.render( guis );

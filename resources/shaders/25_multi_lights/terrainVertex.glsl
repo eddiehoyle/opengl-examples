@@ -6,14 +6,14 @@ in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector;
+out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition;
+uniform vec3 lightPosition[4];
 
 uniform float useFakeLighting;
 
@@ -40,8 +40,10 @@ void main( void ) {
     // TODO
     // Does the light need to be a vector from vertex to light?
     // Removing the worldPosition actually makes this work
-    toLightVector = lightPosition;// - worldPosition.xyz; // Does not work if this is uncommented, should I be dpi
-
+    // toLightVector = lightPosition;// - worldPosition.xyz; // Does not work if this is uncommented
+    for ( int i = 0; i < 4; ++i ) {
+        toLightVector[i] = lightPosition[i];
+    }
     float distance = length( positionRelativeToCam.xyz );
     visibility = exp( -pow( ( distance * density ), gradient ) );
     visibility = clamp( visibility, visibilityClamp, visibilityClamp );
