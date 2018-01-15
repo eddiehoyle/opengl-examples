@@ -24,6 +24,7 @@ add_subdirectory(22_terrain_collision)
 add_subdirectory(23_texture_atlas)
 add_subdirectory(24_guis)
 add_subdirectory(25_multi_lights)
+add_subdirectory(26_point_lights)
 
 # Trying new things
 add_subdirectory(dev)
