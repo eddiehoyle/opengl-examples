@@ -125,18 +125,18 @@ void TerrainRenderer::loadModelMatrix( const Terrain& terrain ) {
 // ------------------------------------------------------------------------------------------
 
 MasterRenderer::MasterRenderer()
-        : m_shader(),
+        : m_entityShader(),
           m_terrainShader(),
           m_entities(),
-          m_renderer( m_shader, glm::mat4() ),
+          m_entityRenderer( m_entityShader, glm::mat4() ),
           m_terrainRenderer( m_terrainShader, glm::mat4() ) {
 
     // Note
-    // 'm_shader' is initialised above and added to the renderer immediately
+    // 'm_entityShader' is initialised above and added to the renderer immediately
     // Do not re-init the shader after this otherwise things break. This
     // should be looked into
 
-    m_shader.init();
+    m_entityShader.init();
     m_terrainShader.init();
 
     glEnable( GL_CULL_FACE );
@@ -148,9 +148,9 @@ MasterRenderer::MasterRenderer()
     m_terrainShader.loadProjectionMatrix( m_projectionMatrix );
     m_terrainShader.stop();
 
-    m_shader.start();
-    m_shader.loadProjectionMatrix( m_projectionMatrix );
-    m_shader.stop();
+    m_entityShader.start();
+    m_entityShader.loadProjectionMatrix( m_projectionMatrix );
+    m_entityShader.stop();
 
 
 
@@ -168,7 +168,7 @@ void MasterRenderer::createProjectionMatrix() {
 }
 
 void MasterRenderer::cleanup() {
-    m_shader.cleanup();
+    m_entityShader.cleanup();
     m_terrainShader.cleanup();
 }
 
@@ -198,11 +198,11 @@ void MasterRenderer::render( Light sun, common::Camera *camera ) {
 
     prepare();
 
-    m_shader.start();
-    m_shader.loadLight( sun );
-    m_shader.loadViewMatrix( camera->matrix() );
-    m_renderer.render( m_entities );
-    m_shader.stop();
+    m_entityShader.start();
+    m_entityShader.loadLight( sun );
+    m_entityShader.loadViewMatrix( camera->matrix() );
+    m_entityRenderer.render( m_entities );
+    m_entityShader.stop();
 
     m_terrainShader.start();
     m_terrainShader.loadLight( sun );

@@ -84,8 +84,8 @@ public:
 private:
 
     /// Entities
-    StaticShader m_shader;
-    EntityRenderer m_renderer;
+    StaticShader m_entityShader;
+    EntityRenderer m_entityRenderer;
     EntityMap m_entities;
 
     /// Terrain
