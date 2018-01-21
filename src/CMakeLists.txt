@@ -26,6 +26,7 @@ add_subdirectory(24_guis)
 add_subdirectory(25_multi_lights)
 add_subdirectory(26_point_lights)
 add_subdirectory(27_skybox)
+add_subdirectory(28_day_night)
 
 # Trying new things
 add_subdirectory(dev)
