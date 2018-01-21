@@ -1,6 +1,6 @@
 set(EXERCISE 27_skybox)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
-add_executable(${EXERCISE} ${SOURCE_FILES} guis.cc guis.hh skybox.cc skybox.hh)
+add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY
         DIRECTORY ../common
         DEFINITION COMMON_LIBRARY)
