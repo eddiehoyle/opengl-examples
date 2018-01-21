@@ -44,9 +44,9 @@ void main( void ) {
     // Removing the worldPosition actually makes this work
     // toLightVector = lightPosition;// - worldPosition.xyz; // Does not work if this is uncommented
     for ( int i = 0; i < 4; ++i ) {
-        toLightVector[i] = lightPosition[i];
+        toLightVector[i] = lightPosition[i] - worldPosition.xyz;
     }
     float distance = length( positionRelativeToCam.xyz );
     visibility = exp( -pow( ( distance * density ), gradient ) );
-    visibility = clamp( visibility, 1.0, 1.0 );
+    visibility = clamp( visibility, 0.0, 1.0 );
 }

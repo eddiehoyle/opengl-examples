@@ -7,3 +7,4 @@ target_link_libraries(${COMMON_LIBRARY}
         ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES}
         ${GLFW_LIBRARIES})
+

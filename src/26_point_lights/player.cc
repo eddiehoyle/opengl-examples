@@ -9,7 +9,7 @@
 #include "../common/display.hh"
 #include "terrain.hh"
 
-static const float RUN_SPEED = 50;
+static const float RUN_SPEED = 200;
 static const float TURN_SPEED = 160;
 static const float GRAVITY = -100;
 static const float JUMP_POWER = 50;
@@ -29,6 +29,11 @@ Player::Player( const TexturedModel& model,
 {}
 
 void Player::move( const Terrain& terrain ) {
+
+    if ( !common::DisplayManager::instance()->isFocused() ) {
+        return;
+    }
+
     checkInputs();
     double elapsed = common::DisplayManager::instance()->getFrameTimeSeconds();
     float rotation = m_currentTurnSpeed * elapsed;

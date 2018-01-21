@@ -14,10 +14,9 @@
 #include "camera.hh"
 #include "guis.hh"
 
-
-const GLfloat kSkyRed = 0.54;
-const GLfloat kSkyGreen = 0.824;
-const GLfloat kSkyBlue = 1.0;
+const GLfloat kSkyRed = 0.05;
+const GLfloat kSkyGreen = 0.19;
+const GLfloat kSkyBlue = 0.27;
 
 typedef std::pair< TexturedModel, std::vector< Entity > > EntityPair;
 typedef std::map< EntityPair::first_type, EntityPair::second_type > EntityMap;

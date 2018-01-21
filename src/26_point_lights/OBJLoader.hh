@@ -13,8 +13,17 @@
 class OBJLoader {
 
 public:
-    static RawModel loadObjModel( const std::string& path,
-                               Loader loader );
+    static RawModel loadObjModel( const std::string& obj_path,
+                                  Loader loader );
+    static RawModel loadObjModel( const std::string& obj_path,
+                                  const std::string& material_path,
+                                  Loader loader );
+
+    /// assimp loader
+    ///
+    /// Deprecated
+//    static RawModel loadObjModel2( const std::string& obj_path, Loader loader );
+
 };
 
 #endif //OPENGL_EXAMPLES_17_OBJLOADER_HH

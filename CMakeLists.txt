@@ -10,13 +10,18 @@ set(CMAKE_MODULE_PATH ${OPENGL_EXAMPLES_ROOT_DIR}/cmake)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLM REQUIRED)
+
+if (APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GLFW REQUIRED glfw3)
+endif()
+
 find_package(glfw3 3.2 REQUIRED)
 
 include_directories(
         ${OPENGL_EXAMPLES_EXTERNAL_DIR}
         ${GLFW_INCLUDE_DIRS}
         ${GLM_INCLUDE_DIRS}
-        ${GLEW_INCLUDE_DIR}
-)
+        ${GLEW_INCLUDE_DIR})
 
 add_subdirectory(src)

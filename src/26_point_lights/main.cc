@@ -150,26 +150,26 @@ int main( int argc, char **argv ) {
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
 
-//    for ( int i = 0; i < numEntities; ++i ) {
-//
-//        std::uniform_real_distribution<> dis( 0.0, terrainSize );
-//
-//        std::uniform_real_distribution<> textureIndexGen( 0, 2 );
-//        glm::vec2 textureGrid( ( int )textureIndexGen( gen ),
-//                               ( int )textureIndexGen( gen ) );
-//
-//        double posX = dis( gen );
-//        double posZ = dis( gen );
-//        double posY = terrain.getHeightOfTerrain( posX, posZ );
-//
-//        Entity fernEntity( fernTexturedModel,
-//                           glm::vec3( posX, posY, posZ ),
-//                           glm::vec3( 0, 0, 0 ),
-//                           1,
-//                           textureGrid );
-//
-//        entities.push_back( fernEntity );
-//    }
+    for ( int i = 0; i < numEntities; ++i ) {
+
+        std::uniform_real_distribution<> dis( 0.0, terrainSize );
+
+        std::uniform_real_distribution<> textureIndexGen( 0, 2 );
+        glm::vec2 textureGrid( ( int )textureIndexGen( gen ),
+                               ( int )textureIndexGen( gen ) );
+
+        double posX = dis( gen );
+        double posZ = dis( gen );
+        double posY = terrain.getHeightOfTerrain( posX, posZ );
+
+        Entity fernEntity( fernTexturedModel,
+                           glm::vec3( posX, posY, posZ ),
+                           glm::vec3( 0, 0, 0 ),
+                           1,
+                           textureGrid );
+
+        entities.push_back( fernEntity );
+    }
 
     // ---------------------------------------------------------------
 
@@ -198,19 +198,22 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     // Light pointing straight down
+    double lampHeight = 14.0;
     std::vector< Light > lights;
-    lights.push_back( Light( glm::vec3( 0.0f, 1000.0f, -7000.0f ), glm::vec3( 0.4f, 0.4f, 0.4f ) ) );
-    lights.push_back( Light( glm::vec3( 185.0f, 10.0f, 293.0f ), glm::vec3( 2, 0, 0 ), glm::vec3( 1, 0.1f, 0.02f ) ) );
-    lights.push_back( Light( glm::vec3( 370.0f, 17.0f, 300.0f ), glm::vec3( 0, 2, 2 ), glm::vec3( 1, 0.1f, 0.02f ) ) );
-    lights.push_back( Light( glm::vec3( 293.0f, 7.0f, 305.0f ), glm::vec3( 2, 2, 0 ), glm::vec3( 1, 0.1f, 0.02f ) ) );
+    lights.push_back( Light( glm::vec3( 0.0f, 1000.0f, -7000.0f ), glm::vec3( 1, 1, 1 ) ) );
+    lights.push_back( Light( glm::vec3( 185.0f, -9.7 + lampHeight, 293.0f ), glm::vec3( 1, 0, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+    lights.push_back( Light( glm::vec3( 370.0f,  0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+    lights.push_back( Light( glm::vec3( 293.0f, -4.4 + lampHeight, 305.0f ), glm::vec3( 1, 1, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
 
     const std::string lampModelPath = common::getResource( "lamp.obj", result );
+    assert( result );
+    const std::string lampMtlPath = common::getResource( "lamp.mtl", result );
     assert( result );
     const std::string lampTexturePath = common::getResource( "lamp.png", result );
     assert( result );
 
     // Model and texture
-    RawModel lampModel = OBJLoader::loadObjModel( lampModelPath, loader );
+    RawModel lampModel = OBJLoader::loadObjModel( lampModelPath, lampMtlPath, loader );
     ModelTexture lampTexture( loader.loadTexture( lampTexturePath ) );
     lampTexture.setShineDamper( 10.0f );
     lampTexture.setReflectivity( 1.0f );
@@ -218,9 +221,9 @@ int main( int argc, char **argv ) {
     lampTexture.setUseFakeLighting( false );
     TexturedModel lampTexturedModel( lampModel, lampTexture );
 
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -4.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 3 ) );
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f, 4.2f, 293.0f ), glm::vec3( 0, 0, 0 ), 3 ) );
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 293.0f, -6.8f, 300.0f ), glm::vec3( 0, 0, 0 ), 3 ) );
+    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -9.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f,  0.2f, 300.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+    entities.push_back( Entity( lampTexturedModel, glm::vec3( 293.0f, -4.4f, 305.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
 
     // 7:01
     // https://youtu.be/KdY0aVDp5G4?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&t=421
