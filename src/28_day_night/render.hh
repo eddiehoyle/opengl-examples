@@ -79,13 +79,17 @@ class SkyboxRenderer {
 
 public:
     SkyboxRenderer( SkyboxShader& shader, const glm::mat4& projectionMatrix );
-    void render( const Camera& camera );
+    void render( const Camera& camera, float r, float g, float b );
+    void bindTextures();
     void cleanup();
 
 private:
     SkyboxShader m_shader;
     RawModel m_cube;
     GLuint m_texture;
+    GLuint m_nightTexture;
+
+    float m_time;
 };
 
 // ------------------------------------------------------------------------------------

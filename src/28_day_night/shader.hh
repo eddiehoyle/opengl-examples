@@ -154,6 +154,17 @@ public:
     virtual void init();
     virtual void getUniformLocations();
     virtual void loadViewMatrix( const glm::mat4& mat );
+    void loadFogColour( float r, float g, float b );
+    void loadBlendFactor( float blend );
+    void connectTextureUnits();
+
+protected:
+    GLint m_fogColour;
+    GLint m_cubeMap;
+    GLint m_cubeMap2;
+    GLint m_blendFactor;
+
+    float m_rotation;
 };
 
 #endif //OPENGL_EXAMPLES_17_SHADER_HH

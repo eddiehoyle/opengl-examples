@@ -189,7 +189,8 @@ void GuiRenderer::cleanup() {
 SkyboxRenderer::SkyboxRenderer( SkyboxShader& shader,
                                 const glm::mat4& projectionMatrix )
         : m_shader( shader ),
-          m_cube( 0, 0 ) {
+          m_cube( 0, 0 ),
+          m_time( 0 ) {
 
     // Note
     // 'm_entityShader' is initialised before added to this renderer.
@@ -243,17 +244,18 @@ SkyboxRenderer::SkyboxRenderer( SkyboxShader& shader,
     };
 
     bool result;
-    const std::string skyboxRightPath = common::getResource( "skybox_right.jpg", result );
+
+    const std::string skyboxRightPath = common::getResource( "skybox_right.png", result );
     assert( result );
-    const std::string skyboxLeftPath = common::getResource( "skybox_left.jpg", result );
+    const std::string skyboxLeftPath = common::getResource( "skybox_left.png", result );
     assert( result );
-    const std::string skyboxTopPath = common::getResource( "skybox_top.jpg", result );
+    const std::string skyboxTopPath = common::getResource( "skybox_top.png", result );
     assert( result );
-    const std::string skyboxBottomPath = common::getResource( "skybox_bottom.jpg", result );
+    const std::string skyboxBottomPath = common::getResource( "skybox_bottom.png", result );
     assert( result );
-    const std::string skyboxBackPath = common::getResource( "skybox_back.jpg", result );
+    const std::string skyboxBackPath = common::getResource( "skybox_back.png", result );
     assert( result );
-    const std::string skyboxFrontPath = common::getResource( "skybox_front.jpg", result );
+    const std::string skyboxFrontPath = common::getResource( "skybox_front.png", result );
     assert( result );
 
     std::vector< std::string > skyboxPaths = {
@@ -265,26 +267,83 @@ SkyboxRenderer::SkyboxRenderer( SkyboxShader& shader,
             skyboxFrontPath,
     };
 
+    const std::string skyboxNightRightPath = common::getResource( "skybox_nightRight.png", result );
+    assert( result );
+    const std::string skyboxNightLeftPath = common::getResource( "skybox_nightLeft.png", result );
+    assert( result );
+    const std::string skyboxNightTopPath = common::getResource( "skybox_nightTop.png", result );
+    assert( result );
+    const std::string skyboxNightBottomPath = common::getResource( "skybox_nightBottom.png", result );
+    assert( result );
+    const std::string skyboxNightBackPath = common::getResource( "skybox_nightBack.png", result );
+    assert( result );
+    const std::string skyboxNightFrontPath = common::getResource( "skybox_nightFront.png", result );
+    assert( result );
+
+    std::vector< std::string > skyboxNightPaths = {
+            skyboxNightRightPath,
+            skyboxNightLeftPath,
+            skyboxNightTopPath,
+            skyboxNightBottomPath,
+            skyboxNightBackPath,
+            skyboxNightFrontPath,
+    };
+
     Loader loader;
 
     m_cube = loader.loadToVao( vertices, 3 );
     m_texture = loader.loadCubeMap( skyboxPaths );
+    m_nightTexture = loader.loadCubeMap( skyboxNightPaths );
     m_shader.start();
+    m_shader.connectTextureUnits();
     m_shader.loadProjectionMatrix( projectionMatrix );
     m_shader.stop();
 }
 
-void SkyboxRenderer::render( const Camera& camera ) {
+void SkyboxRenderer::render( const Camera& camera, float r, float g, float b ) {
     m_shader.start();
     m_shader.loadViewMatrix( camera.view() );
+    m_shader.loadFogColour( r, g, b );
     glBindVertexArray( m_cube.getVaoID() );
     glEnableVertexAttribArray( 0 );
-    glActiveTexture( GL_TEXTURE0 );
-    glBindTexture( GL_TEXTURE_CUBE_MAP, m_texture );
+    bindTextures();
     glDrawArrays( GL_TRIANGLES, 0, m_cube.getVertexCount() );
     glDisableVertexAttribArray( 0 );
     glBindVertexArray( 0 );
     m_shader.stop();
+}
+
+void SkyboxRenderer::bindTextures() {
+    m_time += common::DisplayManager::instance()->getFrameTimeSeconds() * 1000;
+    m_time = int( m_time ) % 24000;
+    int texture1;
+    int texture2;
+    float blendFactor;
+    if ( m_time >= 0 && m_time < 5000 ) {
+        texture1 = m_nightTexture;
+        texture2 = m_nightTexture;
+        blendFactor = ( m_time - 0 ) / ( 5000 - 0 );
+    } else if ( m_time >= 5000 && m_time < 8000 ) {
+        texture1 = m_nightTexture;
+        texture2 = m_texture;
+        blendFactor = ( m_time - 5000 ) / ( 8000 - 5000 );
+    } else if ( m_time >= 8000 && m_time < 21000 ) {
+        texture1 = m_texture;
+        texture2 = m_texture;
+        blendFactor = ( m_time - 8000 ) / ( 21000 - 8000 );
+    } else {
+        texture1 = m_texture;
+        texture2 = m_nightTexture;
+        blendFactor = ( m_time - 21000 ) / ( 24000 - 21000 );
+    }
+
+    std::cerr << __func__ << " : blendFactor=" << blendFactor << std::endl;
+
+    glActiveTexture( GL_TEXTURE0 );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, texture1 );
+    glActiveTexture( GL_TEXTURE1 );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, texture2 );
+    m_shader.loadBlendFactor( blendFactor );
 }
 
 void SkyboxRenderer::cleanup() {
@@ -393,7 +452,7 @@ void MasterRenderer::render( const std::vector< Light >& lights, const Camera& c
     m_terrainShader.stop();
 
     m_skyboxShader.start();
-    m_skyboxRenderer.render( camera );
+    m_skyboxRenderer.render( camera, kSkyRed, kSkyGreen, kSkyBlue );
     m_skyboxShader.stop();
 
     m_terrains.clear();

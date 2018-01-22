@@ -21,6 +21,7 @@
 #include "shader.hh"
 #include "../common/io.hh"
 #include "../common/resources.hh"
+#include "../common/display.hh"
 
 static const int MAX_LIGHTS = 4;
 
@@ -406,7 +407,10 @@ void GuiShader::getUniformLocations() {
 
 // ------------------------------------------------------------------
 
-SkyboxShader::SkyboxShader() : ShaderProgram() {
+SkyboxShader::SkyboxShader()
+        : ShaderProgram(),
+          m_rotation( 0 ),
+          m_fogColour( 0 ) {
 }
 
 void SkyboxShader::init() {
@@ -448,11 +452,27 @@ void SkyboxShader::init() {
     getUniformLocations();
 }
 
+void SkyboxShader::loadFogColour( float r, float g, float b ) {
+    loadVector( m_fogColour, glm::vec3( r, g, b ) );
+}
+
+void SkyboxShader::connectTextureUnits() {
+    loadInt( m_cubeMap, 0 );
+    loadInt( m_cubeMap2, 1 );
+}
+
+void SkyboxShader::loadBlendFactor( float blend ) {
+    loadFloat( m_blendFactor, blend );
+}
+
 void SkyboxShader::getUniformLocations() {
     m_projectionMatrix = getUniformLocation( "projectionMatrix" );
     m_viewMatrix = getUniformLocation( "viewMatrix" );
+    m_fogColour = getUniformLocation( "fogColour" );
+    m_blendFactor = getUniformLocation( "blendFactor" );
+    m_cubeMap = getUniformLocation( "cubeMap" );
+    m_cubeMap2 = getUniformLocation( "cubeMap2" );
 }
-
 
 void SkyboxShader::loadViewMatrix( const glm::mat4& mat ) {
 
@@ -461,6 +481,10 @@ void SkyboxShader::loadViewMatrix( const glm::mat4& mat ) {
     view[3][0] = 0.0;
     view[3][1] = 0.0;
     view[3][2] = 0.0;
+
+    float rotationSpeed = 2.0f;
+    m_rotation += rotationSpeed * common::DisplayManager::instance()->getFrameTimeSeconds();
+    view = glm::rotate( view, glm::radians( m_rotation ), glm::vec3( 0, 1, 0 ) );
 
     loadMatrix( m_viewMatrix, view );
 }
