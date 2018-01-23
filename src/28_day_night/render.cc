@@ -337,8 +337,6 @@ void SkyboxRenderer::bindTextures() {
         blendFactor = ( m_time - 21000 ) / ( 24000 - 21000 );
     }
 
-    std::cerr << __func__ << " : blendFactor=" << blendFactor << std::endl;
-
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_CUBE_MAP, texture1 );
     glActiveTexture( GL_TEXTURE1 );

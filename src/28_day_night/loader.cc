@@ -63,12 +63,6 @@ GLuint Loader::loadCubeMap( std::vector< std::string > textureFiles ) {
     for ( std::size_t i = 0; i < textureFiles.size(); ++i ) {
 
         TextureData data = decodeTextureFile( textureFiles[i] );
-//        std::cerr << __func__ << " : data=" << i
-//                  << ", dimensions=" << data.getWidth() << ", " << data.getHeight()
-//                  << "), target=" << targets[i]
-//                  << "), format=" << data.getFormat()
-//                  << std::endl;
-
         glTexImage2D( targets[i],
                       0,
                       data.getFormat(),
@@ -84,6 +78,7 @@ GLuint Loader::loadCubeMap( std::vector< std::string > textureFiles ) {
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     m_textures.push_back( texID );
 
@@ -101,8 +96,6 @@ TextureData Loader::decodeTextureFile( const std::string& fileName ) {
         colorFormat = GL_RGBA;
         dataFormat = GL_RGBA;
     }
-
-    std::cerr << __func__ << " : dataFormat=" << dataFormat << ", colorFormat=" << colorFormat << std::endl;
 
     // TextureData takes ownership of image data
     return TextureData( data, dataFormat, width, height );

@@ -431,7 +431,7 @@ void SkyboxShader::init() {
     std::string fragment_resource_path;
     fragment_resource_path += "shaders/";
     fragment_resource_path += EXERCISE_NAME;
-    fragment_resource_path += "/skyboxfragment.glsl";
+    fragment_resource_path += "/skyboxFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
