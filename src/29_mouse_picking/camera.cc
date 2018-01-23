@@ -5,6 +5,7 @@
 #include "camera.hh"
 #include "../common/command/command.hh"
 #include "../common/input/input.hh"
+#include "../common/display.hh"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <iostream>
@@ -18,6 +19,8 @@ Camera::Camera()
           m_roll( 0 ),
           m_distanceFromPlayer( 50 ),
           m_angleAroundPlayer( 0 ),
+          m_yawActive( false ),
+          m_pitchActive( false ),
           m_player( new Player( TexturedModel( RawModel( 0, 0 ), ModelTexture( 0 ) ),
                             glm::vec3(),
                             glm::vec3(),
@@ -31,7 +34,9 @@ Camera::Camera( Player* player )
           m_roll( 0 ),
           m_distanceFromPlayer( 50 ),
           m_angleAroundPlayer( 0 ),
-          m_player( player ) {
+          m_player( player ),
+          m_yawActive( false ),
+          m_pitchActive( false ) {
 }
 
 void Camera::setPlayer( Player* player ) {
@@ -39,6 +44,11 @@ void Camera::setPlayer( Player* player ) {
 }
 
 void Camera::move() {
+
+    if ( !common::DisplayManager::instance()->isFocused() ) {
+        return;
+    }
+
     calculateZoom();
     calculatePitch();
     calculateAngleAroundPlayer();
@@ -102,47 +112,46 @@ void Camera::calculateZoom() {
 
 void Camera::calculatePitch() {
     using namespace common;
-
-    bool doPitch = false;
     InputCommands commands = InputManager::instance()->commands();
     for ( InputCommand* command : commands ) {
         if ( command->action() == InputAction::LMB ) {
-            doPitch = true;
-            break;
+            if ( command->state() == InputState::Press ) {
+                m_pitchActive = true;
+            } else if ( command->state() == InputState::Release ) {
+                m_pitchActive = false;
+            }
         }
     }
-
-    if ( !doPitch ) {
+    if ( !m_pitchActive ) {
         return;
     }
-
     double delta = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
     delta *= SENSITIVITY;
-    if ( m_pitch - delta < 0 ) {
-        m_pitch = 0.0;
-    } else if ( m_pitch - delta > 90 ) {
-        m_pitch = 90.0;
-    } else {
-        m_pitch -= delta;
-    }
+    m_pitch += delta;
+//    if ( m_pitch - delta < 0 ) {
+//        m_pitch = 0.0;
+//    } else if ( m_pitch - delta > 90 ) {
+//        m_pitch = 90.0;
+//    } else {
+//        m_pitch -= delta;
+//    }
 }
 
 void Camera::calculateAngleAroundPlayer() {
     using namespace common;
-
-    bool doYaw = false;
     InputCommands commands = InputManager::instance()->commands();
     for ( InputCommand* command : commands ) {
         if ( command->action() == InputAction::LMB ) {
-            doYaw = true;
-            break;
+            if ( command->state() == InputState::Press ) {
+                m_yawActive = true;
+            } else if ( command->state() == InputState::Release ) {
+                m_yawActive = false;
+            }
         }
     }
-
-    if ( !doYaw ) {
+    if ( !m_yawActive ) {
         return;
     }
-
     double delta = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
     delta *= SENSITIVITY;
     m_angleAroundPlayer += delta;
