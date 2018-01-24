@@ -276,7 +276,7 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    MousePicker picker = MousePicker( &camera, render.getProjectionMatrix() );
+    MousePicker picker = MousePicker( &camera, render.getProjectionMatrix(), terrain );
 
     // ---------------------------------------------------------------
 
@@ -297,11 +297,17 @@ int main( int argc, char **argv ) {
         // Ray isn't -1 when above character
         // https://youtu.be/DLKN0jExRIM?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&t=704
         // 11:44
+        //
+        // working on terrain collision now
+        // https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 
         if ( elapsed > 0.5 ) {
             std::cerr << __func__ << " : ray=" << glm::to_string( picker.getCurrentRay() ) << std::endl;
             elapsed = 0.0;
         }
+
+        glm::vec3 terrainPoint = picker.getCurrentTerrainPoint();
+        entities.back().setPosition( terrainPoint );
 
         render.processEntity( player );
         render.processTerrain( terrain );
