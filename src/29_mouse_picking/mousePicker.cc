@@ -8,10 +8,10 @@
 #include "../common/command/command.hh"
 #include "../common/input/input.hh"
 
-MousePicker::MousePicker( const Camera& camera, const glm::mat4& projection )
+MousePicker::MousePicker( Camera* camera, const glm::mat4& projection )
     : m_camera( camera ),
       m_projectionMatrix( projection ),
-      m_viewMatrix( camera.view() ) {
+      m_viewMatrix( camera->view() ) {
 }
 
 glm::vec3 MousePicker::getCurrentRay() const {
@@ -19,13 +19,13 @@ glm::vec3 MousePicker::getCurrentRay() const {
 }
 
 void MousePicker::update() {
-    m_viewMatrix = m_camera.view();
+    m_viewMatrix = m_camera->view();
     m_currentRay = calculateMouseRay();
 }
 
 glm::vec3 MousePicker::calculateMouseRay() const {
-    float mouseX = common::InputManager::instance()->mouse()->x();
-    float mouseY = common::InputManager::instance()->mouse()->y();
+    float mouseX = common::InputManager::instance()->mouse()->windowX();
+    float mouseY = common::InputManager::instance()->mouse()->windowY();
     glm::vec2 normalizedCoords = getNormalizedDeviceCoords( mouseX, mouseY );
     glm::vec4 clipCoords( normalizedCoords.x,
                           normalizedCoords.y,

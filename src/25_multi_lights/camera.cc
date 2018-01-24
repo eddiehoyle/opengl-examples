@@ -108,7 +108,7 @@ void Camera::calculateZoom() {
 
 void Camera::calculatePitch() {
     using namespace common;
-    double delta = InputManager::instance()->mouse()->y() - InputManager::instance()->mouse()->prevY();
+    double delta = InputManager::instance()->mouse()->deltaY() - InputManager::instance()->mouse()->prevY();
     delta *= SENSITIVITY;
     if ( m_pitch - delta < 0 ) {
         m_pitch = 0.0;
@@ -121,7 +121,7 @@ void Camera::calculatePitch() {
 
 void Camera::calculateAngleAroundPlayer() {
     using namespace common;
-    double delta = InputManager::instance()->mouse()->x() - InputManager::instance()->mouse()->prevX();
+    double delta = InputManager::instance()->mouse()->deltaX() - InputManager::instance()->mouse()->prevX();
     delta *= SENSITIVITY;
     m_angleAroundPlayer += delta;
 }

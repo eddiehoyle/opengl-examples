@@ -276,7 +276,7 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    MousePicker picker = MousePicker( camera, render.getProjectionMatrix() );
+    MousePicker picker = MousePicker( &camera, render.getProjectionMatrix() );
 
     // ---------------------------------------------------------------
 
@@ -289,6 +289,9 @@ int main( int argc, char **argv ) {
 
         common::glfw3ProcessMouse( window );
 
+        player.move( terrain );
+        camera.move();
+
         picker.update();
 
         // Ray isn't -1 when above character
@@ -299,9 +302,6 @@ int main( int argc, char **argv ) {
             std::cerr << __func__ << " : ray=" << glm::to_string( picker.getCurrentRay() ) << std::endl;
             elapsed = 0.0;
         }
-
-        player.move( terrain );
-        camera.move();
 
         render.processEntity( player );
         render.processTerrain( terrain );

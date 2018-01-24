@@ -11,7 +11,7 @@
 
 class MousePicker {
 public:
-    MousePicker( const Camera& camera, const glm::mat4& projection );
+    MousePicker( Camera* camera, const glm::mat4& projection );
     glm::vec3 getCurrentRay() const;
     void update();
 
@@ -25,7 +25,7 @@ private:
     glm::vec3 m_currentRay;
     glm::mat4 m_projectionMatrix;
     glm::mat4 m_viewMatrix;
-    Camera m_camera;
+    Camera* m_camera;
 };
 
 

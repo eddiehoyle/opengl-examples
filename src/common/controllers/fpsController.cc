@@ -102,9 +102,9 @@ void FpsController::handleMouseMove() {
     TransformComponent *transformComponent = component->asType< TransformComponent >();
     assert( transformComponent );
 
-    float pitch = static_cast< float >( InputManager::instance()->mouse()->y() -
+    float pitch = static_cast< float >( InputManager::instance()->mouse()->deltaY() -
                                         InputManager::instance()->mouse()->prevY() );
-    float yaw = static_cast< float >( InputManager::instance()->mouse()->x() -
+    float yaw = static_cast< float >( InputManager::instance()->mouse()->deltaX() -
                                       InputManager::instance()->mouse()->prevX() );
 
     pitch *= 0.3;

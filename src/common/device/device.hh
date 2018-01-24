@@ -40,8 +40,10 @@ public:
     void setX( int x );
     void setY( int y );
 
-    int x() const;
-    int y() const;
+    int windowX() const;
+    int windowY() const;
+    int deltaX() const;
+    int deltaY() const;
     int prevX() const;
     int prevY() const;
 
@@ -52,6 +54,8 @@ private:
     int m_y;
     int m_prevX;
     int m_prevY;
+    int m_windowX;
+    int m_windowY;
 };
 
 
