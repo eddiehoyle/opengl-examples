@@ -4,6 +4,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <glm/ext.hpp>
 #include "mousePicker.hh"
 #include "../common/display.hh"
 #include "../common/command/command.hh"
@@ -12,11 +13,11 @@
 static const int RECURSION_COUNT = 200;
 static const float RAY_RANGE = 600;
 
-MousePicker::MousePicker( Camera* camera, const glm::mat4& projection, const Terrain& terrain )
-    : m_camera( camera ),
-      m_terrain( terrain ),
-      m_projectionMatrix( projection ),
-      m_viewMatrix( camera->view() ) {
+MousePicker::MousePicker( Camera *camera, const glm::mat4& projection, const Terrain& terrain )
+        : m_camera( camera ),
+          m_terrain( terrain ),
+          m_projectionMatrix( projection ),
+          m_viewMatrix( camera->view() ) {
 }
 
 glm::vec3 MousePicker::getCurrentRay() const {
@@ -24,6 +25,7 @@ glm::vec3 MousePicker::getCurrentRay() const {
 }
 
 void MousePicker::update() {
+    std::cerr << "MousePicker::update()" << std::endl;
     m_viewMatrix = m_camera->view();
     m_currentRay = calculateMouseRay();
     if ( intersectionInRange( 0, RAY_RANGE, m_currentRay ) ) {
@@ -70,6 +72,8 @@ glm::vec3 MousePicker::toWorldCoords( const glm::vec4& eyeCoords ) const {
 }
 
 glm::vec3 MousePicker::getPointOnRay( const glm::vec3& ray, float distance ) {
+    std::cerr << "MousePicker::getPointOnRay() : ray=" << glm::to_string( ray ) << ", distance=" << distance
+              << std::endl;
     glm::vec3 camPos = m_camera->position();
     glm::vec3 start = camPos;
     glm::vec3 scaledRay = start * distance;
@@ -77,7 +81,7 @@ glm::vec3 MousePicker::getPointOnRay( const glm::vec3& ray, float distance ) {
 }
 
 glm::vec3 MousePicker::binarySearch( int count, float start, float finish, glm::vec3& ray ) {
-    float half = start + ((finish - start) / 2.0f);
+    float half = start + ( ( finish - start ) / 2.0f );
     if ( count >= RECURSION_COUNT ) {
         glm::vec3 endPoint = getPointOnRay( ray, half );
         return endPoint;
@@ -90,14 +94,24 @@ glm::vec3 MousePicker::binarySearch( int count, float start, float finish, glm::
 }
 
 bool MousePicker::intersectionInRange( float start, float finish, glm::vec3& ray ) {
+    std::cerr << "MousePicker::intersectionInRange() : start=" << start << ", finish=" << finish << std::endl;
     glm::vec3 startPoint = getPointOnRay( ray, start );
     glm::vec3 endPoint = getPointOnRay( ray, finish );
-    return !isUnderGround( startPoint ) && isUnderGround( endPoint );
+    bool a = !isUnderGround( startPoint );
+    bool b = isUnderGround( endPoint );
+    std::cerr << "MousePicker::intersectionInRange() "
+              << ": startPoint=" << glm::to_string( startPoint )
+              << ", endPoint=" << glm::to_string( endPoint )
+              << ", aboveGround=" << a
+              << ", underGround=" << b
+              << std::endl;
+    bool result = !isUnderGround( startPoint ) && isUnderGround( endPoint );
+    return result;
 }
 
 bool MousePicker::isUnderGround( const glm::vec3& testPoint ) {
+    std::cerr << "MousePicker::isUnderGround() : testPoint=" << glm::to_string( testPoint ) << std::endl;
     float height = m_terrain.getHeightOfTerrain( testPoint.x, testPoint.z );
-    std::cerr << "height=" << height << std::endl;
     return testPoint.y < height;
 }
 
