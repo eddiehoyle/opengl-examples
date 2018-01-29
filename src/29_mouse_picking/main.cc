@@ -198,13 +198,13 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    // Light pointing straight down
+    // Remember! Limited to only four lights at the moment
     double lampHeight = 14.0;
     std::vector< Light > lights;
     lights.push_back( Light( glm::vec3( 0.0f, 1000.0f, -7000.0f ), glm::vec3( 1, 1, 1 ) ) );
-    lights.push_back( Light( glm::vec3( 185.0f, -9.7 + lampHeight, 293.0f ), glm::vec3( 1, 0, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
-    lights.push_back( Light( glm::vec3( 370.0f,  0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+    lights.push_back( Light( glm::vec3( 370.0f, 0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
     lights.push_back( Light( glm::vec3( 293.0f, -4.4 + lampHeight, 305.0f ), glm::vec3( 1, 1, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+    lights.push_back( Light( glm::vec3( 185.0f, -9.7 + lampHeight, 293.0f ), glm::vec3( 1, 0, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
 
     const std::string lampModelPath = common::getResource( "lamp.obj", result );
     assert( result );
@@ -222,13 +222,9 @@ int main( int argc, char **argv ) {
     lampTexture.setUseFakeLighting( false );
     TexturedModel lampTexturedModel( lampModel, lampTexture );
 
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -9.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f,  0.2f, 300.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f, 0.2f, 300.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
     entities.push_back( Entity( lampTexturedModel, glm::vec3( 293.0f, -4.4f, 305.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
-
-    // 7:01
-    // https://youtu.be/KdY0aVDp5G4?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&t=421
-    // Lights aren't working atm
+    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -9.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
 
     // ---------------------------------------------------------------
 
@@ -257,7 +253,6 @@ int main( int argc, char **argv ) {
     };
     int guiDimensions = 3;
     RawModel guiModel = loader.loadToVao( guiPositions, guiDimensions );
-
 
     // ---------------------------------------------------------------
 
@@ -292,22 +287,18 @@ int main( int argc, char **argv ) {
         player.move( terrain );
         camera.move();
 
-        picker.update();
+        const common::InputCommands& cmds = common::InputManager::instance()->commands();
+        for ( common::InputCommand *cmd : cmds ) {
+            if ( cmd->state() == common::InputState::Press &&
+                 cmd->action() == common::InputAction::RMB ) {
 
-        // Ray isn't -1 when above character
-        // https://youtu.be/DLKN0jExRIM?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&t=704
-        // 11:44
-        //
-        // working on terrain collision now
-        // https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
-
-        if ( elapsed > 0.5 ) {
-            std::cerr << __func__ << " : ray=" << glm::to_string( picker.getCurrentRay() ) << std::endl;
-            elapsed = 0.0;
+                // Update a light
+                picker.update();
+                glm::vec3 terrainPoint = picker.getCurrentTerrainPoint();
+                entities.back().setPosition( terrainPoint );
+                lights.back().setPosition( terrainPoint + glm::vec3( 0, lampHeight, 0 ) );
+            }
         }
-
-        glm::vec3 terrainPoint = picker.getCurrentTerrainPoint();
-        entities.back().setPosition( terrainPoint );
 
         render.processEntity( player );
         render.processTerrain( terrain );
