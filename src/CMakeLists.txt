@@ -28,6 +28,7 @@ add_subdirectory(26_point_lights)
 add_subdirectory(27_skybox)
 add_subdirectory(28_day_night)
 add_subdirectory(29_mouse_picking)
+add_subdirectory(30_cel_shading)
 
 # Trying new things
 add_subdirectory(dev)
