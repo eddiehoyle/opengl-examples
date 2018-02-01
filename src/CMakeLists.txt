@@ -30,5 +30,8 @@ add_subdirectory(28_day_night)
 add_subdirectory(29_mouse_picking)
 add_subdirectory(30_cel_shading)
 
+# Water sub-series
+add_subdirectory(water)
+
 # Trying new things
 add_subdirectory(dev)
