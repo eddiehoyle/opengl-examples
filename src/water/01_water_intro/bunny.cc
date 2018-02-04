@@ -4,9 +4,9 @@
 
 #include "bunny.hh"
 #include "entity.hh"
-#include "../common/components/transformComponent.hh"
-#include "../common/resources.hh"
-#include "../common/components/moveComponent.hh"
+#include <common/components/transformComponent.hh>
+#include <common/resources.hh>
+#include <common/components/moveComponent.hh>
 #include "OBJLoader.hh"
 
 const float kJumpVelocity = 4.0f;

@@ -7,9 +7,9 @@
 #include <glm/vec3.hpp>
 #include <glm/ext.hpp>
 #include "terrain.hh"
-#include "../common/math.hh"
+#include <common/math.hh>
 
-const float SIZE = 500;
+const float SIZE = 100;
 const float MAX_HEIGHT = 40;
 const float MAX_PIXEL_COLOUR = 256;
 

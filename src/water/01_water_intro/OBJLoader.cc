@@ -6,8 +6,8 @@
 #include <glm/vec3.hpp>
 #include <fstream>
 #include "OBJLoader.hh"
-#include "../common/obj/parser.hh"
-#include "../common/obj/tiny_obj_loader.hh"
+#include <common/obj/parser.hh>
+#include <common/obj/tiny_obj_loader.hh>
 
 
 // Removing this for now

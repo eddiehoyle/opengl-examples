@@ -6,7 +6,7 @@
 #define OPENGL_EXAMPLES_BUNNY_HH
 
 
-#include "../common/scene/scene.hh"
+#include <common/scene/scene.hh>
 #include "entity.hh"
 
 class Bunny : public common::AbstractSceneObject {

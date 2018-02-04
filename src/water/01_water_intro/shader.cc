@@ -1,27 +1,11 @@
-//
-// Created by Eddie Hoyle on 23/10/17.
-//
-
-#include <iostream>
-#include <vector>
-
-#include "shader.hh"
-#include "../common/io.hh"
-#include "../common/resources.hh"
-
-
-//
-// Created by Eddie Hoyle on 23/10/17.
-//
-
 #include <iostream>
 #include <vector>
 #include <sstream>
 
 #include "shader.hh"
-#include "../common/io.hh"
-#include "../common/resources.hh"
-#include "../common/display.hh"
+#include <common/io.hh>
+#include <common/resources.hh>
+#include <common/display.hh>
 
 static const int MAX_LIGHTS = 4;
 
@@ -190,7 +174,7 @@ void StaticShader::init() {
 
     // Read in vertex shader
     std::string vertex_resource_path;
-    vertex_resource_path += "shaders/";
+    vertex_resource_path += "shaders/water/";
     vertex_resource_path += EXERCISE_NAME;
     vertex_resource_path += "/staticVertex.glsl";
     const std::string vertex_path = common::getResource( vertex_resource_path, shader_file_exists );
@@ -199,7 +183,7 @@ void StaticShader::init() {
 
     // Read in fragment shader
     std::string fragment_resource_path;
-    fragment_resource_path += "shaders/";
+    fragment_resource_path += "shaders/water/";
     fragment_resource_path += EXERCISE_NAME;
     fragment_resource_path += "/staticFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
@@ -273,7 +257,7 @@ void TerrainShader::init() {
 
     // Read in vertex shader
     std::string vertex_resource_path;
-    vertex_resource_path += "shaders/";
+    vertex_resource_path += "shaders/water/";
     vertex_resource_path += EXERCISE_NAME;
     vertex_resource_path += "/terrainVertex.glsl";
     const std::string vertex_path = common::getResource( vertex_resource_path,
@@ -284,7 +268,7 @@ void TerrainShader::init() {
 
     // Read in fragment shader
     std::string fragment_resource_path;
-    fragment_resource_path += "shaders/";
+    fragment_resource_path += "shaders/water/";
     fragment_resource_path += EXERCISE_NAME;
     fragment_resource_path += "/terrainFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path,
@@ -368,7 +352,7 @@ void GuiShader::init() {
 
     // Read in vertex shader
     std::string vertex_resource_path;
-    vertex_resource_path += "shaders/";
+    vertex_resource_path += "shaders/water/";
     vertex_resource_path += EXERCISE_NAME;
     vertex_resource_path += "/guiVertex.glsl";
     const std::string vertex_path = common::getResource( vertex_resource_path, shader_file_exists );
@@ -377,7 +361,7 @@ void GuiShader::init() {
 
     // Read in fragment shader
     std::string fragment_resource_path;
-    fragment_resource_path += "shaders/";
+    fragment_resource_path += "shaders/water/";
     fragment_resource_path += EXERCISE_NAME;
     fragment_resource_path += "/guiFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
@@ -420,7 +404,7 @@ void SkyboxShader::init() {
 
     // Read in vertex shader
     std::string vertex_resource_path;
-    vertex_resource_path += "shaders/";
+    vertex_resource_path += "shaders/water/";
     vertex_resource_path += EXERCISE_NAME;
     vertex_resource_path += "/skyboxVertex.glsl";
     const std::string vertex_path = common::getResource( vertex_resource_path, shader_file_exists );
@@ -429,7 +413,7 @@ void SkyboxShader::init() {
 
     // Read in fragment shader
     std::string fragment_resource_path;
-    fragment_resource_path += "shaders/";
+    fragment_resource_path += "shaders/water/";
     fragment_resource_path += EXERCISE_NAME;
     fragment_resource_path += "/skyboxFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
@@ -488,3 +472,60 @@ void SkyboxShader::loadViewMatrix( const glm::mat4& mat ) {
 
     loadMatrix( m_viewMatrix, view );
 }
+
+// ------------------------------------------------------------------
+
+WaterShader::WaterShader() : ShaderProgram() {
+}
+
+void WaterShader::init() {
+
+    // File status result
+    bool shader_file_exists;
+
+    // Read in vertex shader
+    std::string vertex_resource_path;
+    vertex_resource_path += "shaders/water/";
+    vertex_resource_path += EXERCISE_NAME;
+    vertex_resource_path += "/guiVertex.glsl";
+    const std::string vertex_path = common::getResource( vertex_resource_path, shader_file_exists );
+    const std::string vertex_source = common::read_file( vertex_path );
+    m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
+
+    // Read in fragment shader
+    std::string fragment_resource_path;
+    fragment_resource_path += "shaders/water/";
+    fragment_resource_path += EXERCISE_NAME;
+    fragment_resource_path += "/guiFragment.glsl";
+    const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
+    const std::string fragment_source = common::read_file( fragment_path );
+    m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
+
+    // Create program
+    m_programID = glCreateProgram();
+    glAttachShader( m_programID, m_vertexShaderID );
+    glAttachShader( m_programID, m_fragmentShaderID );
+
+    // Bind attributes before linking to ensure order
+    bindAttribute( 0, "position" );
+
+    // Link program
+    glLinkProgram( m_programID );
+    validateProgram( m_programID );
+
+    // Must happen after program is linked
+    getUniformLocations();
+}
+
+void WaterShader::getUniformLocations() {
+    m_transformationMatrix = getUniformLocation( "transformationMatrix" );
+    m_viewMatrix = getUniformLocation( "viewMatrix" );
+    m_modelMatrix = getUniformLocation( "modelMatrix" );
+}
+
+void WaterShader::loadModelMatrix( const glm::mat4& matrix ) {
+    loadMatrix( m_modelMatrix, matrix );
+}
+
+// ------------------------------------------------------------------
+

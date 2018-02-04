@@ -167,4 +167,19 @@ protected:
     float m_rotation;
 };
 
+
+class WaterShader : public ShaderProgram {
+
+public:
+    WaterShader();
+    virtual void init();
+    virtual void getUniformLocations();
+    void loadModelMatrix( const glm::mat4& matrix );
+
+protected:
+    GLint m_modelMatrix;
+    GLint m_viewMatrix;
+    GLint m_projectionMatrix;
+};
+
 #endif //OPENGL_EXAMPLES_17_SHADER_HH

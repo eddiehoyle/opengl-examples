@@ -6,9 +6,9 @@
 #include <iostream>
 #include <glm/ext.hpp>
 #include "mousePicker.hh"
-#include "../common/display.hh"
-#include "../common/command/command.hh"
-#include "../common/input/input.hh"
+#include <common/display.hh>
+#include <common/command/command.hh>
+#include <common/input/input.hh>
 
 static const int RECURSION_COUNT = 200;
 static const float RAY_RANGE = 600;

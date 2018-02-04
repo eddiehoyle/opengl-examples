@@ -5,11 +5,11 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include "player.hh"
-#include "../common/input/input.hh"
-#include "../common/display.hh"
+#include <common/input/input.hh>
+#include <common/display.hh>
 #include "terrain.hh"
 
-static const float RUN_SPEED = 200;
+static const float RUN_SPEED = 50;
 static const float TURN_SPEED = 160;
 static const float GRAVITY = -100;
 static const float JUMP_POWER = 50;

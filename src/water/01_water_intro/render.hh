@@ -13,6 +13,7 @@
 #include "terrain.hh"
 #include "camera.hh"
 #include "guis.hh"
+#include "water.hh"
 
 const GLfloat kSkyRed = 0.54f;
 const GLfloat kSkyGreen = 0.62f;
@@ -25,11 +26,14 @@ class EntityRenderer {
 
 public:
     explicit EntityRenderer( StaticShader& shader, const glm::mat4& projectionMatrix );
+
     void render( const EntityMap& entityMap );
 
 private:
     void prepareTexturedModel( const TexturedModel& texturedModel );
+
     void unbindTexturedModel();
+
     void prepareInstance( const Entity& entity );
 
 private:
@@ -43,15 +47,20 @@ class TerrainRenderer {
 
 public:
     explicit TerrainRenderer( TerrainShader& shader, const glm::mat4& projectionMatrix );
+
     void render( const std::vector< Terrain >& terrains );
+
     void setProjectionMatrix( const glm::mat4& matrix ) {
         m_projectionMatrix = matrix;
     }
 
 private:
     void prepareTerrain( const Terrain& terrain );
+
     void unbindTexturedModel();
+
     void loadModelMatrix( const Terrain& terrain );
+
     void bindTextures( const Terrain& terrain );
 
 private:
@@ -65,7 +74,9 @@ class GuiRenderer {
 
 public:
     GuiRenderer( GuiShader& shader, const RawModel& quad );
+
     void render( const std::vector< GuiTexture >& guis );
+
     void cleanup();
 
 private:
@@ -79,8 +90,11 @@ class SkyboxRenderer {
 
 public:
     SkyboxRenderer( SkyboxShader& shader, const glm::mat4& projectionMatrix );
+
     void render( const Camera& camera, float r, float g, float b );
+
     void bindTextures();
+
     void cleanup();
 
 private:
@@ -94,10 +108,27 @@ private:
 
 // ------------------------------------------------------------------------------------
 
+class WaterRenderer {
+
+public:
+    WaterRenderer( WaterShader& shader, const RawModel& quad, const glm::mat4& projectionMatrix );
+    void render( const std::vector< WaterTile >& water, const Camera& camera );
+    void prepareRender( const Camera& camera );
+    void unbind();
+    void setUpVAO( const Loader& loader );
+
+private:
+    RawModel m_quad;
+    WaterShader m_shader;
+};
+
+// ------------------------------------------------------------------------------------
+
 class MasterRenderer {
 public:
 
     static void enableCulling();
+
     static void disableCulling();
 
 public:
@@ -107,10 +138,21 @@ public:
                              SkyboxShader& skyboxShader );
 
     void cleanup();
+
     void prepare();
+
     void render( const std::vector< Light >& lights, const Camera& camera );
+
+    void renderScene( const Entity& player,
+                      const std::vector< Entity >& entities,
+                      const std::vector< Terrain >& terrains,
+                      const std::vector< Light >& lights,
+                      const Camera& camera );
+
     void processEntity( const Entity& entity );
+
     void processTerrain( const Terrain& terrain );
+
     void createProjectionMatrix();
 
     glm::mat4 getProjectionMatrix() const;

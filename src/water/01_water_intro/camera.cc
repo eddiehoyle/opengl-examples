@@ -3,9 +3,9 @@
 //
 
 #include "camera.hh"
-#include "../common/command/command.hh"
-#include "../common/input/input.hh"
-#include "../common/display.hh"
+#include <common/command/command.hh>
+#include <common/input/input.hh>
+#include <common/display.hh>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <iostream>

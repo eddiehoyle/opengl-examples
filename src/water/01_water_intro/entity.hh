@@ -9,7 +9,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include "model.hh"
-#include "../common/components/component.hh"
+#include <common/components/component.hh>
 
 class Entity {
 

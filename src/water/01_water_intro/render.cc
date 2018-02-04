@@ -6,9 +6,10 @@
 #include "model.hh"
 #include "entity.hh"
 #include "shader.hh"
-#include "../common/math.hh"
-#include "../common/display.hh"
-#include "../common/resources.hh"
+#include "water.hh"
+#include <common/math.hh>
+#include <common/display.hh>
+#include <common/resources.hh>
 #include <GL/glew.h>
 #include <iostream>
 
@@ -350,6 +351,48 @@ void SkyboxRenderer::cleanup() {
 
 // ------------------------------------------------------------------------------------------
 
+
+WaterRenderer::WaterRenderer( WaterShader& shader,
+                              const RawModel& quad,
+                              const glm::mat4& projectionMatrix )
+        : m_quad( quad ),
+          m_shader( shader ) {
+
+    // Note
+    // 'm_shader' is initialised before added to this renderer.
+    // Do not re-init the shader after this otherwise things break.
+    // This is stupid and should be fixed
+    m_shader.start();
+    m_shader.loadProjectionMatrix( projectionMatrix );
+    m_shader.stop();
+}
+
+void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera& camera ) {
+    prepareRender( camera );
+    for ( const WaterTile& tile : water ) {
+        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
+                                                                    glm::vec3( 0, 0, 0 ),
+                                                                    tile.getTileSize() );
+        m_shader.loadModelMatrix( modelMatrix );
+        glDrawArrays( GL_TRIANGLES, 0, m_quad.getVertexCount() );
+    }
+    unbind();
+}
+
+void WaterRenderer::prepareRender( const Camera& camera ) {
+    m_shader.start();
+    m_shader.loadViewMatrix( camera.view() );
+    glBindVertexArray( m_quad.getVaoID() );
+    glEnableVertexAttribArray( 0 );
+}
+
+void WaterRenderer::unbind() {
+    glDisableVertexAttribArray( 0 );
+    glBindVertexArray( 0 );
+    m_shader.stop();
+}
+// ------------------------------------------------------------------------------------------
+
 MasterRenderer::MasterRenderer( StaticShader& entityShader,
                                 TerrainShader& terrainShader,
                                 SkyboxShader& skyboxShader )
@@ -359,7 +402,7 @@ MasterRenderer::MasterRenderer( StaticShader& entityShader,
           m_entities(),
           m_entityRenderer( m_entityShader, glm::mat4() ),
           m_terrainRenderer( m_terrainShader, glm::mat4() ),
-          m_skyboxRenderer( m_skyboxShader, glm::mat4() ){
+          m_skyboxRenderer( m_skyboxShader, glm::mat4() ) {
 
     // Note
     // 'm_entityShader' is initialised above and added to the renderer immediately
@@ -459,4 +502,23 @@ void MasterRenderer::render( const std::vector< Light >& lights, const Camera& c
 
     m_terrains.clear();
     m_entities.clear();
+}
+
+void MasterRenderer::renderScene( const Entity& player,
+                                  const std::vector< Entity >& entities,
+                                  const std::vector< Terrain >& terrains,
+                                  const std::vector< Light >& lights,
+                                  const Camera& camera ) {
+
+    processEntity( player );
+
+    for ( const auto& terrain : terrains ) {
+        processTerrain( terrain );
+    }
+
+    for ( const auto& entity : entities ) {
+        processEntity( entity );
+    }
+
+    render( lights, camera );
 }

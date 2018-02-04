@@ -16,20 +16,19 @@
 #include "loader.hh"
 #include "shader.hh"
 #include "OBJLoader.hh"
-
-
-#include "../common/display.hh"
-#include "../common/resources.hh"
-#include "../common/math.hh"
-//#include "../common/scene/camera.hh"
-#include "../common/input/input.hh"
-#include "../common/controllers/controller.hh"
-#include "../common/controllers/fpsController.hh"
-#include "../common/components/transformComponent.hh"
 #include "bunny.hh"
-#include "../common/controllers/tankController.hh"
 #include "player.hh"
 #include "mousePicker.hh"
+
+#include <common/display.hh>
+#include <common/resources.hh>
+#include <common/math.hh>
+#include <common/input/input.hh>
+#include <common/controllers/controller.hh>
+#include <common/controllers/fpsController.hh>
+#include <common/components/transformComponent.hh>
+#include <common/controllers/tankController.hh>
+
 
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
@@ -96,6 +95,13 @@ int main( int argc, char **argv ) {
     bool result;
     Loader loader = Loader();
 
+
+    // Collections
+    std::vector< Entity > entities;
+    std::vector< Terrain > terrains;
+    std::vector< Light > lights;
+    std::vector< WaterTile > waters;
+
     // ---------------------------------------------------------------
 
     const std::string grassyTexturePath = common::getResource( "grass1.jpg", result );
@@ -121,8 +127,9 @@ int main( int argc, char **argv ) {
                                     bTexture );
     TerrainTexture blendMap = TerrainTexture( blendMapTexture );
 
-    const std::string heightMapPath = common::getResource( "heightmap.png", result );
+    const std::string heightMapPath = common::getResource( "heightmapPond.png", result );
     Terrain terrain( 0, 0, loader, texturePack, blendMap, heightMapPath );
+    terrains.push_back( terrain );
 
     // ---------------------------------------------------------------
 
@@ -142,11 +149,8 @@ int main( int argc, char **argv ) {
     fernTexture.setUseFakeLighting( false );
     TexturedModel fernTexturedModel( fernModel, fernTexture );
 
-    // Create entities
-    std::vector< Entity > entities;
-
-    int terrainSize = 500;
-    int numEntities = 1000;
+    int terrainSize = 50;
+    int numEntities = 10;
 
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
@@ -200,7 +204,6 @@ int main( int argc, char **argv ) {
 
     // Remember! Limited to only four lights at the moment
     double lampHeight = 14.0;
-    std::vector< Light > lights;
     lights.push_back( Light( glm::vec3( 0.0f, 1000.0f, -7000.0f ), glm::vec3( 1, 1, 1 ) ) );
     lights.push_back( Light( glm::vec3( 370.0f, 0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
     lights.push_back( Light( glm::vec3( 293.0f, -4.4 + lampHeight, 305.0f ), glm::vec3( 1, 1, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
@@ -256,61 +259,51 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
+    std::vector< GLfloat > waterPositions = {
+            -1.0f, -1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f,  1.0f,  1.0f
+    };
+
+    RawModel waterModel = loader.loadToVao( waterPositions, 2 );
+    WaterTile waterTile( 75, -75, 0 );
+    waters.push_back( waterTile );
+
+    // ---------------------------------------------------------------
+
     StaticShader staticShader;
     TerrainShader terrainShader;
     GuiShader guiShader;
     SkyboxShader skyboxShader;
+    WaterShader waterShader;
 
     staticShader.init();
     terrainShader.init();
     guiShader.init();
     skyboxShader.init();
+    waterShader.init();
 
-    MasterRenderer render( staticShader, terrainShader, skyboxShader );
+    MasterRenderer renderer( staticShader, terrainShader, skyboxShader );
+    WaterRenderer waterRenderer( waterShader, waterModel, glm::mat4() /*TODO*/ );
     GuiRenderer guiRenderer( guiShader, guiModel );
 
     // ---------------------------------------------------------------
 
-    MousePicker picker = MousePicker( &camera, render.getProjectionMatrix(), terrain );
+    MousePicker picker = MousePicker( &camera, renderer.getProjectionMatrix(), terrain );
 
     // ---------------------------------------------------------------
 
-    float value = 0;
-    double elapsed = 0.0;
-
     while ( glfwWindowShouldClose( window ) == 0 ) {
-
-        double start = glfwGetTime();
 
         common::glfw3ProcessMouse( window );
 
         player.move( terrain );
         camera.move();
 
-        const common::InputCommands& cmds = common::InputManager::instance()->commands();
-        for ( common::InputCommand *cmd : cmds ) {
-            if ( cmd->state() == common::InputState::Press &&
-                 cmd->action() == common::InputAction::RMB ) {
-
-                // Update a light
-                picker.update();
-                glm::vec3 terrainPoint = picker.getCurrentTerrainPoint();
-                entities.back().setPosition( terrainPoint );
-                lights.back().setPosition( terrainPoint + glm::vec3( 0, lampHeight, 0 ) );
-            }
-        }
-
-        render.processEntity( player );
-        render.processTerrain( terrain );
-
-        // Update entities
-        for ( auto entity : entities ) {
-            render.processEntity( entity );
-        }
-
-        render.render( lights, camera );
-
-        // Render guis last
+        // Render
+        renderer.renderScene( player, entities, terrains, lights, camera );
+        waterRenderer.render( waters, camera );
         guiRenderer.render( guis );
 
         common::DisplayManager::instance()->updateDisplay();
@@ -321,13 +314,11 @@ int main( int argc, char **argv ) {
         // Swap buffers
         glfwSwapBuffers( window );
         glfwPollEvents();
-
-        value += 0.02f;
-        elapsed += glfwGetTime() - start;
     }
 
     // Cleanup
-    render.cleanup();
+    waterShader.cleanup();
+    renderer.cleanup();
     loader.cleanup();
     guiRenderer.cleanup();
 
