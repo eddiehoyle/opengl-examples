@@ -95,7 +95,6 @@ int main( int argc, char **argv ) {
     bool result;
     Loader loader = Loader();
 
-
     // Collections
     std::vector< Entity > entities;
     std::vector< Terrain > terrains;
@@ -149,32 +148,32 @@ int main( int argc, char **argv ) {
     fernTexture.setUseFakeLighting( false );
     TexturedModel fernTexturedModel( fernModel, fernTexture );
 
-    int terrainSize = 50;
-    int numEntities = 10;
-
-    std::random_device rd;  // Will be used to obtain a seed for the random number engine
-    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
-
-    for ( int i = 0; i < numEntities; ++i ) {
-
-        std::uniform_real_distribution<> dis( 0.0, terrainSize );
-
-        std::uniform_real_distribution<> textureIndexGen( 0, 2 );
-        glm::vec2 textureGrid( ( int )textureIndexGen( gen ),
-                               ( int )textureIndexGen( gen ) );
-
-        double posX = dis( gen );
-        double posZ = dis( gen );
-        double posY = terrain.getHeightOfTerrain( posX, posZ );
-
-        Entity fernEntity( fernTexturedModel,
-                           glm::vec3( posX, posY, posZ ),
-                           glm::vec3( 0, 0, 0 ),
-                           1,
-                           textureGrid );
-
-        entities.push_back( fernEntity );
-    }
+//    int terrainSize = 50;
+//    int numEntities = 10;
+//
+//    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+//    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
+//
+//    for ( int i = 0; i < numEntities; ++i ) {
+//
+//        std::uniform_real_distribution<> dis( 0.0, terrainSize );
+//
+//        std::uniform_real_distribution<> textureIndexGen( 0, 2 );
+//        glm::vec2 textureGrid( ( int )textureIndexGen( gen ),
+//                               ( int )textureIndexGen( gen ) );
+//
+//        double posX = dis( gen );
+//        double posZ = dis( gen );
+//        double posY = terrain.getHeightOfTerrain( posX, posZ );
+//
+//        Entity fernEntity( fernTexturedModel,
+//                           glm::vec3( posX, posY, posZ ),
+//                           glm::vec3( 0, 0, 0 ),
+//                           1,
+//                           textureGrid );
+//
+//        entities.push_back( fernEntity );
+//    }
 
     // ---------------------------------------------------------------
 
@@ -203,31 +202,35 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     // Remember! Limited to only four lights at the moment
-    double lampHeight = 14.0;
-    lights.push_back( Light( glm::vec3( 0.0f, 1000.0f, -7000.0f ), glm::vec3( 1, 1, 1 ) ) );
-    lights.push_back( Light( glm::vec3( 370.0f, 0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
-    lights.push_back( Light( glm::vec3( 293.0f, -4.4 + lampHeight, 305.0f ), glm::vec3( 1, 1, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
-    lights.push_back( Light( glm::vec3( 185.0f, -9.7 + lampHeight, 293.0f ), glm::vec3( 1, 0, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+    // Sun
+    lights.push_back( Light( glm::vec3( 200.0f, 1000.0f, 200.0f ), glm::vec3( 1, 1, 1 ) ) );
 
-    const std::string lampModelPath = common::getResource( "lamp.obj", result );
-    assert( result );
-    const std::string lampMtlPath = common::getResource( "lamp.mtl", result );
-    assert( result );
-    const std::string lampTexturePath = common::getResource( "lamp.png", result );
-    assert( result );
+    // ---------------------------------------------------------------
 
-    // Model and texture
-    RawModel lampModel = OBJLoader::loadObjModel( lampModelPath, lampMtlPath, loader );
-    ModelTexture lampTexture( loader.loadTexture( lampTexturePath ) );
-    lampTexture.setShineDamper( 10.0f );
-    lampTexture.setReflectivity( 1.0f );
-    lampTexture.setHasTransparency( false );
-    lampTexture.setUseFakeLighting( false );
-    TexturedModel lampTexturedModel( lampModel, lampTexture );
-
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f, 0.2f, 300.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 293.0f, -4.4f, 305.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
-    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -9.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+//    double lampHeight = 14.0;
+//    lights.push_back( Light( glm::vec3( 370.0f, 0.2 + lampHeight, 300.0f ), glm::vec3( 0, 1, 1 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+//    lights.push_back( Light( glm::vec3( 293.0f, -4.4 + lampHeight, 305.0f ), glm::vec3( 1, 1, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+//    lights.push_back( Light( glm::vec3( 185.0f, -9.7 + lampHeight, 293.0f ), glm::vec3( 1, 0, 0 ), glm::vec3( 0.4, 0.01f, 0.001f ) ) );
+//
+//    const std::string lampModelPath = common::getResource( "lamp.obj", result );
+//    assert( result );
+//    const std::string lampMtlPath = common::getResource( "lamp.mtl", result );
+//    assert( result );
+//    const std::string lampTexturePath = common::getResource( "lamp.png", result );
+//    assert( result );
+//
+//    // Model and texture
+//    RawModel lampModel = OBJLoader::loadObjModel( lampModelPath, lampMtlPath, loader );
+//    ModelTexture lampTexture( loader.loadTexture( lampTexturePath ) );
+//    lampTexture.setShineDamper( 10.0f );
+//    lampTexture.setReflectivity( 1.0f );
+//    lampTexture.setHasTransparency( false );
+//    lampTexture.setUseFakeLighting( false );
+//    TexturedModel lampTexturedModel( lampModel, lampTexture );
+//
+//    entities.push_back( Entity( lampTexturedModel, glm::vec3( 370.0f, 0.2f, 300.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+//    entities.push_back( Entity( lampTexturedModel, glm::vec3( 293.0f, -4.4f, 305.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
+//    entities.push_back( Entity( lampTexturedModel, glm::vec3( 185.0f, -9.7f, 293.0f ), glm::vec3( 0, 0, 0 ), 1 ) );
 
     // ---------------------------------------------------------------
 
@@ -259,15 +262,7 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    std::vector< GLfloat > waterPositions = {
-            -1.0f, -1.0f, -1.0f,
-             1.0f,  1.0f, -1.0f,
-             1.0f, -1.0f, -1.0f,
-             1.0f,  1.0f,  1.0f
-    };
-
-    RawModel waterModel = loader.loadToVao( waterPositions, 2 );
-    WaterTile waterTile( 75, -75, 0 );
+    WaterTile waterTile( 50, -50, 0 );
     waters.push_back( waterTile );
 
     // ---------------------------------------------------------------
@@ -285,7 +280,7 @@ int main( int argc, char **argv ) {
     waterShader.init();
 
     MasterRenderer renderer( staticShader, terrainShader, skyboxShader );
-    WaterRenderer waterRenderer( waterShader, waterModel, glm::mat4() /*TODO*/ );
+    WaterRenderer waterRenderer( waterShader, renderer.getProjectionMatrix() );
     GuiRenderer guiRenderer( guiShader, guiModel );
 
     // ---------------------------------------------------------------

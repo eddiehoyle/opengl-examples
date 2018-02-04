@@ -487,8 +487,9 @@ void WaterShader::init() {
     std::string vertex_resource_path;
     vertex_resource_path += "shaders/water/";
     vertex_resource_path += EXERCISE_NAME;
-    vertex_resource_path += "/guiVertex.glsl";
+    vertex_resource_path += "/waterVertex.glsl";
     const std::string vertex_path = common::getResource( vertex_resource_path, shader_file_exists );
+    assert( shader_file_exists );
     const std::string vertex_source = common::read_file( vertex_path );
     m_vertexShaderID = compile( vertex_source, GL_VERTEX_SHADER );
 
@@ -496,8 +497,9 @@ void WaterShader::init() {
     std::string fragment_resource_path;
     fragment_resource_path += "shaders/water/";
     fragment_resource_path += EXERCISE_NAME;
-    fragment_resource_path += "/guiFragment.glsl";
+    fragment_resource_path += "/waterFragment.glsl";
     const std::string fragment_path = common::getResource( fragment_resource_path, shader_file_exists );
+    assert( shader_file_exists );
     const std::string fragment_source = common::read_file( fragment_path );
     m_fragmentShaderID = compile( fragment_source, GL_FRAGMENT_SHADER );
 
@@ -515,10 +517,12 @@ void WaterShader::init() {
 
     // Must happen after program is linked
     getUniformLocations();
+
+    GLenum x = glGetError();
 }
 
 void WaterShader::getUniformLocations() {
-    m_transformationMatrix = getUniformLocation( "transformationMatrix" );
+    m_projectionMatrix = getUniformLocation( "projectionMatrix" );
     m_viewMatrix = getUniformLocation( "viewMatrix" );
     m_modelMatrix = getUniformLocation( "modelMatrix" );
 }

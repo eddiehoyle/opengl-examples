@@ -154,7 +154,7 @@ GuiRenderer::GuiRenderer( GuiShader& shader, const RawModel& quad )
           m_shader( shader ) {
 
     // Note
-    // 'm_entityShader' is initialised before added to this renderer.
+    // 'm_shader' is initialised before added to this renderer.
     // Do not re-init the shader after this otherwise things break.
     // This is stupid and should be fixed
 }

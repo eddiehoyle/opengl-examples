@@ -111,11 +111,13 @@ private:
 class WaterRenderer {
 
 public:
-    WaterRenderer( WaterShader& shader, const RawModel& quad, const glm::mat4& projectionMatrix );
+    WaterRenderer( WaterShader& shader, const glm::mat4& projectionMatrix );
     void render( const std::vector< WaterTile >& water, const Camera& camera );
     void prepareRender( const Camera& camera );
     void unbind();
-    void setUpVAO( const Loader& loader );
+
+    // No-op. This is handled in main.cc
+    void setUpVAO( const Loader& loader ) {}
 
 private:
     RawModel m_quad;

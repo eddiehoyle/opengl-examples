@@ -317,26 +317,31 @@ void SkyboxRenderer::render( const Camera& camera, float r, float g, float b ) {
 void SkyboxRenderer::bindTextures() {
     m_time += common::DisplayManager::instance()->getFrameTimeSeconds() * 1000;
     m_time = int( m_time ) % 24000;
-    int texture1;
-    int texture2;
-    float blendFactor;
-    if ( m_time >= 0 && m_time < 5000 ) {
-        texture1 = m_nightTexture;
-        texture2 = m_nightTexture;
-        blendFactor = ( m_time - 0 ) / ( 5000 - 0 );
-    } else if ( m_time >= 5000 && m_time < 8000 ) {
-        texture1 = m_nightTexture;
-        texture2 = m_texture;
-        blendFactor = ( m_time - 5000 ) / ( 8000 - 5000 );
-    } else if ( m_time >= 8000 && m_time < 21000 ) {
-        texture1 = m_texture;
-        texture2 = m_texture;
-        blendFactor = ( m_time - 8000 ) / ( 21000 - 8000 );
-    } else {
-        texture1 = m_texture;
-        texture2 = m_nightTexture;
-        blendFactor = ( m_time - 21000 ) / ( 24000 - 21000 );
-    }
+//    int texture1;
+//    int texture2;
+//    float blendFactor;
+//    if ( m_time >= 0 && m_time < 5000 ) {
+//        texture1 = m_nightTexture;
+//        texture2 = m_nightTexture;
+//        blendFactor = ( m_time - 0 ) / ( 5000 - 0 );
+//    } else if ( m_time >= 5000 && m_time < 8000 ) {
+//        texture1 = m_nightTexture;
+//        texture2 = m_texture;
+//        blendFactor = ( m_time - 5000 ) / ( 8000 - 5000 );
+//    } else if ( m_time >= 8000 && m_time < 21000 ) {
+//        texture1 = m_texture;
+//        texture2 = m_texture;
+//        blendFactor = ( m_time - 8000 ) / ( 21000 - 8000 );
+//    } else {
+//        texture1 = m_texture;
+//        texture2 = m_nightTexture;
+//        blendFactor = ( m_time - 21000 ) / ( 24000 - 21000 );
+//    }
+
+    // Clamp to daytime for now
+    int texture1 = m_texture;
+    int texture2 = m_texture;
+    float blendFactor = 1.0;
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_CUBE_MAP, texture1 );
@@ -353,10 +358,9 @@ void SkyboxRenderer::cleanup() {
 
 
 WaterRenderer::WaterRenderer( WaterShader& shader,
-                              const RawModel& quad,
                               const glm::mat4& projectionMatrix )
-        : m_quad( quad ),
-          m_shader( shader ) {
+        : m_shader( shader ),
+          m_quad( 0, 0 ) {
 
     // Note
     // 'm_shader' is initialised before added to this renderer.
@@ -365,17 +369,28 @@ WaterRenderer::WaterRenderer( WaterShader& shader,
     m_shader.start();
     m_shader.loadProjectionMatrix( projectionMatrix );
     m_shader.stop();
+
+    Loader loader;
+
+    std::vector< GLfloat > vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
+    m_quad = loader.loadToVao( vertices, 2 );
 }
 
 void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera& camera ) {
+
     prepareRender( camera );
+
     for ( const WaterTile& tile : water ) {
-        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
+//        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
+//                                                                    glm::vec3( 0, 0, 0 ),
+//                                                                    tile.getTileSize() );
+        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( 0, 0, 0 ),
                                                                     glm::vec3( 0, 0, 0 ),
-                                                                    tile.getTileSize() );
+                                                                    1 );
         m_shader.loadModelMatrix( modelMatrix );
         glDrawArrays( GL_TRIANGLES, 0, m_quad.getVertexCount() );
     }
+
     unbind();
 }
 
