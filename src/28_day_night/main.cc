@@ -254,7 +254,7 @@ int main( int argc, char **argv ) {
             -1.0f, 1.0f, -1.0f, -1.0f,
             1.0f, 1.0f, 1.0f, -1.0f
     };
-    int guiDimensions = 3;
+    int guiDimensions = 2;
     RawModel guiModel = loader.loadToVao( guiPositions, guiDimensions );
 
 

@@ -98,9 +98,7 @@ public:
 
 public:
 
-    explicit MasterRenderer( StaticShader& entityshader,
-                             TerrainShader& terrainShader,
-                             SkyboxShader& skyboxShader );
+    explicit MasterRenderer( StaticShader& shader, TerrainShader& terrainShader );
 
     void cleanup();
     void prepare();
@@ -122,10 +120,6 @@ private:
     TerrainShader m_terrainShader;
     TerrainRenderer m_terrainRenderer;
     std::vector< Terrain > m_terrains;
-
-    /// Skybox
-    SkyboxShader m_skyboxShader;
-    SkyboxRenderer m_skyboxRenderer;
 
     glm::mat4 m_projectionMatrix;
 

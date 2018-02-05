@@ -254,7 +254,7 @@ int main( int argc, char **argv ) {
             -1.0f, 1.0f, -1.0f, -1.0f,
             1.0f, 1.0f, 1.0f, -1.0f
     };
-    int guiDimensions = 3;
+    int guiDimensions = 2;
     RawModel guiModel = loader.loadToVao( guiPositions, guiDimensions );
 
 
@@ -263,14 +263,12 @@ int main( int argc, char **argv ) {
     StaticShader staticShader;
     TerrainShader terrainShader;
     GuiShader guiShader;
-    SkyboxShader skyboxShader;
 
     staticShader.init();
     terrainShader.init();
     guiShader.init();
-    skyboxShader.init();
 
-    MasterRenderer render( staticShader, terrainShader, skyboxShader );
+    MasterRenderer render( staticShader, terrainShader );
     GuiRenderer guiRenderer( guiShader, guiModel );
 
     float value = 0;
@@ -317,4 +315,3 @@ int main( int argc, char **argv ) {
 
     return 0;
 }
-

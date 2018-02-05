@@ -23,13 +23,13 @@ RawModel Loader::loadToVao( const std::vector< GLfloat >& positions,
     return RawModel( vaoID, indices.size() );
 }
 
-RawModel Loader::loadToVao( const std::vector< float >& positions,
-                            int dimenstions ) {
+RawModel Loader::loadToVao( const std::vector< float >& positions, int dimensions ) {
     int vaoID = createVaoID();
-    storeDataInAttributeList( 0, dimenstions, positions );
+    storeDataInAttributeList( 0, dimensions, positions );
     unbindVao();
-    return RawModel( vaoID, positions.size() / dimenstions );
+    return RawModel( vaoID, positions.size() / dimensions );
 }
+
 
 GLint Loader::createVaoID() {
     GLuint vaoID;

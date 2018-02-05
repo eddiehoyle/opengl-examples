@@ -243,17 +243,17 @@ SkyboxRenderer::SkyboxRenderer( SkyboxShader& shader,
     };
 
     bool result;
-    const std::string skyboxRightPath = common::getResource( "skybox_right.jpg", result );
+    const std::string skyboxRightPath = common::getResource( "skybox_right.png", result );
     assert( result );
-    const std::string skyboxLeftPath = common::getResource( "skybox_left.jpg", result );
+    const std::string skyboxLeftPath = common::getResource( "skybox_left.png", result );
     assert( result );
-    const std::string skyboxTopPath = common::getResource( "skybox_top.jpg", result );
+    const std::string skyboxTopPath = common::getResource( "skybox_top.png", result );
     assert( result );
-    const std::string skyboxBottomPath = common::getResource( "skybox_bottom.jpg", result );
+    const std::string skyboxBottomPath = common::getResource( "skybox_bottom.png", result );
     assert( result );
-    const std::string skyboxBackPath = common::getResource( "skybox_back.jpg", result );
+    const std::string skyboxBackPath = common::getResource( "skybox_back.png", result );
     assert( result );
-    const std::string skyboxFrontPath = common::getResource( "skybox_front.jpg", result );
+    const std::string skyboxFrontPath = common::getResource( "skybox_front.png", result );
     assert( result );
 
     std::vector< std::string > skyboxPaths = {
@@ -293,16 +293,12 @@ void SkyboxRenderer::cleanup() {
 
 // ------------------------------------------------------------------------------------------
 
-MasterRenderer::MasterRenderer( StaticShader& entityShader,
-                                TerrainShader& terrainShader,
-                                SkyboxShader& skyboxShader )
-        : m_entityShader( entityShader ),
+MasterRenderer::MasterRenderer( StaticShader& shader, TerrainShader& terrainShader )
+        : m_entityShader( shader ),
           m_terrainShader( terrainShader ),
-          m_skyboxShader( skyboxShader ),
           m_entities(),
           m_entityRenderer( m_entityShader, glm::mat4() ),
-          m_terrainRenderer( m_terrainShader, glm::mat4() ),
-          m_skyboxRenderer( m_skyboxShader, glm::mat4() ){
+          m_terrainRenderer( m_terrainShader, glm::mat4() ) {
 
     // Note
     // 'm_entityShader' is initialised above and added to the renderer immediately
@@ -320,10 +316,6 @@ MasterRenderer::MasterRenderer( StaticShader& entityShader,
     m_terrainShader.start();
     m_terrainShader.loadProjectionMatrix( m_projectionMatrix );
     m_terrainShader.stop();
-
-    m_skyboxShader.start();
-    m_skyboxShader.loadProjectionMatrix( m_projectionMatrix );
-    m_skyboxShader.stop();
 
 }
 
@@ -391,10 +383,6 @@ void MasterRenderer::render( const std::vector< Light >& lights, const Camera& c
     m_terrainShader.loadViewMatrix( camera.view() );
     m_terrainRenderer.render( m_terrains );
     m_terrainShader.stop();
-
-    m_skyboxShader.start();
-    m_skyboxRenderer.render( camera );
-    m_skyboxShader.stop();
 
     m_terrains.clear();
     m_entities.clear();
