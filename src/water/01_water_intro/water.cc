@@ -4,7 +4,7 @@
 
 #include "water.hh"
 
-static const float TILE_SIZE = 1;
+static const float TILE_SIZE = 40;
 
 WaterTile::WaterTile( float centerX, float centerZ, float height )
         : m_x( centerX ),

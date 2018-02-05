@@ -177,9 +177,10 @@ public:
     void loadModelMatrix( const glm::mat4& matrix );
 
 protected:
+
+    // Model is same as transformation atm
     GLint m_modelMatrix;
-    GLint m_viewMatrix;
-    GLint m_projectionMatrix;
+
 };
 
 #endif //OPENGL_EXAMPLES_17_SHADER_HH

@@ -111,7 +111,7 @@ private:
 class WaterRenderer {
 
 public:
-    WaterRenderer( WaterShader& shader, const glm::mat4& projectionMatrix );
+    WaterRenderer( WaterShader& shader, const RawModel& quad, const glm::mat4& projectionMatrix );
     void render( const std::vector< WaterTile >& water, const Camera& camera );
     void prepareRender( const Camera& camera );
     void unbind();

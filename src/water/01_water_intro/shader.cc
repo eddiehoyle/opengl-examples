@@ -517,8 +517,6 @@ void WaterShader::init() {
 
     // Must happen after program is linked
     getUniformLocations();
-
-    GLenum x = glGetError();
 }
 
 void WaterShader::getUniformLocations() {

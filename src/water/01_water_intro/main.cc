@@ -203,7 +203,7 @@ int main( int argc, char **argv ) {
 
     // Remember! Limited to only four lights at the moment
     // Sun
-    lights.push_back( Light( glm::vec3( 200.0f, 1000.0f, 200.0f ), glm::vec3( 1, 1, 1 ) ) );
+    lights.push_back( Light( glm::vec3( 200.0f, 1000.0f, 500.0f ), glm::vec3( 0.8, 0.8, 1 ) ) );
 
     // ---------------------------------------------------------------
 
@@ -257,12 +257,20 @@ int main( int argc, char **argv ) {
             -1.0f, 1.0f, -1.0f, -1.0f,
             1.0f, 1.0f, 1.0f, -1.0f
     };
-    int guiDimensions = 3;
+    int guiDimensions = 2;
     RawModel guiModel = loader.loadToVao( guiPositions, guiDimensions );
 
     // ---------------------------------------------------------------
 
-    WaterTile waterTile( 50, -50, 0 );
+    std::vector< GLfloat > waterPositions = {
+            -1, -1, -1, 1, 1, -1,
+            1, -1, -1, 1, 1, 1
+    };
+
+    int waterDimensions = 2;
+    RawModel waterModel = loader.loadToVao( waterPositions, waterDimensions );
+
+    WaterTile waterTile( 50, 50, -1 );
     waters.push_back( waterTile );
 
     // ---------------------------------------------------------------
@@ -280,7 +288,7 @@ int main( int argc, char **argv ) {
     waterShader.init();
 
     MasterRenderer renderer( staticShader, terrainShader, skyboxShader );
-    WaterRenderer waterRenderer( waterShader, renderer.getProjectionMatrix() );
+    WaterRenderer waterRenderer( waterShader, waterModel, renderer.getProjectionMatrix() );
     GuiRenderer guiRenderer( guiShader, guiModel );
 
     // ---------------------------------------------------------------

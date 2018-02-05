@@ -358,9 +358,10 @@ void SkyboxRenderer::cleanup() {
 
 
 WaterRenderer::WaterRenderer( WaterShader& shader,
+                              const RawModel& quad,
                               const glm::mat4& projectionMatrix )
         : m_shader( shader ),
-          m_quad( 0, 0 ) {
+          m_quad( quad ) {
 
     // Note
     // 'm_shader' is initialised before added to this renderer.
@@ -369,11 +370,6 @@ WaterRenderer::WaterRenderer( WaterShader& shader,
     m_shader.start();
     m_shader.loadProjectionMatrix( projectionMatrix );
     m_shader.stop();
-
-    Loader loader;
-
-    std::vector< GLfloat > vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
-    m_quad = loader.loadToVao( vertices, 2 );
 }
 
 void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera& camera ) {
@@ -381,12 +377,9 @@ void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera&
     prepareRender( camera );
 
     for ( const WaterTile& tile : water ) {
-//        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
-//                                                                    glm::vec3( 0, 0, 0 ),
-//                                                                    tile.getTileSize() );
-        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( 0, 0, 0 ),
+        glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
                                                                     glm::vec3( 0, 0, 0 ),
-                                                                    1 );
+                                                                    tile.getTileSize() );
         m_shader.loadModelMatrix( modelMatrix );
         glDrawArrays( GL_TRIANGLES, 0, m_quad.getVertexCount() );
     }
@@ -415,6 +408,7 @@ MasterRenderer::MasterRenderer( StaticShader& entityShader,
           m_terrainShader( terrainShader ),
           m_skyboxShader( skyboxShader ),
           m_entities(),
+          m_terrains(),
           m_entityRenderer( m_entityShader, glm::mat4() ),
           m_terrainRenderer( m_terrainShader, glm::mat4() ),
           m_skyboxRenderer( m_skyboxShader, glm::mat4() ) {
@@ -456,6 +450,7 @@ void MasterRenderer::createProjectionMatrix() {
 void MasterRenderer::cleanup() {
     m_entityShader.cleanup();
     m_terrainShader.cleanup();
+    m_skyboxShader.cleanup();
 }
 
 void MasterRenderer::processEntity( const Entity& entity ) {
