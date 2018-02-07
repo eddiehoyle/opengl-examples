@@ -1,4 +1,4 @@
-set(EXERCISE 02_water_fbo)
+set(EXERCISE 03_water_clipping)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
 add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY

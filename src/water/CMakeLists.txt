@@ -1,2 +1,3 @@
 add_subdirectory(01_water_intro)
 add_subdirectory(02_water_fbo)
+add_subdirectory(03_water_clipping)
