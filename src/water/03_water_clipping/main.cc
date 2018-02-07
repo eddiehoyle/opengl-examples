@@ -150,9 +150,13 @@ int main( int argc, char **argv ) {
     fernTexture.setUseFakeLighting( false );
     TexturedModel fernTexturedModel( fernModel, fernTexture );
 
-//    int terrainSize = 50;
-//    int numEntities = 10;
-//
+    // https://www.youtube.com/watch?v=0NH9k4zTAqk&index=3&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh
+    // 5:39
+
+    entities.push_back( Entity( fernTexturedModel, glm::vec3( 98, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( fernTexturedModel, glm::vec3( 0, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( fernTexturedModel, glm::vec3( 98, 0, 0 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+
 //    std::random_device rd;  // Will be used to obtain a seed for the random number engine
 //    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
 //
@@ -314,13 +318,11 @@ int main( int argc, char **argv ) {
         player.move( terrain );
         camera.move();
 
-        // https://www.youtube.com/watch?v=21UsMuFTN0k&index=2&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh
-        // 11:15
+        glEnable( GL_CLIP_DISTANCE0 );
 
         // Render FBO to gui
         fbos.bindReflectionFrameBuffer();
         renderer.renderScene( player, entities, terrains, lights, camera );
-        waterRenderer.render( waters, camera );
         fbos.unbindCurrentFrameBuffer();
 
         // Render
