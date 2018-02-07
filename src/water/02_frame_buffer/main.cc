@@ -279,8 +279,8 @@ int main( int argc, char **argv ) {
     WaterFrameBuffers fbos = WaterFrameBuffers();
 
     GuiTexture fboTexture = GuiTexture( fbos.getReflectionTexture(),
-                                        glm::vec2( -0.5f, 0.5f ),
-                                        glm::vec2( -0.5f, 0.5f ) );
+                                        glm::vec2( -0.5f, -0.5f ),
+                                        glm::vec2( 0.5f, 0.5f ) );
     guiTextures.push_back( fboTexture );
 
     // ---------------------------------------------------------------
@@ -320,6 +320,7 @@ int main( int argc, char **argv ) {
         // Render FBO to gui
         fbos.bindReflectionFrameBuffer();
         renderer.renderScene( player, entities, terrains, lights, camera );
+        waterRenderer.render( waters, camera );
         fbos.unbindCurrentFrameBuffer();
 
         // Render

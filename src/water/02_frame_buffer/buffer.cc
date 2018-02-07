@@ -38,7 +38,8 @@ void WaterFrameBuffers::unbindCurrentFrameBuffer() {
     glBindFramebuffer( GL_FRAMEBUFFER, 0 );
     int width = common::DisplayManager::instance()->width();
     int height = common::DisplayManager::instance()->height();
-    glViewport( 0, 0, width, height );
+    int mult = __APPLE__ == true ? 2 : 1;
+    glViewport( 0, 0, width * mult, height * mult );
 }
 
 GLuint WaterFrameBuffers::getReflectionTexture() {
