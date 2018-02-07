@@ -1,2 +1,2 @@
 add_subdirectory(01_water_intro)
-add_subdirectory(02_frame_buffer)
+add_subdirectory(02_water_fbo)

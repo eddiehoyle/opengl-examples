@@ -1,4 +1,4 @@
-set(EXERCISE 02_frame_buffer)
+set(EXERCISE 02_water_fbo)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
 add_executable(${EXERCISE} ${SOURCE_FILES} buffer.cc buffer.hh)
 get_directory_property(COMMON_LIBRARY
