@@ -488,11 +488,12 @@ glm::mat4 MasterRenderer::getProjectionMatrix() const {
     return m_projectionMatrix;
 }
 
-void MasterRenderer::render( const std::vector< Light >& lights, const Camera& camera ) {
+void MasterRenderer::render( const std::vector< Light >& lights, const Camera& camera, const glm::vec4& clipPlane ) {
 
     prepare();
 
     m_entityShader.start();
+    m_entityShader.loadClipPlane( clipPlane );
     m_entityShader.loadSkyColour( kSkyRed, kSkyGreen, kSkyBlue );
     m_entityShader.loadLights( lights );
     m_entityShader.loadViewMatrix( camera.view() );
@@ -500,6 +501,7 @@ void MasterRenderer::render( const std::vector< Light >& lights, const Camera& c
     m_entityShader.stop();
 
     m_terrainShader.start();
+    m_terrainShader.loadClipPlane( clipPlane );
     m_terrainShader.loadSkyColour( kSkyRed, kSkyGreen, kSkyBlue );
     m_terrainShader.loadLights( lights );
     m_terrainShader.loadViewMatrix( camera.view() );
@@ -518,7 +520,8 @@ void MasterRenderer::renderScene( const Entity& player,
                                   const std::vector< Entity >& entities,
                                   const std::vector< Terrain >& terrains,
                                   const std::vector< Light >& lights,
-                                  const Camera& camera ) {
+                                  const Camera& camera,
+                                  const glm::vec4& clipPlane ) {
 
     processEntity( player );
 
@@ -530,5 +533,5 @@ void MasterRenderer::renderScene( const Entity& player,
         processEntity( entity );
     }
 
-    render( lights, camera );
+    render( lights, camera, clipPlane );
 }

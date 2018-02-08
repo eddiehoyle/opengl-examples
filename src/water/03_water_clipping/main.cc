@@ -135,27 +135,27 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     // Fern
-    const std::string fernModelPath = common::getResource( "fern.obj", result );
+    const std::string treeModelPath = common::getResource( "tree.obj", result );
     assert( result );
-    const std::string fernTexturePath = common::getResource( "fern_atlas.png", result );
+    const std::string treeTexturePath = common::getResource( "tree.png", result );
     assert( result );
 
     // Model and texture
-    RawModel fernModel = OBJLoader::loadObjModel( fernModelPath, loader );
-    ModelTexture fernTexture( loader.loadTexture( fernTexturePath ) );
-    fernTexture.setNumberOfRows( 2 );
-    fernTexture.setShineDamper( 10.0f );
-    fernTexture.setReflectivity( 1.0f );
-    fernTexture.setHasTransparency( true );
-    fernTexture.setUseFakeLighting( false );
-    TexturedModel fernTexturedModel( fernModel, fernTexture );
+    RawModel treeModel = OBJLoader::loadObjModel( treeModelPath, loader );
+    ModelTexture treeTexture( loader.loadTexture( treeTexturePath ) );
+    treeTexture.setNumberOfRows( 2 );
+    treeTexture.setShineDamper( 10.0f );
+    treeTexture.setReflectivity( 1.0f );
+    treeTexture.setHasTransparency( true );
+    treeTexture.setUseFakeLighting( false );
+    TexturedModel treeTexturedModel( treeModel, treeTexture );
 
     // https://www.youtube.com/watch?v=0NH9k4zTAqk&index=3&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh
     // 5:39
 
-    entities.push_back( Entity( fernTexturedModel, glm::vec3( 98, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
-    entities.push_back( Entity( fernTexturedModel, glm::vec3( 0, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
-    entities.push_back( Entity( fernTexturedModel, glm::vec3( 98, 0, 0 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 98, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 0, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 98, 0, 0 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
 
 //    std::random_device rd;  // Will be used to obtain a seed for the random number engine
 //    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
@@ -281,11 +281,14 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     WaterFrameBuffers fbos = WaterFrameBuffers();
-
-    GuiTexture fboTexture = GuiTexture( fbos.getReflectionTexture(),
-                                        glm::vec2( -0.5f, -0.5f ),
-                                        glm::vec2( 0.5f, 0.5f ) );
-    guiTextures.push_back( fboTexture );
+    GuiTexture refraction = GuiTexture( fbos.getRefractionTexture(),
+                                        glm::vec2( 0.5f, 0.5f ),
+                                        glm::vec2( 0.25f, 0.25f ) );
+    GuiTexture reflection = GuiTexture( fbos.getReflectionTexture(),
+                                        glm::vec2( -0.5f, 0.5f ),
+                                        glm::vec2( 0.25f, 0.25f ) );
+    guiTextures.push_back( refraction );
+    guiTextures.push_back( reflection );
 
     // ---------------------------------------------------------------
 
@@ -311,6 +314,8 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
+    // ---------------------------------------------------------------
+
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
         common::glfw3ProcessMouse( window );
@@ -320,13 +325,26 @@ int main( int argc, char **argv ) {
 
         glEnable( GL_CLIP_DISTANCE0 );
 
-        // Render FBO to gui
+        // Render reflection texture
         fbos.bindReflectionFrameBuffer();
-        renderer.renderScene( player, entities, terrains, lights, camera );
-        fbos.unbindCurrentFrameBuffer();
+
+        glm::vec3 cameraPosition = camera.position();
+        float distance = 2 * ( cameraPosition.y - waterTile.getHeight() );
+        cameraPosition.y -= distance;
+        camera.setPosition( cameraPosition );
+        camera.invertPitch();
+        renderer.renderScene( player, entities, terrains, lights, camera, glm::vec4( 0, 1, 0, -waterTile.getHeight() ) );
+        cameraPosition += distance;
+        camera.setPosition( cameraPosition );
+        camera.invertPitch();
+
+        // Render refraction texture
+        fbos.bindRefractionFrameBuffer();
+        renderer.renderScene( player, entities, terrains, lights, camera, glm::vec4( 0, -1, 0, waterTile.getHeight() ) );
 
         // Render
-        renderer.renderScene( player, entities, terrains, lights, camera );
+        fbos.unbindCurrentFrameBuffer();
+        renderer.renderScene( player, entities, terrains, lights, camera, glm::vec4( 0, 0, 0, 0 ) );
         waterRenderer.render( waters, camera );
         guiRenderer.render( guiTextures );
 

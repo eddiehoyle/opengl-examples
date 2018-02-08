@@ -143,13 +143,16 @@ public:
 
     void prepare();
 
-    void render( const std::vector< Light >& lights, const Camera& camera );
+    void render( const std::vector< Light >& lights,
+                 const Camera& camera,
+                 const glm::vec4& clipPlane );
 
     void renderScene( const Entity& player,
                       const std::vector< Entity >& entities,
                       const std::vector< Terrain >& terrains,
                       const std::vector< Light >& lights,
-                      const Camera& camera );
+                      const Camera& camera,
+                      const glm::vec4& clipPlane );
 
     void processEntity( const Entity& entity );
 

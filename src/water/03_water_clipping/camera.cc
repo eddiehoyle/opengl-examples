@@ -74,6 +74,10 @@ void Camera::setRoll( float roll ) {
     m_roll = roll;
 }
 
+void Camera::invertPitch() {
+    m_pitch = -m_pitch;
+}
+
 glm::vec3 Camera::position() const {
     return m_position;
 }

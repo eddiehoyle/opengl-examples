@@ -30,6 +30,10 @@ GLint ShaderProgram::getUniformLocation( const std::string& name ) {
     return glGetUniformLocation( m_programID, name.c_str() );
 }
 
+void ShaderProgram::loadClipPlane( const glm::vec4& plane  ) {
+    loadVector( m_plane, plane );
+}
+
 void ShaderProgram::loadNumberOfRows( GLint numberOfRows  ) {
     loadFloat( m_numberOfRows, numberOfRows );
 }
@@ -91,6 +95,10 @@ void ShaderProgram::loadVector( GLint location, const glm::vec2& vec ) {
 
 void ShaderProgram::loadVector( GLint location, const glm::vec3& vec ) {
     glUniform3fv( location, 1, glm::value_ptr( vec ) );
+}
+
+void ShaderProgram::loadVector( GLint location, const glm::vec4& vec ) {
+    glUniform4fv( location, 1, glm::value_ptr( vec ) );
 }
 
 void ShaderProgram::loadMatrix( GLint location, const glm::mat4& mat ) {
@@ -222,6 +230,7 @@ void StaticShader::getUniformLocations() {
     m_skyColour = getUniformLocation( "skyColour" );
     m_numberOfRows = getUniformLocation( "numberOfRows" );
     m_offset = getUniformLocation( "offset" );
+    m_plane = getUniformLocation( "plane" );
 
     for ( int i = 0; i < MAX_LIGHTS; ++i ) {
 
@@ -310,6 +319,7 @@ void TerrainShader::getUniformLocations() {
     m_shineDamper = getUniformLocation( "shineDamper" );
     m_reflectivity = getUniformLocation( "reflectivity" );
     m_skyColour = getUniformLocation( "skyColour" );
+    m_plane = getUniformLocation( "plane" );
 
     // Custom
     m_backgroundTexture = getUniformLocation( "backgroundTexture" );

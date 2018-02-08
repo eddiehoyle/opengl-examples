@@ -31,6 +31,9 @@ public:
     /// TODO
     GLint getUniformLocation( const std::string& name );
 
+    /// Clipping plane
+    void loadClipPlane( const glm::vec4& plane  );
+
     /// Texture atlas rows
     void loadNumberOfRows( GLint numberOfRows  );
 
@@ -69,6 +72,9 @@ public:
 
     /// Load a vector 3 into a uniform
     void loadVector( GLint location, const glm::vec3& vec );
+
+    /// Load a vector 4 into a uniform
+    void loadVector( GLint location, const glm::vec4& vec );
 
     /// Load a 4x4 matrix into a uniform
     void loadMatrix( GLint location, const glm::mat4& mat );
@@ -109,6 +115,7 @@ protected:
     GLint m_skyColour;
     GLint m_numberOfRows;
     GLint m_offset;
+    GLint m_plane;
     std::vector< GLint > m_lightPosition;
     std::vector< GLint > m_lightColour;
     std::vector< GLint > m_attenuation;

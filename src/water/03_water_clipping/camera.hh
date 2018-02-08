@@ -27,6 +27,8 @@ public:
     void setYaw( float yaw );
     void setRoll( float roll );
 
+    void invertPitch();
+
     glm::vec3 position() const;
     float pitch() const;
     float yaw() const;
