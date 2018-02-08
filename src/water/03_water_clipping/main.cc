@@ -334,7 +334,7 @@ int main( int argc, char **argv ) {
         camera.setPosition( cameraPosition );
         camera.invertPitch();
         renderer.renderScene( player, entities, terrains, lights, camera, glm::vec4( 0, 1, 0, -waterTile.getHeight() ) );
-        cameraPosition += distance;
+        cameraPosition.y += distance;
         camera.setPosition( cameraPosition );
         camera.invertPitch();
 
