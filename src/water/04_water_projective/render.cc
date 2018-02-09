@@ -7,6 +7,7 @@
 #include "entity.hh"
 #include "shader.hh"
 #include "water.hh"
+#include "buffer.hh"
 #include <common/math.hh>
 #include <common/display.hh>
 #include <common/resources.hh>
@@ -359,15 +360,18 @@ void SkyboxRenderer::cleanup() {
 
 WaterRenderer::WaterRenderer( WaterShader& shader,
                               const RawModel& quad,
-                              const glm::mat4& projectionMatrix )
+                              const glm::mat4& projectionMatrix,
+                              const WaterFrameBuffers& fbos )
         : m_shader( shader ),
-          m_quad( quad ) {
+          m_quad( quad ),
+          m_fbos( fbos ) {
 
     // Note
     // 'm_shader' is initialised before added to this renderer.
     // Do not re-init the shader after this otherwise things break.
     // This is stupid and should be fixed
     m_shader.start();
+    m_shader.connectTextureUnits();
     m_shader.loadProjectionMatrix( projectionMatrix );
     m_shader.stop();
 }
@@ -392,6 +396,10 @@ void WaterRenderer::prepareRender( const Camera& camera ) {
     m_shader.loadViewMatrix( camera.view() );
     glBindVertexArray( m_quad.getVaoID() );
     glEnableVertexAttribArray( 0 );
+    glActiveTexture( GL_TEXTURE0 );
+    glBindTexture( GL_TEXTURE_2D, m_fbos.getReflectionTexture() );
+    glActiveTexture( GL_TEXTURE1 );
+    glBindTexture( GL_TEXTURE_2D, m_fbos.getRefractionTexture() );
 }
 
 void WaterRenderer::unbind() {

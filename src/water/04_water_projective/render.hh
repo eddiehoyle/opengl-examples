@@ -14,6 +14,7 @@
 #include "camera.hh"
 #include "guis.hh"
 #include "water.hh"
+#include "buffer.hh"
 
 const GLfloat kSkyRed = 0.54f;
 const GLfloat kSkyGreen = 0.62f;
@@ -111,7 +112,10 @@ private:
 class WaterRenderer {
 
 public:
-    WaterRenderer( WaterShader& shader, const RawModel& quad, const glm::mat4& projectionMatrix );
+    WaterRenderer( WaterShader& shader,
+                   const RawModel& quad,
+                   const glm::mat4& projectionMatrix,
+                   const WaterFrameBuffers& fbos );
     void render( const std::vector< WaterTile >& water, const Camera& camera );
     void prepareRender( const Camera& camera );
     void unbind();
@@ -122,6 +126,7 @@ public:
 private:
     RawModel m_quad;
     WaterShader m_shader;
+    WaterFrameBuffers m_fbos;
 };
 
 // ------------------------------------------------------------------------------------

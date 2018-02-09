@@ -533,6 +533,15 @@ void WaterShader::getUniformLocations() {
     m_projectionMatrix = getUniformLocation( "projectionMatrix" );
     m_viewMatrix = getUniformLocation( "viewMatrix" );
     m_modelMatrix = getUniformLocation( "modelMatrix" );
+    m_reflectionTexture = getUniformLocation( "reflectionTexture" );
+    m_refractionTexture = getUniformLocation( "refractionTexture" );
+
+    printf( "%d, %d\n", m_reflectionTexture, m_refractionTexture );
+}
+
+void WaterShader::connectTextureUnits() {
+    loadInt( m_reflectionTexture, 0 );
+    loadInt( m_refractionTexture, 1 );
 }
 
 void WaterShader::loadModelMatrix( const glm::mat4& matrix ) {

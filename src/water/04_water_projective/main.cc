@@ -150,12 +150,18 @@ int main( int argc, char **argv ) {
     treeTexture.setUseFakeLighting( false );
     TexturedModel treeTexturedModel( treeModel, treeTexture );
 
-    // https://www.youtube.com/watch?v=0NH9k4zTAqk&index=3&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh
-    // 5:39
 
+    // Corners
     entities.push_back( Entity( treeTexturedModel, glm::vec3( 98, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
     entities.push_back( Entity( treeTexturedModel, glm::vec3( 0, 0, 98 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
     entities.push_back( Entity( treeTexturedModel, glm::vec3( 98, 0, 0 ), glm::vec3( 0, 0, 0 ), 1, glm::vec2( 0, 0 ) ) );
+
+    // Detail
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 84, 0, 98 ), glm::vec3( 0, 0, 0 ), 1.3, glm::vec2( 0, 0 ) ) );
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 96, 0, 74 ), glm::vec3( 0, 0, 0 ), 1.7, glm::vec2( 0, 0 ) ) );
+
+
+    entities.push_back( Entity( treeTexturedModel, glm::vec3( 2, 0, 78 ), glm::vec3( 0, 0, 0 ), 0.7, glm::vec2( 0, 0 ) ) );
 
 //    std::random_device rd;  // Will be used to obtain a seed for the random number engine
 //    std::mt19937 gen( rd() ); // Standard mersenne_twister_engine seeded with rd()
@@ -281,14 +287,14 @@ int main( int argc, char **argv ) {
     // ---------------------------------------------------------------
 
     WaterFrameBuffers fbos = WaterFrameBuffers();
-    GuiTexture refraction = GuiTexture( fbos.getRefractionTexture(),
-                                        glm::vec2( 0.5f, 0.5f ),
-                                        glm::vec2( 0.25f, 0.25f ) );
-    GuiTexture reflection = GuiTexture( fbos.getReflectionTexture(),
-                                        glm::vec2( -0.5f, 0.5f ),
-                                        glm::vec2( 0.25f, 0.25f ) );
-    guiTextures.push_back( refraction );
-    guiTextures.push_back( reflection );
+//    GuiTexture refraction = GuiTexture( fbos.getRefractionTexture(),
+//                                        glm::vec2( 0.5f, 0.5f ),
+//                                        glm::vec2( 0.25f, 0.25f ) );
+//    GuiTexture reflection = GuiTexture( fbos.getReflectionTexture(),
+//                                        glm::vec2( -0.5f, 0.5f ),
+//                                        glm::vec2( 0.25f, 0.25f ) );
+//    guiTextures.push_back( refraction );
+//    guiTextures.push_back( reflection );
 
     // ---------------------------------------------------------------
 
@@ -305,7 +311,7 @@ int main( int argc, char **argv ) {
     waterShader.init();
 
     MasterRenderer renderer( staticShader, terrainShader, skyboxShader );
-    WaterRenderer waterRenderer( waterShader, waterModel, renderer.getProjectionMatrix() );
+    WaterRenderer waterRenderer( waterShader, waterModel, renderer.getProjectionMatrix(), fbos );
     GuiRenderer guiRenderer( guiShader, guiModel );
 
     // ---------------------------------------------------------------

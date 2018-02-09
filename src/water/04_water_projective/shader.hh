@@ -182,11 +182,15 @@ public:
     virtual void init();
     virtual void getUniformLocations();
     void loadModelMatrix( const glm::mat4& matrix );
+    void connectTextureUnits();
 
 protected:
 
     // Model is same as transformation atm
     GLint m_modelMatrix;
+
+    GLint m_reflectionTexture;
+    GLint m_refractionTexture;
 
 };
 
