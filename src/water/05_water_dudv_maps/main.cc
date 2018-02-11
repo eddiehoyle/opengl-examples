@@ -113,7 +113,7 @@ int main( int argc, char **argv ) {
     assert( result );
     const std::string pathTexturePath = common::getResource( "path.png", result );
     assert( result );
-    const std::string blendMapTexturePath = common::getResource( "blendMap.png", result );
+    const std::string blendMapTexturePath = common::getResource( "blendMap2.png", result );
     assert( result );
 
     TerrainTexture backgroundTexture = TerrainTexture( loader.loadTexture( grassyTexturePath ) );
@@ -215,7 +215,7 @@ int main( int argc, char **argv ) {
 
     // Remember! Limited to only four lights at the moment
     // Sun
-    lights.push_back( Light( glm::vec3( 200.0f, 1000.0f, 500.0f ), glm::vec3( 0.8, 0.8, 1 ) ) );
+    lights.push_back( Light( glm::vec3( -200.0f, 1000.0f, -500.0f ), glm::vec3( 0.8, 0.8, 1 ) ) );
 
     // ---------------------------------------------------------------
 

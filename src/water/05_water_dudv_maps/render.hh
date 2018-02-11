@@ -127,6 +127,9 @@ private:
     RawModel m_quad;
     WaterShader m_shader;
     WaterFrameBuffers m_fbos;
+
+    GLuint m_dudvTexture;
+    float m_moveFactor = 0;
 };
 
 // ------------------------------------------------------------------------------------

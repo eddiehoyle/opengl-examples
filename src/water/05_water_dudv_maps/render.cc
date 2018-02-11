@@ -14,9 +14,11 @@
 #include <GL/glew.h>
 #include <iostream>
 
-static const float kFov = 70;
-static const float kNearPlane = 0.01f;
-static const float kFarPlane = 1000.0f;
+static const float FOV = 70;
+static const float NEAR_PLANE = 0.01f;
+static const float FAR_PLANE = 1000.0f;
+
+static const float WAVE_SPEED = 0.03f;
 
 EntityRenderer::EntityRenderer( StaticShader& shader,
                                 const glm::mat4& projectionMatrix )
@@ -364,7 +366,15 @@ WaterRenderer::WaterRenderer( WaterShader& shader,
                               const WaterFrameBuffers& fbos )
         : m_shader( shader ),
           m_quad( quad ),
-          m_fbos( fbos ) {
+          m_fbos( fbos ),
+          m_dudvTexture( 0 ) {
+
+    bool result;
+    const std::string dudvMapPath = common::getResource( "dudvMap.png", result );
+    assert( result );
+
+    Loader loader;
+    m_dudvTexture = loader.loadTexture( dudvMapPath );
 
     // Note
     // 'm_shader' is initialised before added to this renderer.
@@ -394,12 +404,19 @@ void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera&
 void WaterRenderer::prepareRender( const Camera& camera ) {
     m_shader.start();
     m_shader.loadViewMatrix( camera.view() );
+    m_moveFactor += WAVE_SPEED * common::DisplayManager::instance()->getFrameTimeSeconds();
+    if ( m_moveFactor > 1.0f ) {
+        m_moveFactor = 0.0f;
+    }
+    m_shader.loadMoveFactor( m_moveFactor );
     glBindVertexArray( m_quad.getVaoID() );
     glEnableVertexAttribArray( 0 );
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_fbos.getReflectionTexture() );
     glActiveTexture( GL_TEXTURE1 );
     glBindTexture( GL_TEXTURE_2D, m_fbos.getRefractionTexture() );
+    glActiveTexture( GL_TEXTURE2 );
+    glBindTexture( GL_TEXTURE_2D, m_dudvTexture );
 }
 
 void WaterRenderer::unbind() {
@@ -448,11 +465,11 @@ void MasterRenderer::createProjectionMatrix() {
     unsigned int width = common::DisplayManager::instance()->width();
     unsigned int height = common::DisplayManager::instance()->height();
     m_projectionMatrix = common::createProjectionMatrix(
-            kFov,
+            FOV,
             width,
             height,
-            kNearPlane,
-            kFarPlane );
+            NEAR_PLANE,
+            FAR_PLANE );
 }
 
 void MasterRenderer::cleanup() {
