@@ -181,8 +181,10 @@ public:
     WaterShader();
     virtual void init();
     virtual void getUniformLocations();
+    virtual void loadViewMatrix( const glm::mat4& matrix );
     void loadModelMatrix( const glm::mat4& matrix );
     void connectTextureUnits();
+    void loadCameraPosition( const glm::vec3& pos );
     void loadMoveFactor( float value );
 
 protected:
@@ -194,6 +196,7 @@ protected:
     GLint m_refractionTexture;
     GLint m_dudvMapTexture;
     GLint m_moveFactor;
+    GLint m_cameraPosition;
 
 };
 

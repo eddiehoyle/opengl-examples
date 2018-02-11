@@ -409,6 +409,7 @@ void WaterRenderer::prepareRender( const Camera& camera ) {
         m_moveFactor = 0.0f;
     }
     m_shader.loadMoveFactor( m_moveFactor );
+    m_shader.loadCameraPosition( camera.position() );
     glBindVertexArray( m_quad.getVaoID() );
     glEnableVertexAttribArray( 0 );
     glActiveTexture( GL_TEXTURE0 );

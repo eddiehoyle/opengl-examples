@@ -1,4 +1,4 @@
-set(EXERCISE 05_water_dudv_maps)
+set(EXERCISE 06_water_fresnel)
 file(GLOB_RECURSE SOURCE_FILES "*.cc")
 add_executable(${EXERCISE} ${SOURCE_FILES})
 get_directory_property(COMMON_LIBRARY

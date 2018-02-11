@@ -537,8 +537,7 @@ void WaterShader::getUniformLocations() {
     m_refractionTexture = getUniformLocation( "refractionTexture" );
     m_dudvMapTexture = getUniformLocation( "dudvMap" );
     m_moveFactor = getUniformLocation( "moveFactor" );
-
-    printf( "%d, %d\n", m_reflectionTexture, m_refractionTexture );
+    m_cameraPosition = getUniformLocation( "cameraPosition" );
 }
 
 void WaterShader::connectTextureUnits() {
@@ -549,6 +548,20 @@ void WaterShader::connectTextureUnits() {
 
 void WaterShader::loadModelMatrix( const glm::mat4& matrix ) {
     loadMatrix( m_modelMatrix, matrix );
+}
+
+void WaterShader::loadCameraPosition( const glm::vec3& pos ) {
+
+    // Note: This was supposed to happen in loadViewMatrix, but I
+    // Didn't want to pass in a camera to the shader. Instead,
+    // I call this method from WaterRenderer::prepareRender and
+    // pass in raw position of camera instead decompose view
+    // matrix.
+    loadVector( m_cameraPosition, pos );
+}
+
+void WaterShader::loadViewMatrix( const glm::mat4& mat ) {
+    ShaderProgram::loadViewMatrix( mat );
 }
 
 void WaterShader::loadMoveFactor( float value ) {
