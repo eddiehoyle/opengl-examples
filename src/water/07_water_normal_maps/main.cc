@@ -42,7 +42,6 @@
 const unsigned int kWindowWidth = 640;
 const unsigned int kWindowHeight = 480;
 
-
 int main( int argc, char **argv ) {
 
     // Initialise GLFW
@@ -320,8 +319,6 @@ int main( int argc, char **argv ) {
 
     // ---------------------------------------------------------------
 
-    // ---------------------------------------------------------------
-
     while ( glfwWindowShouldClose( window ) == 0 ) {
 
         common::glfw3ProcessMouse( window );
@@ -351,7 +348,7 @@ int main( int argc, char **argv ) {
         // Render
         fbos.unbindCurrentFrameBuffer();
         renderer.renderScene( player, entities, terrains, lights, camera, glm::vec4( 0, 0, 0, 0 ) );
-        waterRenderer.render( waters, camera );
+        waterRenderer.render( waters, camera, lights.front() );
         guiRenderer.render( guiTextures );
 
         common::DisplayManager::instance()->updateDisplay();

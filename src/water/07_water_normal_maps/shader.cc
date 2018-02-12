@@ -538,12 +538,16 @@ void WaterShader::getUniformLocations() {
     m_dudvMapTexture = getUniformLocation( "dudvMap" );
     m_moveFactor = getUniformLocation( "moveFactor" );
     m_cameraPosition = getUniformLocation( "cameraPosition" );
+    m_normalMap = getUniformLocation( "normalMap" );
+    m_lightColour = getUniformLocation( "lightColour" );
+    m_lightPosition = getUniformLocation( "lightPosition" );
 }
 
 void WaterShader::connectTextureUnits() {
     loadInt( m_reflectionTexture, 0 );
     loadInt( m_refractionTexture, 1 );
     loadInt( m_dudvMapTexture, 2 );
+    loadInt( m_normalMap, 3 );
 }
 
 void WaterShader::loadModelMatrix( const glm::mat4& matrix ) {
@@ -558,6 +562,14 @@ void WaterShader::loadCameraPosition( const glm::vec3& pos ) {
     // pass in raw position of camera instead decompose view
     // matrix.
     loadVector( m_cameraPosition, pos );
+}
+
+void WaterShader::loadLightColour( const glm::vec3& vec ) {
+    loadVector( m_lightColour, vec );
+}
+
+void WaterShader::loadLightPosition( const glm::vec3& vec ) {
+    loadVector( m_lightPosition, vec );
 }
 
 void WaterShader::loadViewMatrix( const glm::mat4& mat ) {

@@ -116,8 +116,8 @@ public:
                    const RawModel& quad,
                    const glm::mat4& projectionMatrix,
                    const WaterFrameBuffers& fbos );
-    void render( const std::vector< WaterTile >& water, const Camera& camera );
-    void prepareRender( const Camera& camera );
+    void render( const std::vector< WaterTile >& water, const Camera& camera, const Light& light );
+    void prepareRender( const Camera& camera, const Light& light );
     void unbind();
 
     // No-op. This is handled in main.cc
@@ -129,6 +129,7 @@ private:
     WaterFrameBuffers m_fbos;
 
     GLuint m_dudvTexture;
+    GLuint m_normalMapTexture;
     float m_moveFactor = 0;
 };
 

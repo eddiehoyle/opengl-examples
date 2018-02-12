@@ -186,6 +186,8 @@ public:
     void connectTextureUnits();
     void loadCameraPosition( const glm::vec3& pos );
     void loadMoveFactor( float value );
+    void loadLightColour( const glm::vec3& vec );
+    void loadLightPosition( const glm::vec3& vec );
 
 protected:
 
@@ -197,6 +199,9 @@ protected:
     GLint m_dudvMapTexture;
     GLint m_moveFactor;
     GLint m_cameraPosition;
+    GLint m_normalMap;
+    GLint m_lightColour;
+    GLint m_lightPosition;
 
 };
 

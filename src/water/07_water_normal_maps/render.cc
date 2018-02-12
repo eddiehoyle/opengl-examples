@@ -372,9 +372,12 @@ WaterRenderer::WaterRenderer( WaterShader& shader,
     bool result;
     const std::string dudvMapPath = common::getResource( "dudvMap.png", result );
     assert( result );
+    const std::string normalMapPath = common::getResource( "normalMap.png", result );
+    assert( result );
 
     Loader loader;
     m_dudvTexture = loader.loadTexture( dudvMapPath );
+    m_normalMapTexture = loader.loadTexture( normalMapPath );
 
     // Note
     // 'm_shader' is initialised before added to this renderer.
@@ -386,9 +389,9 @@ WaterRenderer::WaterRenderer( WaterShader& shader,
     m_shader.stop();
 }
 
-void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera& camera ) {
+void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera& camera, const Light& light ) {
 
-    prepareRender( camera );
+    prepareRender( camera, light );
 
     for ( const WaterTile& tile : water ) {
         glm::mat4 modelMatrix = common::createTransformationMatrix( glm::vec3( tile.getX(), tile.getHeight(), tile.getZ() ),
@@ -401,7 +404,7 @@ void WaterRenderer::render( const std::vector< WaterTile >& water, const Camera&
     unbind();
 }
 
-void WaterRenderer::prepareRender( const Camera& camera ) {
+void WaterRenderer::prepareRender( const Camera& camera, const Light& light ) {
     m_shader.start();
     m_shader.loadViewMatrix( camera.view() );
     m_moveFactor += WAVE_SPEED * common::DisplayManager::instance()->getFrameTimeSeconds();
@@ -409,6 +412,8 @@ void WaterRenderer::prepareRender( const Camera& camera ) {
         m_moveFactor = 0.0f;
     }
     m_shader.loadMoveFactor( m_moveFactor );
+    m_shader.loadLightColour( light.getColour() );
+    m_shader.loadLightPosition( light.getPosition() );
     m_shader.loadCameraPosition( camera.position() );
     glBindVertexArray( m_quad.getVaoID() );
     glEnableVertexAttribArray( 0 );
@@ -418,6 +423,8 @@ void WaterRenderer::prepareRender( const Camera& camera ) {
     glBindTexture( GL_TEXTURE_2D, m_fbos.getRefractionTexture() );
     glActiveTexture( GL_TEXTURE2 );
     glBindTexture( GL_TEXTURE_2D, m_dudvTexture );
+    glActiveTexture( GL_TEXTURE3 );
+    glBindTexture( GL_TEXTURE_2D, m_normalMapTexture );
 }
 
 void WaterRenderer::unbind() {
